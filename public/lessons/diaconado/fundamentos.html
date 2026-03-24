@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 El Camino del servicio - Diaconado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --xp-bar: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            --context-bg: rgba(30, 58, 138, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 2px solid var(--primary);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #6366f1, #ec4899, #f59e0b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            margin-top: 10px;
+        }
+
+        /* XP BAR */
+        .xp-container {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 25px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid var(--primary);
+        }
+
+        .xp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .xp-bar {
+            height: 25px;
+            background: #334155;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .xp-progress {
+            height: 100%;
+            background: var(--xp-bar);
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .xp-level {
+            position: absolute;
+            top: -30px;
+            right: 20px;
+            background: var(--warning);
+            color: var(--dark);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* LEVELS */
+        .level {
+            background: rgba(30, 41, 59, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .level.active {
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .level.locked {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .level-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .level-badge {
+            font-size: 1.2rem;
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: var(--primary);
+            color: white;
+        }
+
+        .mission {
+            background: rgba(56, 189, 248, 0.1);
+            border-left: 4px solid #0ea5e9;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mission:hover {
+            background: rgba(56, 189, 248, 0.2);
+            transform: translateX(5px);
+        }
+
+        .mission.completed {
+            background: rgba(16, 185, 129, 0.2);
+            border-left-color: var(--success);
+        }
+
+        .mission-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mission-xp {
+            background: var(--warning);
+            color: var(--dark);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        /* QUIZ */
+        .quiz-container {
+            background: rgba(30, 41, 59, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid var(--secondary);
+            display: none;
+        }
+
+        .quiz-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .context-theory {
+            background: var(--context-bg);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .context-title {
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .context-title::before {
+            content: "📚";
+        }
+
+        .versicle-highlight {
+            display: block;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 3px solid var(--warning);
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .versicle-ref {
+            display: block;
+            text-align: right;
+            font-weight: bold;
+            color: var(--warning);
+            margin-top: 5px;
+        }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-weight: 600;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .quiz-option {
+            background: rgba(56, 189, 248, 0.1);
+            padding: 15px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #0ea5e9;
+        }
+
+        .quiz-option.selected {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: var(--primary);
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.3);
+            border-color: var(--success);
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: var(--danger);
+        }
+
+        .quiz-feedback {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback-correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-left: 4px solid var(--success);
+        }
+
+        .feedback-incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+
+        .quiz-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .quiz-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .quiz-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quiz-btn.next {
+            background: var(--success);
+        }
+
+        .toggle-context {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .toggle-context:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+
+        /* BADGES */
+        .badges-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .badge {
+            background: rgba(56, 189, 248, 0.1);
+            border: 2px solid #0ea5e9;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .badge.unlocked {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success);
+            transform: scale(1.05);
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .badge-name {
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        /* PRAYER */
+        .prayer-container {
+            background: rgba(30, 41, 59, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 2px solid var(--warning);
+            display: none;
+        }
+
+        .prayer-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            font-size: 1rem;
+            resize: vertical;
+            margin: 15px 0;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-large {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #0da271;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        /* CONGRATULATIONS */
+        .congrats {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            border-radius: 20px;
+            display: none;
+        }
+
+        .congrats.show {
+            display: block;
+            animation: celebration 1s ease;
+        }
+
+        @keyframes celebration {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .congrats h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .certificate {
+            background: white;
+            color: var(--dark);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid gold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .certificate h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .certificate p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        .fireworks {
+            font-size: 3rem;
+            margin: 20px 0;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* VERSICLE */
+        .versicle {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-style: italic;
+        }
+
+        .versicle-reference {
+            display: block;
+            text-align: right;
+            font-weight: bold;
+            margin-top: 5px;
+            color: var(--warning);
+        }
+
+        /* PROGRESS CIRCLE */
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) 0%, var(--primary) 0%, #334155 0%, #334155 100%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #0f172a;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* KEYWORD HIGHLIGHT */
+        .keyword {
+            color: var(--warning);
+            font-weight: bold;
+        }
+
+        /* NAVIGATION SYSTEM */
+        .navigation-system {
+            background: rgba(30, 41, 59, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid var(--primary);
+        }
+
+        .nav-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-btn.prev {
+            background: var(--danger);
+        }
+
+        .nav-btn.prev:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .nav-btn.next {
+            background: var(--success);
+        }
+
+        .nav-btn.next:hover {
+            background: #0da271;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .nav-btn.home {
+            background: var(--warning);
+            color: var(--dark);
+        }
+
+        .nav-btn.home:hover {
+            background: #fbbf24;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        .nav-btn.program {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+
+        .nav-btn.program:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.5);
+        }
+
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .lesson-card {
+            background: rgba(99, 102, 241, 0.1);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .lesson-card:hover {
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .lesson-card.active {
+            background: rgba(16, 185, 129, 0.3);
+            border-color: var(--success);
+            transform: scale(1.05);
+        }
+
+        .lesson-card.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .lesson-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            line-height: 30px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .lesson-card.locked .lesson-number {
+            background: #64748b;
+        }
+
+        .lesson-card.active .lesson-number {
+            background: var(--success);
+        }
+
+        .lesson-name {
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* BACK TO PROGRAM BUTTON - FIXED */
+        .back-to-program {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+            z-index: 1000;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-program:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        .back-to-program:active {
+            transform: translateY(0);
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .level-title {
+                font-size: 1.5rem;
+            }
+
+            .quiz-question {
+                font-size: 1.1rem;
+            }
+
+            .context-theory {
+                font-size: 0.95rem;
+            }
+
+            .badges-container {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+            }
+
+            .back-to-program {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- BOTÓN FIJO PARA REGRESAR AL PROGRAMA -->
+    <a href="/cursos/diaconado" target="_parent" class="back-to-program">
+        📚 Programa Diaconado
+    </a>
+
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🎮 FUNDAMENTOS DEL DIACONADO</h1>
+            <p>La Misión del Servidor - Un viaje para forjar siervos según el corazón de Cristo</p>
+            
+            <div class="progress-circle" id="progressCircle">
+                <span class="progress-text">0%</span>
+            </div>
+        </div>
+
+        <!-- XP BAR -->
+        <div class="xp-container">
+            <div class="xp-header">
+                <span>XP: <span id="xpCurrent">0</span> / <span id="xpMax">1200</span></span>
+                <span>Nivel: <span id="currentLevel">1</span> / 3</span>
+            </div>
+            <div class="xp-bar">
+                <div class="xp-progress" id="xpProgress"></div>
+                <div class="xp-level" id="levelDisplay">NIVEL 1</div>
+            </div>
+        </div>
+
+        <!-- LEVEL 1 -->
+        <div class="level active" id="level1">
+            <div class="level-header">
+                <div class="level-title">🔧 Nivel 1: Depurador de Código Fuente</div>
+                <div class="level-badge">0-300 XP</div>
+            </div>
+
+            <div class="versicle">
+                "Buscad, pues, hermanos, de entre vosotros a siete varones de buen testimonio, llenos del Espíritu Santo y de sabiduría, a quienes encarguemos de este trabajo."
+                <span class="versicle-reference">Hechos 6:3</span>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz1')">
+                <div class="mission-title">🔍 M1.1: Búsqueda de Etimología <span class="mission-xp">+50 XP</span></div>
+                <p>Elige entre 4 "scripts antiguos" cuál define correctamente <strong>diakonos</strong>. ¡Cuidado con los virus semánticos!</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz2')">
+                <div class="mission-title">⚠️ M1.2: Debuggear el Bug Histórico <span class="mission-xp">+75 XP</span></div>
+                <p>Resuelve el problema de las viudas griegas en Hechos 6. ¿Qué provocó la necesidad de elegir servidores?</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz3')">
+                <div class="mission-title">🤖 M1.3: Arquitectura del Sistema <span class="mission-xp">+100 XP</span></div>
+                <p>Une los roles correctos: ¿Por qué los apóstoles delegaron el servicio de las mesas?</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz4')">
+                <div class="mission-title">💥 JEFE FINAL: Batalla contra "Orgullo.exe" <span class="mission-xp">+75 XP</span></div>
+                <p>3 preguntas rápidas sobre Hechos 6. Cada acierto reduce la barra de vida del jefe.</p>
+            </div>
+        </div>
+
+        <!-- LEVEL 2 -->
+        <div class="level locked" id="level2">
+            <div class="level-header">
+                <div class="level-title">🛡️ Nivel 2: Guardián del Sistema Espiritual</div>
+                <div class="level-badge">301-700 XP</div>
+            </div>
+
+            <div class="versicle">
+                "Que guarden el misterio de la fe con limpia conciencia."
+                <span class="versicle-reference">1 Timoteo 3:9</span>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz5')">
+                <div class="mission-title">🧪 M2.1: Laboratorio de Carácter <span class="mission-xp">+100 XP</span></div>
+                <p>Analiza las cualificaciones bíblicas para diáconos según 1 Timoteo 3:8-13.</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz6')">
+                <div class="mission-title">🔐 M2.2: Rompe el Candado del Misterio <span class="mission-xp">+125 XP</span></div>
+                <p>¿Qué significa "guardar el misterio de la fe con limpia conciencia"?</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz7')">
+                <div class="mission-title">⏳ M2.3: Prueba Beta Espiritual <span class="mission-xp">+150 XP</span></div>
+                <p>¿Qué requisito es indispensable en los elegidos de Hechos 6 desde una perspectiva pneumatológica?</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz8')">
+                <div class="mission-title">💥 JEFE FINAL: Batalla contra "Hipocresía.dll" <span class="mission-xp">+125 XP</span></div>
+                <p>Elige el "parche espiritual" correcto para corregir errores de conducta.</p>
+            </div>
+        </div>
+
+        <!-- LEVEL 3 -->
+        <div class="level locked" id="level3">
+            <div class="level-header">
+                <div class="level-title">❤️ Nivel 3: Clon del Modelo Maestro</div>
+                <div class="level-badge">701-1200 XP</div>
+            </div>
+
+            <div class="versicle">
+                "Porque ni aun el Hijo del Hombre vino para ser servido, sino para servir, y para dar su vida en rescate por muchos."
+                <span class="versicle-reference">Marcos 10:45</span>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz9')">
+                <div class="mission-title">🧼 M3.1: Simulador de Lavado de Pies <span class="mission-xp">+150 XP</span></div>
+                <p>¿Cómo define Jesús la esencia de su misión y el modelo para el diaconado?</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz10')">
+                <div class="mission-title">⚔️ M3.2: Arena del Orgullo <span class="mission-xp">+175 XP</span></div>
+                <p>¿Por qué el diaconado ayuda a preservar la unidad de la iglesia?</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz11')">
+                <div class="mission-title">🌐 M3.3: Hackea el Sistema Mundano <span class="mission-xp">+175 XP</span></div>
+                <p>¿Cuál es una diferencia clave entre los requisitos de un anciano y un diácono?</p>
+            </div>
+
+            <div class="mission" onclick="openQuiz('quiz12')">
+                <div class="mission-title">⏳ M3.4: Sometidos a Prueba <span class="mission-xp">+200 XP</span></div>
+                <p>¿Qué significa que los diáconos deben ser sometidos a prueba primero?</p>
+            </div>
+
+            <div class="mission" onclick="openPrayer()">
+                <div class="mission-title">🙏 M3.5: Oración y Compromiso <span class="mission-xp">+250 XP</span></div>
+                <p>Escribe una oración de compromiso renunciando al reconocimiento y pidiendo capacitar para servir.</p>
+            </div>
+        </div>
+
+        <!-- BADGES -->
+        <div class="level">
+            <div class="level-header">
+                <div class="level-title">🏆 Insignias Desbloqueadas</div>
+            </div>
+            <div class="badges-container">
+                <div class="badge" id="badge1">
+                    <div class="badge-icon">✨</div>
+                    <div class="badge-name">Polvo de Servicio</div>
+                </div>
+                <div class="badge" id="badge2">
+                    <div class="badge-icon">🛠️</div>
+                    <div class="badge-name">Solucionador de Conflictos</div>
+                </div>
+                <div class="badge" id="badge3">
+                    <div class="badge-icon">🏗️</div>
+                    <div class="badge-name">Arquitecto Eclesial</div>
+                </div>
+                <div class="badge" id="badge4">
+                    <div class="badge-icon">✅</div>
+                    <div class="badge-name">Integridad Certificada</div>
+                </div>
+                <div class="badge" id="badge5">
+                    <div class="badge-icon">📖</div>
+                    <div class="badge-name">Doctrina Viva</div>
+                </div>
+                <div class="badge" id="badge6">
+                    <div class="badge-icon">🧪</div>
+                    <div class="badge-name">Beta Tester Aprobado</div>
+                </div>
+                <div class="badge" id="badge7">
+                    <div class="badge-icon">🧵</div>
+                    <div class="badge-name">Toalla Sagrada</div>
+                </div>
+                <div class="badge" id="badge8">
+                    <div class="badge-icon">✝️</div>
+                    <div class="badge-name">Muerte al Yo</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUIZZES WITH CONTEXT -->
+        <div class="quiz-container" id="quiz1">
+            <h3>🔍 M1.1: Búsqueda de Etimología</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Código Fuente: Etimología de <span class="keyword">diakonos</span></div>
+                <p>La palabra griega <span class="keyword">diakonos</span> (διάκονος) tiene un significado literal profundamente práctico: <strong>"el que sirve a la mesa"</strong> o <strong>"el que levanta polvo al moverse rápido para servir"</strong>. Este concepto no denota un cargo de honor, sino una función de servicio activo y diligente.</p>
+                <p>En la iglesia primitiva, entender esta definición era crucial. Si no comprendemos el significado bíblico de <span class="keyword">diakonia</span>, el ministerio colapsa porque confundimos el servicio con el poder.</p>
+                <p class="versicle-highlight">
+                    "El diácono es el servidor oficial de la iglesia encargado de las necesidades logísticas y tangibles para preservar la unidad del cuerpo."
+                </p>
+            </div>
+
+            <div class="quiz-question">
+                ¿Cuál es el significado literal original de la palabra griega <strong>'diakonos'</strong>?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz1', false)">
+                    A. Un maestro experto en la ley mosaica.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz1', true)">
+                    B. Aquel que sirve a la mesa o levanta polvo al moverse rápido.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz1', false)">
+                    C. Un líder político que gobierna sobre la asamblea.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz1', false)">
+                    D. El que tiene el don de sanidad y milagros.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback1"></div>
+            <button class="quiz-btn" id="btn1" onclick="submitQuiz('quiz1', 50, 'badge1')">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz2">
+            <h3>⚠️ M1.2: Debuggear el Bug Histórico</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">El "Bug" de Hechos 6: Crisis de las Viudas</div>
+                <p>La iglesia primitiva enfrentó un <span class="keyword">"bug"</span> (error crítico) en su sistema operativo: <strong>las viudas de los griegos (helenistas) eran desatendidas en la distribución diaria</strong>, mientras las viudas hebreas recibían asistencia.</p>
+                <p>Este problema no era meramente administrativo; amenazaba la <span class="keyword">unidad del cuerpo de Cristo</span>, que es el sistema operativo espiritual de la iglesia. La desatención generaba quejas y divisiones étnicas dentro de la comunidad.</p>
+                <p class="versicle-highlight">
+                    "En aquellos días, creciendo el número de los discípulos, hubo murmuración de los griegos contra los hebreos, porque sus viudas eran desatendidas en la distribución diaria." — Hechos 6:1
+                </p>
+                <p>La solución no fue ignorar el problema ni culpar a los apóstoles, sino establecer un protocolo de servicio específico: elegir siete varones llenos del Espíritu Santo para gestionar esta necesidad práctica.</p>
+            </div>
+
+            <div class="quiz-question">
+                Según Hechos 6, ¿qué problema administrativo provocó la necesidad de elegir a los primeros servidores (protodiáconos)?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz2', false)">
+                    A. La persecución romana estaba dispersando a la iglesia.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz2', true)">
+                    B. Las viudas de los griegos eran desatendidas en la distribución diaria.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz2', false)">
+                    C. Los apóstoles no querían seguir predicando.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz2', false)">
+                    D. La falta de fondos para construir un templo.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback2"></div>
+            <button class="quiz-btn" id="btn2" onclick="submitQuiz('quiz2', 75, 'badge2')">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz3">
+            <h3>🤖 M1.3: Arquitectura del Sistema</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Arquitectura Eclesial: Backend vs. Interfaz de Usuario</div>
+                <p>Los apóstoles no delegaron el servicio de las mesas porque fuera una tarea <span class="keyword">inferior</span>, sino porque era <span class="keyword">vital</span> para la salud del cuerpo. Establecieron una arquitectura funcional:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li><strong>Backend Espiritual:</strong> Los ancianos/pastores se dedican a la <span class="keyword">oración y al ministerio de la Palabra</span> (Hechos 6:4).</li>
+                    <li><strong>Interfaz de Usuario del Amor:</strong> Los diáconos gestionan el <span class="keyword">servicio práctico y logístico</span> que hace visible el amor cristiano.</li>
+                </ul>
+                <p class="versicle-highlight">
+                    "Pero nosotros persistiremos en la oración y en el ministerio de la palabra." — Hechos 6:4
+                </p>
+                <p>Esta división no crea una jerarquía de valor, sino una <span class="keyword">complementariedad funcional</span>. Ambos roles son esenciales: sin el backend, no hay fundamento doctrinal; sin la interfaz, el amor permanece invisible.</p>
+            </div>
+
+            <div class="quiz-question">
+                ¿Cuál fue la razón principal por la que los apóstoles delegaron el servicio de las mesas?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz3', true)">
+                    A. Para poder dedicarse a la oración y al ministerio de la palabra.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz3', false)">
+                    B. Para evitar tener contacto con los creyentes de habla griega.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz3', false)">
+                    C. Para retirarse y jubilarse del ministerio activo.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz3', false)">
+                    D. Porque consideraban que servir comida era un trabajo indigno.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback3"></div>
+            <button class="quiz-btn" id="btn3" onclick="submitQuiz('quiz3', 100, 'badge3')">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz4">
+            <h3>💥 JEFE FINAL: Batalla contra "Orgullo.exe"</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">El Error del Orgullo: ¿Servicio Inferior?</div>
+                <p>Un virus común en la iglesia es pensar que el diaconado es un <span class="keyword">"cargo de poder político"</span> o un <span class="keyword">"conserje glorificado"</span>. Ambas visiones son erróneas.</p>
+                <p>La verdad bíblica es que el diaconado es un <span class="keyword">oficio de servicio vital</span> que preserva la unidad del cuerpo. Los apóstoles delegaron estas funciones prácticas precisamente porque eran esenciales para evitar divisiones.</p>
+                <p class="versicle-highlight">
+                    "Y la palabra de Dios crecía, y el número de los discípulos se multiplicaba grandemente en Jerusalén; y también muchos de los sacerdotes obedecían a la fe." — Hechos 6:7
+                </p>
+                <p>El resultado de esta estructura no fue fragmentación, sino <span class="keyword">crecimiento explosivo</span>: la Palabra se multiplicó y hasta sacerdotes se convirtieron. El diaconado bien entendido no debilita la iglesia; la fortalece.</p>
+            </div>
+
+            <div class="quiz-question">
+                En Hechos 6, los apóstoles delegaron funciones prácticas no porque fueran inferiores, sino porque eran:
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz4', false)">
+                    A. Una forma de castigar a los hermanos desobedientes.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz4', true)">
+                    B. Vitales para preservar la unidad del cuerpo.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz4', false)">
+                    C. Tareas que solo los griegos podían hacer.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz4', false)">
+                    D. Ocupaciones temporales sin importancia espiritual.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback4"></div>
+            <button class="quiz-btn" id="btn4" onclick="submitQuiz('quiz4', 75)">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz5">
+            <h3>🧪 M2.1: Laboratorio de Carácter</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Checklist de Validación: 1 Timoteo 3:8-13</div>
+                <p>Para que un servidor corra el "programa diaconal", debe cumplir con requisitos de <span class="keyword">espiritualidad</span>, no solo habilidades técnicas. Pablo enfatiza el carácter moldeado por el Espíritu Santo:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li><span class="keyword">Honestos, sin doblez:</span> Integridad en el código moral.</li>
+                    <li><span class="keyword">No dados al mucho vino:</span> Sobriedad y autocontrol (fruto del Espíritu).</li>
+                    <li><span class="keyword">No codiciosos de ganancias deshonestas:</span> Manejo transparente de recursos (mayordomía).</li>
+                    <li><span class="keyword">Irreprochables:</span> Testimonio público validado antes de la instalación oficial.</li>
+                </ul>
+                <p class="versicle-highlight">
+                    "Los diáconos sean asimismo honestos, no de doble lengua, no dados a mucho vino, no codiciosos de ganancias deshonestas..." — 1 Timoteo 3:8
+                </p>
+                <p>Nota del Programador: <span class="keyword">Un diácono sin el Espíritu Santo es como una computadora sin electricidad</span>: tiene todos los componentes, pero no puede funcionar para la gloria de Dios.</p>
+            </div>
+
+            <div class="quiz-question">
+                En 1 Timoteo 3:8-13, ¿cuál de los siguientes es un requisito específico mencionado para los diáconos?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz5', false)">
+                    A. Que tengan un título académico en teología.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz5', true)">
+                    B. Que sean honestos, sin doblez y no dados al mucho vino.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz5', false)">
+                    C. Que sean capaces de expulsar demonios.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz5', false)">
+                    D. Que sean solteros para dedicarse más al Señor.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback5"></div>
+            <button class="quiz-btn" id="btn5" onclick="submitQuiz('quiz5', 100, 'badge4')">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz6">
+            <h3>🔐 M2.2: Rompe el Candado del Misterio</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">El Misterio de la Fe con Conciencia Limpia</div>
+                <p>El requisito de que los diáconos <span class="keyword">"guarden el misterio de la fe con limpia conciencia"</span> (1 Timoteo 3:9) es profundamente teológico:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li><span class="keyword">Misterio de la fe:</span> No se refiere a secretos ocultos, sino a las verdades profundas del evangelio reveladas por Dios (Cristo, la salvación, la Trinidad).</li>
+                    <li><span class="keyword">Conciencia limpia:</span> Coherencia entre lo que se cree y lo que se vive. No hipocresía.</li>
+                </ul>
+                <p class="versicle-highlight">
+                    "Guarden el misterio de la fe con limpia conciencia." — 1 Timoteo 3:9
+                </p>
+                <p>Un diácono debe tener <span class="keyword">conocimiento teológico sólido</span> y vivir de acuerdo con él. No basta con saber doctrina; debe <span class="keyword">incarnarla</span> en su servicio diario. La fe no es solo información, es transformación visible.</p>
+            </div>
+
+            <div class="quiz-question">
+                ¿Qué significa la frase <strong>'guarden el misterio de la fe con limpia conciencia'</strong> mencionada en 1 Timoteo 3:9?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz6', false)">
+                    A. Que deben mantener en secreto las doctrinas de la iglesia.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz6', false)">
+                    B. Que deben memorizar toda la Ley de Moisés.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz6', true)">
+                    C. Que deben sostener firmemente la sana doctrina viviendo de acuerdo a ella.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz6', false)">
+                    D. Que deben realizar rituales misteriosos en privado.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback6"></div>
+            <button class="quiz-btn" id="btn6" onclick="submitQuiz('quiz6', 125, 'badge5')">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz7">
+            <h3>⏳ M2.3: Prueba Beta Espiritual</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Perspectiva Pneumatológica: Llenos del Espíritu Santo</div>
+                <p>Desde una perspectiva <span class="keyword">pneumatológica</span> (del Espíritu), el requisito indispensable en los elegidos de Hechos 6 no fue su currículum profesional, sino su <span class="keyword">llenura espiritual</span>:</p>
+                <p class="versicle-highlight">
+                    "Buscad, pues, hermanos, de entre vosotros a siete varones de buen testimonio, <span class="keyword">llenos del Espíritu Santo y de sabiduría</span>, a quienes encarguemos de este trabajo." — Hechos 6:3
+                </p>
+                <p>Esto es revolucionario: incluso para tareas <span class="keyword">prácticas</span> (distribuir comida), la iglesia primitiva requería:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li><span class="keyword">Llenura del Espíritu Santo:</span> Dependencia constante de Dios para servir con amor sobrenatural.</li>
+                    <li><span class="keyword">Sabiduría:</span> Discernimiento para tomar decisiones justas en situaciones complejas (como la equidad entre grupos étnicos).</li>
+                </ul>
+                <p>Sin el Espíritu, el servicio se convierte en mero activismo social. Con Él, se transforma en <span class="keyword">ministerio transformador</span>.</p>
+            </div>
+
+            <div class="quiz-question">
+                Desde una perspectiva <strong>pneumatológica</strong> (del Espíritu), ¿qué característica era indispensable en los elegidos de Hechos 6?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz7', false)">
+                    A. Que fueran parientes de los apóstoles.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz7', false)">
+                    B. Que fueran los más jóvenes de la congregación.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz7', true)">
+                    C. Que fueran hombres llenos del Espíritu Santo y de sabiduría.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz7', false)">
+                    D. Que tuvieran experiencia previa en contabilidad.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback7"></div>
+            <button class="quiz-btn" id="btn7" onclick="submitQuiz('quiz7', 150, 'badge6')">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz8">
+            <h3>💥 JEFE FINAL: Batalla contra "Hipocresía.dll"</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Carácter sobre Habilidades Técnicas</div>
+                <p>¿Por qué se enfatiza el <span class="keyword">carácter espiritual</span> sobre las habilidades técnicas en las cualificaciones del diácono?</p>
+                <p>Porque el diaconado no es un puesto administrativo secular. Es un <span class="keyword">oficio sagrado</span> donde las tareas prácticas son canalizadas por el Espíritu Santo para glorificar a Dios y edificar a los santos.</p>
+                <p class="versicle-highlight">
+                    "Porque la letra mata, pero el espíritu vivifica." — 2 Corintios 3:6
+                </p>
+                <p>Un diácono puede aprender a manejar hojas de cálculo, pero <span class="keyword">no puede aprender a amar con el amor de Cristo</span> sin el Espíritu. Las habilidades técnicas son herramientas; el carácter espiritual es el <span class="keyword">combustible</span> que da vida al servicio.</p>
+                <p>La iglesia no necesita gerentes eficientes sin unción; necesita <span class="keyword">siervos ungidos</span> que, aunque aprendan las habilidades con el tiempo, ya poseen el corazón de Cristo.</p>
+            </div>
+
+            <div class="quiz-question">
+                ¿Por qué se enfatiza el carácter espiritual sobre las habilidades técnicas en las cualificaciones del diácono?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz8', false)">
+                    A. Porque las habilidades técnicas no son necesarias en la iglesia.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz8', true)">
+                    B. Porque un diácono sin el Espíritu Santo es como una computadora sin electricidad.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz8', false)">
+                    C. Porque solo los pastores necesitan el Espíritu Santo.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz8', false)">
+                    D. Porque las habilidades se aprenden con el tiempo, pero el carácter no.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback8"></div>
+            <button class="quiz-btn" id="btn8" onclick="submitQuiz('quiz8', 125)">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz9">
+            <h3>🧼 M3.1: Simulador de Lavado de Pies</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">El Modelo Maestro: Jesús como Diácono Supremo</div>
+                <p>Jesús no es solo el Señor; es el <span class="keyword">Diácono por excelencia</span>. En Marcos 10:45, define la esencia de su misión usando la forma verbal de <span class="keyword">diakonos</span>:</p>
+                <p class="versicle-highlight">
+                    "Porque ni aun el Hijo del Hombre vino para ser servido, sino para <span class="keyword">servir [diakonesai]</span>, y para dar su vida en rescate por muchos." — Marcos 10:45
+                </p>
+                <p>Este versículo revela dos dimensiones inseparables del servicio cristiano:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li><span class="keyword">Servir:</span> Acción práctica de poner las necesidades de otros por encima de las propias.</li>
+                    <li><span class="keyword">Dar la vida:</span> El servicio culmina en sacrificio total (la cruz).</li>
+                </ul>
+                <p>El diaconado no es un <span class="keyword">escalón hacia el pastorado</span> ni un <span class="keyword">título de honor</span>; es una <span class="keyword">muerte al yo</span>. Lavar los pies (Juan 13) es la "función principal" que Cristo ejecutó y nos dejó como librería estándar para importar a nuestras vidas.</p>
+            </div>
+
+            <div class="quiz-question">
+                Según Marcos 10:45, ¿cómo define Jesús la esencia de su misión y, por extensión, el modelo para el diaconado?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz9', false)">
+                    A. Vino para establecer un reino político inmediato.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz9', false)">
+                    B. Vino para ser servido por los ángeles y los hombres.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz9', true)">
+                    C. Vino para servir y dar su vida en rescate por muchos.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz9', false)">
+                    D. Vino para juzgar a los gentiles inmediatamente.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback9"></div>
+            <button class="quiz-btn" id="btn9" onclick="submitQuiz('quiz9', 150, 'badge7')">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz10">
+            <h3>⚔️ M3.2: Arena del Orgullo</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Diaconado y Unidad de la Iglesia</div>
+                <p>El diaconado no es un lujo administrativo; es un <span class="keyword">mecanismo de preservación de la unidad</span>. En Hechos 6, el problema de las viudas griegas no era solo logístico: era una <span class="keyword">grieta que amenazaba con convertirse en cisma</span>.</p>
+                <p>Al designar diáconos para atender necesidades prácticas:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li>Se <span class="keyword">eliminan motivos de queja</span> que generan resentimiento.</li>
+                    <li>Se <span class="keyword">demuestra equidad</span> en el trato a todos los miembros.</li>
+                    <li>Se <span class="keyword">libera a los pastores</span> para alimentar espiritualmente al rebaño.</li>
+                </ul>
+                <p class="versicle-highlight">
+                    "Y sucedió que la palabra de Dios crecía..." — Hechos 6:7
+                </p>
+                <p>El resultado no fue fragmentación, sino <span class="keyword">crecimiento explosivo</span>. Cuando las necesidades prácticas se atienden con justicia y amor, el cuerpo crece en unidad y la Palabra se multiplica.</p>
+            </div>
+
+            <div class="quiz-question">
+                ¿Por qué se dice que el diaconado ayuda a preservar la unidad de la iglesia?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz10', false)">
+                    A. Porque organizan las mejores fiestas para que todos estén contentos.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz10', false)">
+                    B. Porque los diáconos obligan a todos a estar de acuerdo.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz10', true)">
+                    C. Porque al atender las necesidades físicas, eliminan motivos de queja y división.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz10', false)">
+                    D. Porque los diáconos son los encargados de expulsar a los miembros conflictivos.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback10"></div>
+            <button class="quiz-btn" id="btn10" onclick="submitQuiz('quiz10', 175)">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz11">
+            <h3>🌐 M3.3: Hackea el Sistema Mundano</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Diferencias entre Anciano y Diácono</div>
+                <p>Ambos oficios comparten requisitos de carácter (integridad, buen testimonio, etc.), pero tienen <span class="keyword">distintos énfasis funcionales</span>:</p>
+                <table style="width:100%; margin:15px 0; border-collapse: collapse; font-size: 0.95rem;">
+                    <tr style="border-bottom: 1px solid #4b5563;">
+                        <th style="text-align: left; padding: 8px; color: var(--primary);">Anciano/Pastor</th>
+                        <th style="text-align: left; padding: 8px; color: var(--primary);">Diácono</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155;">Debe ser <span class="keyword">"apto para enseñar"</span> (1 Tim 3:2)</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155;">No se exige explícitamente enseñar</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155;">Supervisión espiritual del rebaño</td>
+                        <td style="padding: 8px; border-bottom: 1px solid #334155;">Servicio práctico y logístico</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;">"Obispo" (supervisor)</td>
+                        <td style="padding: 8px;">"Siervo" (ministro práctico)</td>
+                    </tr>
+                </table>
+                <p class="versicle-highlight">
+                    "El que sabe bien gobernar sus hijos, con toda dignidad, merece doble honor; mayormente el que trabaja en predicar y enseñar." — 1 Timoteo 5:17
+                </p>
+                <p>Esto no significa que los diáconos deban ser <span class="keyword">ignorantes doctrinalmente</span> (deben guardar el misterio de la fe), sino que su función primaria no es la enseñanza autoritativa, sino el servicio práctico.</p>
+            </div>
+
+            <div class="quiz-question">
+                ¿Cuál es una diferencia clave entre los requisitos de un anciano (pastor) y un diácono según 1 Timoteo 3?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz11', false)">
+                    A. El diácono debe ser más santo que el anciano.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz11', false)">
+                    B. El anciano debe ser rico y el diácono pobre.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz11', false)">
+                    C. El anciano no necesita tener buen testimonio.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz11', true)">
+                    D. El anciano debe ser 'apto para enseñar', requisito no exigido explícitamente al diácono.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback11"></div>
+            <button class="quiz-btn" id="btn11" onclick="submitQuiz('quiz11', 175)">Responder</button>
+        </div>
+
+        <div class="quiz-container" id="quiz12">
+            <h3>⏳ M3.4: Sometidos a Prueba</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Versión Beta: Servicio Antes del Oficio</div>
+                <p>1 Timoteo 3:10 establece un principio crucial de validación espiritual:</p>
+                <p class="versicle-highlight">
+                    "Y éstos también sean sometidos a prueba primero, y entonces ejerzan el diaconado los que fuere hallados irreprensibles."
+                </p>
+                <p>Esto significa que los candidatos a diáconos deben:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li><span class="keyword">Servir informalmente primero:</span> Demostrar su corazón de siervo en la vida cotidiana de la iglesia.</li>
+                    <li><span class="keyword">Ser observados:</span> La congregación y los líderes deben validar su testimonio durante un tiempo ("versión beta").</li>
+                    <li><span class="keyword">Recibir el oficio después:</span> Solo tras demostrar fidelidad en lo pequeño reciben el reconocimiento oficial.</li>
+                </ul>
+                <p>Este proceso evita que personas con motivaciones incorrectas (búsqueda de estatus, poder) accedan al oficio. El diaconado no se <span class="keyword">busca</span>; se <span class="keyword">reconoce</span> en quienes ya viven como siervos.</p>
+            </div>
+
+            <div class="quiz-question">
+                ¿Qué significa que los diáconos deben ser sometidos a prueba primero (1 Timoteo 3:10)?
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="selectOption(this, 'quiz12', false)">
+                    A. Deben pasar un examen escrito de 100 preguntas.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz12', false)">
+                    B. Deben realizar una hazaña física para demostrar fuerza.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz12', true)">
+                    C. Deben servir y demostrar su carácter fiel antes de ser nombrados oficialmente.
+                </div>
+                <div class="quiz-option" onclick="selectOption(this, 'quiz12', false)">
+                    D. Deben pagar una cuota de ingreso.
+                </div>
+            </div>
+            <div class="quiz-feedback" id="feedback12"></div>
+            <button class="quiz-btn" id="btn12" onclick="submitQuiz('quiz12', 200, 'badge8')">Responder</button>
+        </div>
+
+        <!-- PRAYER -->
+        <div class="prayer-container" id="prayer">
+            <h3>🙏 M3.5: Oración y Compromiso</h3>
+            
+            <div class="context-theory">
+                <div class="context-title">Compromiso del Corazón: Muerte al Yo</div>
+                <p>El diaconado no es un título que se ostenta; es una <span class="keyword">muerte diaria al orgullo</span>. Jesús lavó los pies no como un acto simbólico único, sino como modelo permanente:</p>
+                <p class="versicle-highlight">
+                    "Porque ejemplo os he dado, para que como yo os he hecho, vosotros también hagáis." — Juan 13:15
+                </p>
+                <p>Este compromiso implica:</p>
+                <ul style="margin: 15px 0 15px 25px; line-height: 1.7;">
+                    <li><span class="keyword">Renunciar al reconocimiento:</span> Servir en lo oculto sin buscar aplausos.</li>
+                    <li><span class="keyword">Buscar la gloria de Dios:</span> Que Cristo sea exaltado, no nosotros.</li>
+                    <li><span class="keyword">Depender del Espíritu:</span> Reconocer que sin Él, nuestro servicio es activismo vacío.</li>
+                </ul>
+                <p>Escribe tu oración de compromiso. Sé honesto ante Dios. Él no busca perfección, sino un <span class="keyword">corazón dispuesto</span>.</p>
+            </div>
+            
+            <textarea id="prayerText" placeholder="Escribe tu oración aquí (mínimo 50 palabras)..."></textarea>
+            
+            <button class="quiz-btn" onclick="submitPrayer()">Enviar Oración</button>
+        </div>
+
+        <!-- CONGRATULATIONS -->
+        <div class="congrats" id="congrats">
+            <div class="fireworks">🎉🎊✨</div>
+            <h2>¡ORDENACIÓN COMPLETADA!</h2>
+            <p>Has compilado exitosamente el código del siervo</p>
+            
+            <div class="certificate">
+                <h3>📜 CERTIFICADO DE ORDENACIÓN</h3>
+                <p><strong>Este certifica que</strong></p>
+                <p><strong id="userName">Siervo del Señor</strong></p>
+                <p>ha completado exitosamente el módulo</p>
+                <p><strong>"Fundamentos del Diaconado"</strong></p>
+                <p>con un total de <strong id="finalXP">1200</strong> XP</p>
+                <p style="margin-top: 20px; font-style: italic;">
+                    "Porque ni aun el Hijo del Hombre vino para ser servido,<br>
+                    sino para servir y dar su vida en rescate por muchos."
+                </p>
+                <p style="text-align: right; margin-top: 10px;"><strong>Marcos 10:45</strong></p>
+            </div>
+
+            <div class="navigation-system">
+                <div class="nav-title">📚 Continuar Estudio</div>
+                <div class="nav-buttons">
+                    <a href="diaconado.html" class="nav-btn program">
+                        📚 Programa Diaconado
+                    </a>
+                    <a href="#" class="nav-btn prev" onclick="restartGame()">
+                        🔄 Reiniciar Módulo
+                    </a>
+                    <a href="#" class="nav-btn home" onclick="window.location.href='#level1'">
+                        🏠 Volver al Inicio
+                    </a>
+                </div>
+
+                <div class="nav-title" style="margin-top: 30px;">📖 Módulos Disponibles</div>
+                <div class="lesson-grid">
+                    <div class="lesson-card active">
+                        <div class="lesson-number">1</div>
+                        <div class="lesson-name">Fundamentos del Diaconado</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">2</div>
+                        <div class="lesson-name">Doctrina Bíblica</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">3</div>
+                        <div class="lesson-name">Historia de la Iglesia</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">4</div>
+                        <div class="lesson-name">Ética Cristiana</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">5</div>
+                        <div class="lesson-name">Liderazgo Eclesial</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">6</div>
+                        <div class="lesson-name">Misiones Globales</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION SYSTEM - BOTTOM OF PAGE -->
+        <div class="navigation-system">
+            <div class="nav-title">📚 Navegación del Curso</div>
+            <p style="text-align: center; margin-bottom: 25px; color: var(--gray);">
+                Continúa tu formación como siervo del Señor
+            </p>
+            
+            <div class="nav-buttons">
+                <a href="modulo-0.html" class="nav-btn prev">
+                    ⬅️ Módulo Anterior<br><small>Introducción al Curso</small>
+                </a>
+                <a href="#" class="nav-btn home" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+                    🏠 Volver al Inicio
+                </a>
+                <a href="modulo-2.html" class="nav-btn next">
+                    Módulo Siguiente ➡️<br><small>Doctrina Bíblica</small>
+                </a>
+            </div>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--primary);">
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <strong style="color: var(--warning);">📊 Progreso General del Curso</strong>
+                </div>
+                <div class="lesson-grid">
+                    <div class="lesson-card active">
+                        <div class="lesson-number">1</div>
+                        <div class="lesson-name">Fundamentos del Diaconado</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">2</div>
+                        <div class="lesson-name">Doctrina Bíblica</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">3</div>
+                        <div class="lesson-name">Historia de la Iglesia</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">4</div>
+                        <div class="lesson-name">Ética Cristiana</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">5</div>
+                        <div class="lesson-name">Liderazgo Eclesial</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">6</div>
+                        <div class="lesson-name">Misiones Globales</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">7</div>
+                        <div class="lesson-name">Teología Práctica</div>
+                    </div>
+                    <div class="lesson-card locked">
+                        <div class="lesson-number">8</div>
+                        <div class="lesson-name">Examen Final</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let xp = 0;
+        let currentLevel = 1;
+        let selectedAnswers = {};
+        let completedMissions = 0;
+        const TOTAL_XP = 1200;
+        const XP_PER_LEVEL = [300, 400, 500]; // XP needed for each level
+
+        // Función para enviar mensajes al LMS (padre)
+        function notifyLMS(type, data) {
+            if (window.self !== window.top) {
+                window.parent.postMessage({
+                    source: 'diacono-quest',
+                    type: type,
+                    ...data
+                }, '*');
+            }
+        }
+
+        // Función para seleccionar una opción
+        function selectOption(element, quizId, isCorrect) {
+            // Remover selección anterior
+            document.querySelectorAll(`#${quizId} .quiz-option`).forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Marcar la opción seleccionada
+            element.classList.add('selected');
+            selectedAnswers[quizId] = { element, isCorrect };
+            
+            // Habilitar botón
+            document.getElementById(`btn${quizId.replace('quiz', '')}`).disabled = false;
+        }
+
+        // Función para abrir un quiz
+        function openQuiz(quizId) {
+            // Ocultar todos los quizzes
+            document.querySelectorAll('.quiz-container').forEach(q => {
+                q.classList.remove('active');
+            });
+            
+            // Mostrar el quiz seleccionado
+            document.getElementById(quizId).classList.add('active');
+            
+            // Scroll to quiz
+            document.getElementById(quizId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Función para abrir la oración
+        function openPrayer() {
+            document.querySelectorAll('.quiz-container').forEach(q => {
+                q.classList.remove('active');
+            });
+            document.getElementById('prayer').classList.add('active');
+            document.getElementById('prayer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Función para enviar un quiz
+        function submitQuiz(quizId, xpReward, badgeId = null) {
+            const answer = selectedAnswers[quizId];
+            
+            if (!answer) {
+                alert('Por favor selecciona una respuesta');
+                return;
+            }
+
+            // Mostrar feedback
+            const feedbackDiv = document.getElementById(`feedback${quizId.replace('quiz', '')}`);
+            const questionDiv = document.querySelector(`#${quizId} .quiz-question`);
+            
+            if (answer.isCorrect) {
+                feedbackDiv.innerHTML = '✅ ¡Correcto! Has comprendido la enseñanza.';
+                feedbackDiv.className = 'quiz-feedback show feedback-correct';
+                
+                // Marcar opción correcta
+                answer.element.classList.add('correct');
+                
+                // Agregar XP
+                addXP(xpReward);
+                
+                // Desbloquear insignia si aplica
+                if (badgeId) {
+                    unlockBadge(badgeId);
+                }
+                
+                // Marcar misión como completada
+                completedMissions++;
+                
+                // Marcar misión como completada visualmente en el mapa
+                const missionDiv = document.querySelector(`[onclick="openQuiz('${quizId}')"]`);
+                if (missionDiv) missionDiv.classList.add('completed');
+                
+                // Verificar si completó todas las misiones del nivel
+                checkLevelCompletion();
+            } else {
+                feedbackDiv.innerHTML = '❌ Incorrecto. Revisa el contexto teórico y vuelve a intentarlo.';
+                feedbackDiv.className = 'quiz-feedback show feedback-incorrect';
+                
+                // Marcar opción incorrecta y mostrar la correcta
+                answer.element.classList.add('incorrect');
+                
+                // Encontrar y marcar la respuesta correcta
+                document.querySelectorAll(`#${quizId} .quiz-option`).forEach(opt => {
+                    if (opt.onclick && opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+            // Habilitar y cambiar botón a "Siguiente"
+            const btn = document.getElementById(`btn${quizId.replace('quiz', '')}`);
+            btn.disabled = false;
+            btn.textContent = 'Siguiente Misión';
+            btn.className = 'quiz-btn next';
+            btn.onclick = function() {
+                document.getElementById(quizId).classList.remove('active');
+            };
+        }
+
+        // Función para agregar XP
+        function addXP(amount) {
+            xp += amount;
+            if (xp > TOTAL_XP) xp = TOTAL_XP;
+            
+            // Actualizar display
+            document.getElementById('xpCurrent').textContent = xp;
+            document.getElementById('xpProgress').style.width = `${(xp / TOTAL_XP) * 100}%`;
+            document.getElementById('progressCircle').style.background = 
+                `conic-gradient(var(--primary) 0%, var(--primary) ${(xp / TOTAL_XP) * 100}%, #334155 ${(xp / TOTAL_XP) * 100}%, #334155 100%)`;
+            document.querySelector('.progress-text').textContent = `${Math.round((xp / TOTAL_XP) * 100)}%`;
+            
+            // Sincronización con el LMS principal
+            if (window.parent !== window.self) {
+                window.parent.postMessage({ 
+                    source: 'diacono-quest', 
+                    type: 'xp', 
+                    amount: amount 
+                }, '*');
+            }
+
+            // Verificar subida de nivel
+            checkLevelUp();
+        }
+
+        // Función para verificar subida de nivel
+        function checkLevelUp() {
+            let xpNeeded = 0;
+            for (let i = 0; i < currentLevel; i++) {
+                xpNeeded += XP_PER_LEVEL[i] || 0;
+            }
+            
+            if (xp >= xpNeeded && currentLevel < 3) {
+                currentLevel++;
+                document.getElementById('currentLevel').textContent = currentLevel;
+                document.getElementById('levelDisplay').textContent = `NIVEL ${currentLevel}`;
+                
+                // Desbloquear siguiente nivel
+                if (currentLevel === 2) {
+                    document.getElementById('level2').classList.remove('locked');
+                    document.getElementById('level2').classList.add('active');
+                } else if (currentLevel === 3) {
+                    document.getElementById('level3').classList.remove('locked');
+                    document.getElementById('level3').classList.add('active');
+                }
+                
+                // Mostrar mensaje
+                alert(`¡Felicidades! Has alcanzado el Nivel ${currentLevel}. El sistema espiritual se ha actualizado.`);
+            }
+        }
+
+        // Función para desbloquear insignia
+        function unlockBadge(badgeId) {
+            const badge = document.getElementById(badgeId);
+            badge.classList.add('unlocked');
+            // Mostrar notificación
+            setTimeout(() => {
+                alert(`🏆 ¡Insignia desbloqueada: ${badge.querySelector('.badge-name').textContent}!`);
+            }, 500);
+        }
+
+        // Función para verificar completación del nivel
+        function checkLevelCompletion() {
+            // Permitir finalizar si se han intentado suficientes misiones
+            if (completedMissions >= 12) {
+                showCongratulations();
+            }
+        }
+
+        // Función para enviar oración
+        function submitPrayer() {
+            const prayerText = document.getElementById('prayerText').value.trim();
+            
+            // Ajuste: 50 caracteres es suficiente para una oración corta, 50 palabras es demasiado estricto
+            if (prayerText.length < 50) {
+                alert('Por favor escribe una oración de al menos 50 caracteres.');
+                return;
+            }
+            
+            // Agregar XP
+            addXP(250);
+            completedMissions++;
+            
+            // Marcar misión como completada visualmente
+            const mission = document.querySelector('[onclick="openPrayer()"]');
+            mission.classList.add('completed');
+            
+            showCongratulations();
+        }
+
+        // Función para mostrar felicitaciones
+        function showCongratulations() {
+            document.getElementById('congrats').classList.add('show');
+            document.getElementById('finalXP').textContent = xp;
+            
+            // Sincronización de completado con el LMS principal
+            notifyLMS('complete', { xp: xp });
+            
+            // Pedir nombre para certificado
+            const name = prompt('¿Cuál es tu nombre para el certificado de ordenación?');
+            if (name && name.trim() !== '') {
+                document.getElementById('userName').textContent = name;
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Función para reiniciar juego
+        function restartGame() {
+            if (confirm('¿Quieres reiniciar el juego y comenzar de nuevo tu misión de servicio?')) {
+                xp = 0;
+                currentLevel = 1;
+                selectedAnswers = {};
+                completedMissions = 0;
+                
+                // Reset XP display
+                document.getElementById('xpCurrent').textContent = xp;
+                document.getElementById('xpProgress').style.width = '0%';
+                document.getElementById('currentLevel').textContent = currentLevel;
+                document.getElementById('levelDisplay').textContent = `NIVEL ${currentLevel}`;
+                document.querySelector('.progress-text').textContent = '0%';
+                document.getElementById('progressCircle').style.background = 
+                    'conic-gradient(var(--primary) 0%, var(--primary) 0%, #334155 0%, #334155 100%)';
+                
+                // Reset levels
+                document.getElementById('level2').classList.add('locked');
+                document.getElementById('level2').classList.remove('active');
+                document.getElementById('level3').classList.add('locked');
+                document.getElementById('level3').classList.remove('active');
+                document.getElementById('level1').classList.add('active');
+                
+                // Reset missions
+                document.querySelectorAll('.mission').forEach(m => {
+                    m.classList.remove('completed');
+                });
+                
+                // Reset quizzes
+                document.querySelectorAll('.quiz-option').forEach(o => {
+                    o.classList.remove('selected', 'correct', 'incorrect');
+                });
+                document.querySelectorAll('.quiz-btn').forEach(b => {
+                    b.disabled = false;
+                    b.textContent = 'Responder';
+                    b.className = 'quiz-btn';
+                });
+                document.querySelectorAll('.quiz-feedback').forEach(f => {
+                    f.className = 'quiz-feedback';
+                });
+                
+                // Reset badges
+                document.querySelectorAll('.badge').forEach(b => {
+                    b.classList.remove('unlocked');
+                });
+                
+                // Reset prayer
+                document.getElementById('prayerText').value = '';
+                
+                // Hide congratulations
+                document.getElementById('congrats').classList.remove('show');
+                
+                alert('¡Juego reiniciado! Comienza de nuevo tu misión como siervo del Señor.');
+            }
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ocultar botón de retorno si estamos en un iframe
+            if (window.self !== window.top) {
+                const backBtn = document.querySelector('.back-to-program');
+                if (backBtn) backBtn.style.display = 'none';
+            }
+
+            // Deshabilitar botones de quiz inicialmente
+            document.querySelectorAll('.quiz-btn').forEach(btn => {
+                btn.disabled = true;
+            });
+        });
+    </script>
+</body>
+</html>

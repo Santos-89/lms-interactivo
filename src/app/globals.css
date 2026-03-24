@@ -1,26 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;700;900&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
+@theme {
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Glassmorphism Palette - Indigo */
+  --primary: #6366F1; /* Indigo Vibrante */
+  --primary-hover: #4F46E5;
+  --secondary: #2F3A81; 
+  --success: #10B981;
+  --danger: #EF4444;
+  --warning: #F59E0B;
+  --background: #F8FAFC; 
+  --card-bg: rgba(255, 255, 255, 0.7); 
+  --text-main: #1E293B; 
+  --text-muted: #64748B; 
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --xp-bar: linear-gradient(90deg, #6366F1 0%, #818CF8 100%);
+  --bethel-red: #812726;
+  --bethel-blue: #2F3A81;
+}
+
+
+
+
+
+body {
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: 'Manrope', sans-serif;
+  min-height: 100vh;
+  /* Soporte para áreas seguras en iOS */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03); /* Very subtle shadow */
+  }
+
+  .text-gradient {
+    background: linear-gradient(90deg, #6366F1, #818CF8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+
+
