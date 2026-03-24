@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 
+export const dynamic = 'force-dynamic';
+
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
