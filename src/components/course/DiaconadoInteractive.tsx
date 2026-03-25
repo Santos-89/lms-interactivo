@@ -139,27 +139,39 @@ export default function DiaconadoInteractive() {
 
       const { data: progressData } = await supabase
         .from('user_progress')
-        .select('lesson_id')
+        .select('lesson_id, lessons(course_id)')
         .eq('user_id', session.user.id);
       
-      if (progressData) {
-        const completedIds = progressData.map(p => p.lesson_id);
-        const completedIndices: number[] = [];
-        const unlockedIndices: number[] = [0];
+        if (progressData) {
+          const completedIds = (progressData as any[]).map(p => p.lesson_id);
+          const completedIndices: number[] = [];
+          const unlockedIndices: number[] = [0];
 
-        LESSONS_DATA.forEach((_, idx) => {
-          const dbId = `${courseId}-interactivo-${idx + 1}`;
-          if (completedIds.includes(dbId)) {
-            completedIndices.push(idx);
-            if (idx + 1 < LESSONS_DATA.length) {
-              unlockedIndices.push(idx + 1);
-            }
+          // 1. Check by counting (Fallback robusto)
+          const diaconadoCount = (progressData as any[]).filter(p => 
+            p.lesson_id.includes('diaconado') || 
+            (p.lessons && (Array.isArray(p.lessons) ? p.lessons[0]?.course_id : (p.lessons as any).course_id) === 'diaconado')
+          ).length;
+          
+          for (let i = 0; i < diaconadoCount; i++) {
+            completedIndices.push(i);
+            if (i + 1 < LESSONS_DATA.length) unlockedIndices.push(i + 1);
           }
-        });
 
-        setCompletedLessons(completedIndices);
-        setUnlockedLessons([...new Set(unlockedIndices)]);
-      }
+          // 2. Check by fixed IDs (Compatibilidad)
+          LESSONS_DATA.forEach((_, idx) => {
+            const dbId = `${courseId}-interactivo-${idx + 1}`;
+            if (completedIds.includes(dbId) && !completedIndices.includes(idx)) {
+              completedIndices.push(idx);
+              if (idx + 1 < LESSONS_DATA.length) {
+                unlockedIndices.push(idx + 1);
+              }
+            }
+          });
+
+          setCompletedLessons([...new Set(completedIndices)]);
+          setUnlockedLessons([...new Set(unlockedIndices)]);
+        }
 
       const { data: profile } = await supabase
         .from('profiles')
@@ -273,10 +285,28 @@ export default function DiaconadoInteractive() {
       }
 
       if (user) {
-        const dbId = `${courseId}-interactivo-${activeLessonIdx + 1}`;
+        // Intentar registrar el progreso con un ID que SI exista en la DB
+        // Primero buscamos lecciones reales del curso en la DB
+        const { data: realLessons } = await supabase
+          .from('lessons')
+          .select('id')
+          .eq('course_id', courseId)
+          .order('order_index', { ascending: true });
+
+        let dbId = `${courseId}-interactivo-${activeLessonIdx + 1}`; // Fallback original
+        
+        if (realLessons && realLessons.length > activeLessonIdx) {
+          dbId = realLessons[activeLessonIdx].id; // Usar el ID REAL de la base de datos
+        }
+
         await supabase
           .from('user_progress')
-          .upsert({ user_id: user.id, lesson_id: dbId, course_id: courseId });
+          .upsert({ 
+            user_id: user.id, 
+            lesson_id: dbId, 
+            course_id: courseId,
+            completed_at: new Date().toISOString()
+          });
       }
     }
     setView('dashboard');

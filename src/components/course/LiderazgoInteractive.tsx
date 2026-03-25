@@ -187,17 +187,29 @@ export default function LiderazgoInteractive() {
       // 2. Obtener progreso de lecciones
       const { data: progressData } = await supabase
         .from('user_progress')
-        .select('lesson_id')
+        .select('lesson_id, lessons(course_id)')
         .eq('user_id', session.user.id);
       
       if (progressData) {
-        const completedIds = progressData.map(p => p.lesson_id);
+        const completedIds = (progressData as any[]).map(p => p.lesson_id);
         const completedIndices: number[] = [];
         const unlockedIndices: number[] = [0];
 
+        // 1. Check by counting (Fallback robusto)
+        const count = (progressData as any[]).filter(p => 
+          p.lesson_id.includes('liderazgo') || 
+          (p.lessons && (Array.isArray(p.lessons) ? p.lessons[0]?.course_id : (p.lessons as any).course_id) === 'liderazgo')
+        ).length;
+        
+        for (let i = 0; i < count; i++) {
+          completedIndices.push(i);
+          if (i + 1 < LESSONS_DATA.length) unlockedIndices.push(i + 1);
+        }
+
+        // 2. Check by fixed IDs (Compatibilidad)
         LESSONS_DATA.forEach((_, idx) => {
           const dbId = `${courseId}-leccion-${idx + 1}`;
-          if (completedIds.includes(dbId)) {
+          if (completedIds.includes(dbId) && !completedIndices.includes(idx)) {
             completedIndices.push(idx);
             if (idx + 1 < LESSONS_DATA.length) {
               unlockedIndices.push(idx + 1);
@@ -205,7 +217,7 @@ export default function LiderazgoInteractive() {
           }
         });
 
-        setCompletedLessons(completedIndices);
+        setCompletedLessons([...new Set(completedIndices)]);
         setUnlockedLessons([...new Set(unlockedIndices)]);
       }
 
@@ -325,10 +337,27 @@ export default function LiderazgoInteractive() {
 
       // Persistir en Supabase
       if (user) {
-        const dbId = `${courseId}-leccion-${activeLessonIdx + 1}`;
+        // Intentar registrar el progreso con un ID que SI exista en la DB
+        const { data: realLessons } = await supabase
+          .from('lessons')
+          .select('id')
+          .eq('course_id', courseId)
+          .order('order_index', { ascending: true });
+
+        let dbId = `${courseId}-leccion-${activeLessonIdx + 1}`; // Fallback
+        
+        if (realLessons && realLessons.length > activeLessonIdx) {
+          dbId = realLessons[activeLessonIdx].id;
+        }
+
         await supabase
           .from('user_progress')
-          .upsert({ user_id: user.id, lesson_id: dbId, course_id: courseId });
+          .upsert({ 
+            user_id: user.id, 
+            lesson_id: dbId, 
+            course_id: courseId,
+            completed_at: new Date().toISOString()
+          });
       }
     }
     setView('dashboard');
