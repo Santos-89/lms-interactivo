@@ -180,20 +180,22 @@ export default function AdminDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="glass p-6 rounded-3xl border-white/5"
+              className="bg-[#1e293b]/40 backdrop-blur-3xl p-8 rounded-[36px] border border-white/10 hover:border-primary/30 transition-all shadow-2xl"
             >
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center text-primary">
-                  {stat.icon}
+              <div className="flex items-center justify-between mb-6">
+                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+                  {React.cloneElement(stat.icon as React.ReactElement<any>, { className: "w-7 h-7" })}
                 </div>
                 {stat.isTrend && (
-                   <span className="text-xs font-black text-success bg-success/10 px-2 py-1 rounded-lg">
+                   <span className="text-xs font-black text-[#10b981] bg-[#10b981]/10 px-3 py-1.5 rounded-xl border border-[#10b981]/20">
                     {stat.value}
                   </span>
                 )}
               </div>
-              <p className="text-sm text-gray-400 font-bold uppercase tracking-tight mb-1">{stat.label}</p>
-              <h3 className="text-3xl font-black text-white font-outfit">{!stat.isTrend ? stat.value : 'Puntuación'}</h3>
+              <p className="text-[11px] text-slate-400 font-black uppercase tracking-[0.1em] mb-2">{stat.label}</p>
+              <h3 className="text-4xl font-black text-white font-outfit tracking-tighter">
+                {!stat.isTrend ? stat.value : 'Puntuación'}
+              </h3>
             </motion.div>
           ))}
         </div>
@@ -213,55 +215,67 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="glass rounded-[32px] overflow-hidden border-white/5">
+            <div className="bg-[#1e293b]/40 backdrop-blur-3xl rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="bg-white/5 text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
-                    <th className="px-8 py-4">Usuario</th>
-                    <th className="px-8 py-4">Puntos XP</th>
-                    <th className="px-8 py-4">Estado</th>
-                    <th className="px-8 py-4 text-right">Acciones</th>
+                  <tr className="bg-white/5 text-slate-400 text-[11px] font-black uppercase tracking-[0.2em]">
+                    <th className="px-10 py-6">Usuario</th>
+                    <th className="px-10 py-6">Progreso</th>
+                    <th className="px-10 py-6">Estado</th>
+                    <th className="px-10 py-6 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {profiles.length > 0 ? profiles.map((profile, i) => (
-                    <tr key={profile.id} className="group hover:bg-white/[0.02] transition-colors">
-                      <td className="px-8 py-6">
-                        <div className="flex items-center gap-4">
-                          <div className={`w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-black uppercase`}>
+                    <tr key={profile.id} className="group hover:bg-white/[0.03] transition-colors">
+                      <td className="px-10 py-8">
+                        <div className="flex items-center gap-5">
+                          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-[#818cf8] flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20`}>
                             {profile.first_name ? profile.first_name.charAt(0) : 'U'}
                           </div>
                           <div>
-                            <p className="text-white font-bold text-sm truncate max-w-[150px]">
+                            <p className="text-white font-black text-base mb-1">
                               {profile.first_name || 'Nuevo Usuario'} {profile.last_name || ''}
                             </p>
-                            <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter">
-                              {profile.is_admin ? 'Administrador' : 'Estudiante'}
+                            <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest">
+                                {profile.is_admin ? (
+                                    <span className="text-primary flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> Administrador</span>
+                                ) : 'Estudiante Activo'}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-8 py-6 text-white font-black text-sm">{profile.xp || 0} XP</td>
-                      <td className="px-8 py-6">
-                        <span className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest bg-success/10 text-success`}>
-                          Activo
+                      <td className="px-10 py-8">
+                        <div className="flex flex-col gap-2">
+                           <span className="text-white font-black text-sm">{profile.xp || 0} XP</span>
+                           <div className="w-32 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-primary" 
+                                style={{ width: `${Math.min((profile.xp || 0) / 10, 100)}%` }}
+                              ></div>
+                           </div>
+                        </div>
+                      </td>
+                      <td className="px-10 py-8">
+                        <span className={`text-[10px] font-black px-4 py-2 rounded-xl uppercase tracking-widest bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20`}>
+                          ONLINE
                         </span>
                       </td>
-                      <td className="px-8 py-6 text-right">
-                        <div className="flex justify-end gap-2 outline-none">
-                            <button className="p-2 hover:bg-white/10 rounded-lg text-gray-500 hover:text-white transition-all">
-                                <ArrowRight className="w-4 h-4" />
+                      <td className="px-10 py-8 text-right">
+                        <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
+                            <button className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-300 hover:text-white transition-all border border-white/5 hover:border-white/10 shadow-sm">
+                                <ArrowRight className="w-5 h-5" />
                             </button>
-                            <button className="p-2 hover:bg-red-500/10 rounded-lg text-gray-500 hover:text-red-500 transition-all">
-                                <Trash2 className="w-4 h-4" />
+                            <button className="p-3 bg-red-500/5 hover:bg-red-500/10 rounded-2xl text-red-400 hover:text-red-500 transition-all border border-red-500/10 shadow-sm">
+                                <Trash2 className="w-5 h-5" />
                             </button>
                         </div>
                       </td>
                     </tr>
                   )) : (
                     <tr>
-                      <td colSpan={4} className="px-8 py-20 text-center text-gray-500 font-bold uppercase text-xs tracking-widest">
-                        No se encontraron estudiantes registrados
+                      <td colSpan={4} className="px-10 py-24 text-center text-slate-500 font-black uppercase text-xs tracking-[0.3em]">
+                        No hay estudiantes para mostrar
                       </td>
                     </tr>
                   )}
@@ -272,11 +286,11 @@ export default function AdminDashboard() {
 
           {/* Content Management */}
           <div className="space-y-8">
-            <div className="glass p-8 rounded-[32px] border-primary/20 bg-primary/5">
-              <h3 className="text-xl font-black font-outfit text-white mb-2 uppercase tracking-wider">Gestión de Contenido</h3>
-              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-6">Añade o quita clases de los programas</p>
+            <div className="bg-[#1e293b]/60 backdrop-blur-3xl p-10 rounded-[40px] border border-primary/20 shadow-2xl">
+              <h3 className="text-2xl font-black font-outfit text-white mb-2 uppercase tracking-tighter">Gestión de Contenido</h3>
+              <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest mb-10">Añade o quita clases de los programas</p>
               
-              <div className="flex gap-2 mb-8">
+              <div className="flex gap-2.5 mb-10 overflow-x-auto pb-2 scrollbar-hide">
                 {['liderazgo', 'diaconado', 'maestros'].map((id) => (
                   <button
                     key={id}
@@ -284,8 +298,8 @@ export default function AdminDashboard() {
                         setSelectedCourse(id);
                         loadLessons(id);
                     }}
-                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                      selectedCourse === id ? 'bg-primary text-white' : 'bg-white/5 text-gray-500 hover:bg-white/10'
+                    className={`flex-1 min-w-[90px] py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-300 shadow-md ${
+                      selectedCourse === id ? 'bg-primary text-white shadow-primary/20 scale-[1.02]' : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/5'
                     }`}
                   >
                     {id}
@@ -293,36 +307,40 @@ export default function AdminDashboard() {
                 ))}
               </div>
 
-              <div className="space-y-4 mb-8 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-4 mb-10 max-h-[400px] overflow-y-auto pr-3 custom-scrollbar">
                 {lessons.map((lesson) => (
-                  <div key={lesson.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group">
+                  <motion.div 
+                    layout
+                    key={lesson.id} 
+                    className="flex items-center justify-between p-5 bg-[#0f172a]/50 rounded-2xl border border-white/5 hover:border-primary/20 transition-all group shadow-sm"
+                  >
                     <div>
-                      <p className="text-sm font-bold text-white leading-tight">{lesson.title}</p>
-                      <p className="text-[10px] text-gray-500 font-black uppercase mt-1">Orden: {lesson.order_index}</p>
+                      <p className="text-sm font-black text-white leading-[1.3] mb-1">{lesson.title}</p>
+                      <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">ID: {lesson.id}</p>
                     </div>
                     <button 
                       onClick={() => handleDeleteLesson(lesson.id)}
-                      className="p-2 text-gray-500 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                      className="p-3 bg-red-500/0 hover:bg-red-500/10 text-slate-500 hover:text-red-500 rounded-xl transition-all"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-4 bg-white/5 p-6 rounded-[28px] border border-white/5">
                 <input 
                   type="text" 
                   value={newLessonTitle}
                   onChange={(e) => setNewLessonTitle(e.target.value)}
                   placeholder="Título de la nueva lección..."
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-6 text-sm text-white focus:outline-none focus:border-primary transition-all font-medium"
+                  className="w-full bg-[#0f172a]/80 border border-white/10 rounded-2xl py-5 px-8 text-sm text-white focus:outline-none focus:border-primary transition-all font-bold placeholder:text-slate-600"
                 />
                 <button 
                   onClick={handleAddLesson}
-                  className="w-full py-4 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all flex items-center justify-center gap-2"
+                  className="w-full py-5 bg-primary text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-primary-hover hover:shadow-[0_15px_40px_rgba(99,102,241,0.3)] transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
                 >
-                  <Plus className="w-4 h-4" /> Añadir Lección
+                  <Plus className="w-5 h-5" /> Añadir Lección
                 </button>
               </div>
             </div>
