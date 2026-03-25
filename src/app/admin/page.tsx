@@ -23,15 +23,49 @@ import { useRouter } from 'next/navigation';
 export default function AdminDashboard() {
   const router = useRouter();
   const [isAdmin, setIsAdmin] = React.useState<boolean | null>(null);
-  const [profiles, setProfiles] = React.useState<any[]>([]);
-  const [courses, setCourses] = React.useState<any[]>([]);
-  const [stats, setStats] = React.useState({
-    students: 0,
-    courses: 0,
-    totalXp: 0,
-    certificates: 0
-  });
-  const [loading, setLoading] = React.useState(true);
+  const [lessons, setLessons] = React.useState<any[]>([]);
+  const [selectedCourse, setSelectedCourse] = React.useState<string>('liderazgo');
+  const [newLessonTitle, setNewLessonTitle] = React.useState('');
+
+  const loadLessons = React.useCallback(async (courseId: string) => {
+    const { data } = await supabase
+      .from('lessons')
+      .select('*')
+      .eq('course_id', courseId)
+      .order('order_index', { ascending: true });
+    setLessons(data || []);
+  }, []);
+
+  const handleAddLesson = async () => {
+    if (!newLessonTitle) return;
+    const nextOrder = lessons.length > 0 ? Math.max(...lessons.map(l => l.order_index || 0)) + 1 : 1;
+    
+    const { error } = await supabase
+      .from('lessons')
+      .insert([{
+        id: newLessonTitle.toLowerCase().replace(/\s+/g, '-'),
+        course_id: selectedCourse,
+        title: newLessonTitle,
+        xp_value: 100,
+        order_index: nextOrder
+      }]);
+
+    if (!error) {
+      setNewLessonTitle('');
+      loadLessons(selectedCourse);
+    }
+  };
+
+  const handleDeleteLesson = async (id: string) => {
+    const { error } = await supabase
+      .from('lessons')
+      .delete()
+      .eq('id', id);
+
+    if (!error) {
+      loadLessons(selectedCourse);
+    }
+  };
 
   React.useEffect(() => {
     async function checkAdminAndLoad() {
@@ -57,6 +91,7 @@ export default function AdminDashboard() {
 
       setIsAdmin(true);
       await loadData();
+      await loadLessons('liderazgo');
     }
 
     async function loadData() {
@@ -82,14 +117,14 @@ export default function AdminDashboard() {
         students: allProfiles?.length || 0,
         courses: allCourses?.length || 0,
         totalXp: totalXp,
-        certificates: Math.floor(totalXp / 1000) // Mock logic for certificates
+        certificates: Math.floor(totalXp / 1000)
       });
 
       setLoading(false);
     }
 
     checkAdminAndLoad();
-  }, [router]);
+  }, [router, loadLessons]);
 
   if (isAdmin === null || loading) {
     return (
@@ -226,26 +261,61 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Quick Actions / Activity */}
+          {/* Content Management */}
           <div className="space-y-8">
             <div className="glass p-8 rounded-[32px] border-primary/20 bg-primary/5">
-              <h3 className="text-xl font-black font-outfit text-white mb-6 uppercase tracking-wider">Cursos del Sistema</h3>
-              <div className="space-y-6">
-                {courses.map((course) => (
-                  <div key={course.id} className="flex gap-4 items-center">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-primary shrink-0">
-                        <BookOpen className="w-5 h-5" />
-                    </div>
+              <h3 className="text-xl font-black font-outfit text-white mb-2 uppercase tracking-wider">Gestión de Contenido</h3>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-6">Añade o quita clases de los programas</p>
+              
+              <div className="flex gap-2 mb-8">
+                {['liderazgo', 'diaconado', 'maestros'].map((id) => (
+                  <button
+                    key={id}
+                    onClick={() => {
+                        setSelectedCourse(id);
+                        loadLessons(id);
+                    }}
+                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                      selectedCourse === id ? 'bg-primary text-white' : 'bg-white/5 text-gray-500 hover:bg-white/10'
+                    }`}
+                  >
+                    {id}
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-4 mb-8 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                {lessons.map((lesson) => (
+                  <div key={lesson.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group">
                     <div>
-                      <p className="text-sm font-bold text-white leading-tight uppercase tracking-tight">{course.title}</p>
-                      <p className="text-[10px] text-gray-500 font-black mt-1">ID: {course.id}</p>
+                      <p className="text-sm font-bold text-white leading-tight">{lesson.title}</p>
+                      <p className="text-[10px] text-gray-500 font-black uppercase mt-1">Orden: {lesson.order_index}</p>
                     </div>
+                    <button 
+                      onClick={() => handleDeleteLesson(lesson.id)}
+                      className="p-2 text-gray-500 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
                   </div>
                 ))}
               </div>
-              <button className="w-full mt-8 py-4 glass border-white/10 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
-                Ver Todos los Cursos
-              </button>
+
+              <div className="space-y-3">
+                <input 
+                  type="text" 
+                  value={newLessonTitle}
+                  onChange={(e) => setNewLessonTitle(e.target.value)}
+                  placeholder="Título de la nueva lección..."
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-4 px-6 text-sm text-white focus:outline-none focus:border-primary transition-all font-medium"
+                />
+                <button 
+                  onClick={handleAddLesson}
+                  className="w-full py-4 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-4 h-4" /> Añadir Lección
+                </button>
+              </div>
             </div>
 
             <div className="glass p-8 rounded-[32px] border-white/5">
