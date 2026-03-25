@@ -303,9 +303,7 @@ export default function DiaconadoInteractive() {
           .from('user_progress')
           .upsert({ 
             user_id: user.id, 
-            lesson_id: dbId, 
-            course_id: courseId,
-            completed_at: new Date().toISOString()
+            lesson_id: dbId
           });
       }
     }
