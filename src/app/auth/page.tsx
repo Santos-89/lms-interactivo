@@ -80,8 +80,8 @@ export default function AuthPage() {
     switch: '¿No tienes cuenta? Regístrate',
     formTitle: 'INICIAR SESIÓN'
   } : {
-    title: 'Únete',
-    subtitle: 'Ahora',
+    title: 'Equípate',
+    subtitle: 'con Nosotros',
     tagline: 'Comienza tu formación hoy mismo',
     action: 'REGISTRARSE',
     switch: '¿Ya eres miembro? Inicia sesión',
@@ -133,7 +133,7 @@ export default function AuthPage() {
               exit={{ opacity: 0, x: 20 }}
               className="flex-1 flex flex-col justify-center"
             >
-              <h1 className={`${isLogin ? 'text-4xl md:text-5xl' : 'text-6xl md:text-7xl'} font-black font-outfit text-white leading-[1.1] mb-4`}>
+              <h1 className="text-4xl md:text-5xl font-black font-outfit text-white leading-[1.1] mb-4">
                 {tAuth.title}<br />
                 <span className="text-gradient pr-2">{tAuth.subtitle}</span>
               </h1>
