@@ -35,6 +35,14 @@ export default function AdminDashboard() {
     certificates: 0
   });
   const [loading, setLoading] = React.useState(true);
+  const [searchQuery, setSearchQuery] = React.useState('');
+
+  const filteredProfiles = React.useMemo(() => {
+    return profiles.filter(p => {
+      const searchStr = `${p.first_name} ${p.last_name} ${p.full_name} ${p.email}`.toLowerCase();
+      return searchStr.includes(searchQuery.toLowerCase());
+    });
+  }, [profiles, searchQuery]);
 
   const loadLessons = React.useCallback(async (courseId: string) => {
     const { data } = await supabase
@@ -73,6 +81,19 @@ export default function AdminDashboard() {
 
     if (!error) {
       loadLessons(selectedCourse);
+    }
+  };
+
+  const handleDeleteProfile = async (id: string, name: string) => {
+    if (!window.confirm(`¿Estás seguro de que deseas eliminar al estudiante "${name}"? Esta acción no se puede deshacer.`)) return;
+    
+    const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', id);
+
+    if (!error) {
+        setProfiles(prev => prev.filter(p => p.id !== id));
     }
   };
 
@@ -209,8 +230,10 @@ export default function AdminDashboard() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
                 <input 
                   type="text" 
-                  placeholder="Buscar alumno..." 
-                  className="bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-primary transition-all"
+                  placeholder="Buscar por nombre o email..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-primary transition-all w-64"
                 />
               </div>
             </div>
@@ -226,21 +249,23 @@ export default function AdminDashboard() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {profiles.length > 0 ? profiles.map((profile, i) => (
+                  {filteredProfiles.length > 0 ? filteredProfiles.map((profile, i) => (
                     <tr key={profile.id} className="group hover:bg-white/[0.03] transition-colors">
                       <td className="px-10 py-8">
                         <div className="flex items-center gap-5">
                           <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-[#818cf8] flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20`}>
-                            {profile.first_name ? profile.first_name.charAt(0) : 'U'}
+                            {(profile.first_name || profile.full_name || 'U').charAt(0)}
                           </div>
                           <div>
                             <p className="text-white font-black text-base mb-1">
-                              {profile.first_name || 'Nuevo Usuario'} {profile.last_name || ''}
+                              {profile.first_name || profile.full_name || 'Nuevo Usuario'} {profile.last_name || ''}
                             </p>
-                            <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest">
+                            <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest flex items-center gap-2">
                                 {profile.is_admin ? (
-                                    <span className="text-primary flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> Administrador</span>
-                                ) : 'Estudiante Activo'}
+                                    <span className="text-primary flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> ADMINISTRADOR</span>
+                                ) : 'ESTUDIANTE ACTIVO'}
+                                <span className="opacity-40">•</span>
+                                <span className="lowercase">{profile.email || 'sin email'}</span>
                             </p>
                           </div>
                         </div>
@@ -263,10 +288,16 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-10 py-8 text-right">
                         <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
-                            <button className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-300 hover:text-white transition-all border border-white/5 hover:border-white/10 shadow-sm">
+                            <button 
+                                onClick={() => alert(`Perfil: ${profile.first_name || profile.full_name}`)}
+                                className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-300 hover:text-white transition-all border border-white/5 hover:border-white/10 shadow-sm"
+                            >
                                 <ArrowRight className="w-5 h-5" />
                             </button>
-                            <button className="p-3 bg-red-500/5 hover:bg-red-500/10 rounded-2xl text-red-400 hover:text-red-500 transition-all border border-red-500/10 shadow-sm">
+                            <button 
+                                onClick={() => handleDeleteProfile(profile.id, profile.first_name || profile.full_name || 'estudiante')}
+                                className="p-3 bg-red-500/5 hover:bg-red-500/10 rounded-2xl text-red-400 hover:text-red-500 transition-all border border-red-500/10 shadow-sm"
+                            >
                                 <Trash2 className="w-5 h-5" />
                             </button>
                         </div>
@@ -275,7 +306,7 @@ export default function AdminDashboard() {
                   )) : (
                     <tr>
                       <td colSpan={4} className="px-10 py-24 text-center text-slate-500 font-black uppercase text-xs tracking-[0.3em]">
-                        No hay estudiantes para mostrar
+                        {searchQuery ? `No hay resultados para "${searchQuery}"` : "No hay estudiantes registrados"}
                       </td>
                     </tr>
                   )}
