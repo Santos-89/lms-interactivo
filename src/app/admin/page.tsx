@@ -237,9 +237,9 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-12">
-          {/* Students Table */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-16">
+          {/* Students Table - Full Width */}
+          <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-black font-outfit text-white uppercase tracking-tight">Estudiantes Registrados</h2>
               <div className="relative">
@@ -332,8 +332,9 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Content Management */}
-          <div className="space-y-8">
+          {/* Bottom Grid: Management + Security */}
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Content Management */}
             <div className="bg-[#1e293b]/60 backdrop-blur-3xl p-10 rounded-[40px] border border-primary/20 shadow-2xl">
               <h3 className="text-2xl font-black font-outfit text-white mb-2 uppercase tracking-tighter">Gestión de Contenido</h3>
               <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest mb-10">Añade o quita clases de los programas</p>
@@ -393,21 +394,24 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            <div className="glass p-8 rounded-[32px] border-white/5">
-              <h3 className="text-xl font-black font-outfit text-white mb-6 uppercase tracking-wider">Seguridad</h3>
-              <div className="p-4 bg-orange-500/10 border border-orange-500/20 rounded-2xl mb-6">
-                <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-1">Nota de Seguridad</p>
-                <p className="text-[10px] text-gray-400">Eres el administrador principal. Asegúrate de cerrar sesión al terminar.</p>
-              </div>
-              <button 
-                onClick={async () => {
-                    await supabase.auth.signOut();
-                    router.push('/auth');
-                }}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-red-500/10 text-red-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-red-500/20 transition-all border border-red-500/20"
-              >
-                <LogOut className="w-4 h-4" /> Desconectarse
-              </button>
+            {/* Security Block (Moved here inside grid) */}
+            <div className="glass p-10 rounded-[40px] border-white/5 flex flex-col justify-center">
+                <h3 className="text-2xl font-black font-outfit text-white mb-6 uppercase tracking-tighter flex items-center gap-3">
+                    <ShieldCheck className="w-6 h-6 text-orange-500" /> Seguridad
+                </h3>
+                <div className="p-8 bg-orange-500/10 border border-orange-500/20 rounded-[32px] mb-8">
+                    <p className="text-xs font-black text-orange-500 uppercase tracking-widest mb-2">Acceso Administrativo</p>
+                    <p className="text-sm text-slate-400 leading-relaxed font-bold">Estás en el panel de control maestro. Asegúrate de cerrar sesión al terminar para proteger los datos de la academia.</p>
+                </div>
+                <button 
+                    onClick={async () => {
+                        await supabase.auth.signOut();
+                        router.push('/auth');
+                    }}
+                    className="w-full flex items-center justify-center gap-4 py-6 bg-red-500/10 text-red-500 rounded-[28px] font-black text-sm uppercase tracking-widest hover:bg-red-500/20 hover:scale-[1.02] transition-all border border-red-500/20 active:scale-[0.98]"
+                >
+                    <LogOut className="w-5 h-5" /> Cerrar Sesión Segura
+                </button>
             </div>
           </div>
         </div>
