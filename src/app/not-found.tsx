@@ -32,7 +32,7 @@ export default function NotFound() {
           />
         </div>
         
-        <h1 className="text-4xl md:text-7xl font-black mb-8 tracking-tight uppercase font-outfit bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40 leading-[1.1]">
+        <h1 className="text-4xl md:text-7xl font-black mb-8 tracking-tight uppercase font-outfit bg-clip-text text-transparent bg-gradient-to-r from-[#6366F1] to-[#818CF8] leading-[1.1]">
           Próximamente
         </h1>
         
