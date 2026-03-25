@@ -253,9 +253,9 @@ export default function Home() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
               {courses.length > 0 ? courses.map((course, index) => {
                 const config = {
-                  diaconado: { bg: 'bg-[#F9DCC4]', circle: 'bg-[#F08E52]/20', img: '/illustrations/Diaconos.png' },
-                  liderazgo: { bg: 'bg-[#BDE0FE]', circle: 'bg-[#4895EF]/20', img: '/illustrations/Liderazgo.png' },
-                  maestros: { bg: 'bg-[#D0F4DE]', circle: 'bg-[#40916C]/20', img: '/illustrations/Maestros.png' }
+                  diaconado: { bg: 'bg-[#F9DCC4]', circle: 'bg-[#F08E52]/20', img: '/illustrations/diaconado.png' },
+                  liderazgo: { bg: 'bg-[#BDE0FE]', circle: 'bg-[#4895EF]/20', img: '/illustrations/liderazgo.png' },
+                  maestros: { bg: 'bg-[#D0F4DE]', circle: 'bg-[#40916C]/20', img: '/illustrations/maestros.png' }
                 } as any;
 
                 
