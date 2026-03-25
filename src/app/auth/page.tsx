@@ -73,19 +73,19 @@ export default function AuthPage() {
   };
 
   const tAuth = isLogin ? {
-    title: 'Welcome',
-    subtitle: 'Back',
+    title: 'Nos Alegra',
+    subtitle: 'tenerte de nuevo con nosotros',
     tagline: 'Tu portal a la academia espiritual',
-    action: 'SIGN IN',
-    switch: '¿No tienes cuenta? Registrate',
-    formTitle: 'SIGN IN'
+    action: 'INICIAR SESIÓN',
+    switch: '¿No tienes cuenta? Regístrate',
+    formTitle: 'INICIAR SESIÓN'
   } : {
     title: 'Únete',
     subtitle: 'Ahora',
     tagline: 'Comienza tu formación hoy mismo',
-    action: 'SIGN UP',
+    action: 'REGISTRARSE',
     switch: '¿Ya eres miembro? Inicia sesión',
-    formTitle: 'SIGN UP'
+    formTitle: 'REGISTRARSE'
   };
 
   return (
@@ -133,7 +133,7 @@ export default function AuthPage() {
               exit={{ opacity: 0, x: 20 }}
               className="flex-1 flex flex-col justify-center"
             >
-              <h1 className="text-6xl md:text-7xl font-black font-outfit text-white leading-[1.1] mb-4">
+              <h1 className={`${isLogin ? 'text-4xl md:text-5xl' : 'text-6xl md:text-7xl'} font-black font-outfit text-white leading-[1.1] mb-4`}>
                 {tAuth.title}<br />
                 <span className="text-gradient pr-2">{tAuth.subtitle}</span>
               </h1>
@@ -189,7 +189,7 @@ export default function AuthPage() {
                     exit={{ opacity: 0, height: 0 }}
                     className="relative"
                   >
-                    <label className="text-[9px] font-black text-white/60 uppercase tracking-widest mb-2 block">Name</label>
+                    <label className="text-[9px] font-black text-white/60 uppercase tracking-widest mb-2 block">Nombre Completo</label>
                     <input 
                       type="text" 
                       placeholder="Tu nombre completo"
@@ -203,7 +203,7 @@ export default function AuthPage() {
               </AnimatePresence>
 
               <div className="relative">
-                <label className="text-[9px] font-black text-white/60 uppercase tracking-widest mb-2 block">Email Address</label>
+                <label className="text-[9px] font-black text-white/60 uppercase tracking-widest mb-2 block">Correo Electrónico</label>
                 <input 
                   type="email" 
                   placeholder="ejemplo@correo.com"
@@ -215,7 +215,7 @@ export default function AuthPage() {
               </div>
 
               <div className="relative">
-                <label className="text-[9px] font-black text-white/60 uppercase tracking-widest mb-2 block">Password</label>
+                <label className="text-[9px] font-black text-white/60 uppercase tracking-widest mb-2 block">Contraseña</label>
                 <div className="flex items-center">
                   <input 
                     type={showPassword ? "text" : "password"} 
@@ -240,7 +240,7 @@ export default function AuthPage() {
                   disabled={loading}
                   className="px-10 py-4 bg-primary text-white rounded-xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-primary-hover transition-all shadow-[0_15px_30px_rgba(99,102,241,0.2)] active:scale-[0.98] disabled:opacity-50"
                 >
-                  {loading ? 'Processing...' : tAuth.action}
+                  {loading ? 'Procesando...' : tAuth.action}
                 </button>
                 
                 <div className="flex gap-4">
