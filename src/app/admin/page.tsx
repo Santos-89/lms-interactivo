@@ -36,6 +36,9 @@ export default function AdminDashboard() {
   });
   const [loading, setLoading] = React.useState(true);
   const [searchQuery, setSearchQuery] = React.useState('');
+  const [selectedStudent, setSelectedStudent] = React.useState<any | null>(null);
+  const [studentProgress, setStudentProgress] = React.useState<any[]>([]);
+  const [loadingProgress, setLoadingProgress] = React.useState(false);
 
   const filteredProfiles = React.useMemo(() => {
     return profiles.filter(p => {
@@ -95,6 +98,19 @@ export default function AdminDashboard() {
     if (!error) {
         setProfiles(prev => prev.filter(p => p.id !== id));
     }
+  };
+
+  const loadStudentProgress = async (student: any) => {
+    setSelectedStudent(student);
+    setLoadingProgress(true);
+    
+    const { data: progress } = await supabase
+      .from('user_progress')
+      .select('*, lessons(title, course_id)')
+      .eq('user_id', student.id);
+    
+    setStudentProgress(progress || []);
+    setLoadingProgress(false);
   };
 
   React.useEffect(() => {
@@ -289,9 +305,10 @@ export default function AdminDashboard() {
                       <td className="px-10 py-8 text-right">
                         <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
                             <button 
-                                onClick={() => alert(`Perfil: ${profile.first_name || profile.full_name}`)}
-                                className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-300 hover:text-white transition-all border border-white/5 hover:border-white/10 shadow-sm"
+                                onClick={() => loadStudentProgress(profile)}
+                                className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-300 hover:text-white transition-all border border-white/5 hover:border-white/10 shadow-sm flex items-center gap-2"
                             >
+                                <span className="text-[10px] font-black uppercase tracking-widest px-2">Ver Progreso</span>
                                 <ArrowRight className="w-5 h-5" />
                             </button>
                             <button 
@@ -395,6 +412,111 @@ export default function AdminDashboard() {
           </div>
         </div>
       </main>
+
+      {/* Student Detail Modal */}
+      {selectedStudent && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                onClick={() => setSelectedStudent(null)}
+                className="absolute inset-0 bg-black/80 backdrop-blur-md"
+            ></motion.div>
+            
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                className="bg-[#1e293b] w-full max-w-2xl rounded-[40px] border border-white/10 overflow-hidden relative z-10 shadow-2xl"
+            >
+                <div className="p-10 border-b border-white/5 bg-white/2">
+                    <div className="flex items-center gap-6 mb-8">
+                        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-[#818cf8] flex items-center justify-center text-white font-black text-3xl shadow-xl shadow-primary/30">
+                            {(selectedStudent.first_name || selectedStudent.full_name || 'U').charAt(0)}
+                        </div>
+                        <div>
+                            <h3 className="text-3xl font-black text-white font-outfit uppercase tracking-tighter">
+                                {selectedStudent.first_name || selectedStudent.full_name || 'Nuevo Usuario'} {selectedStudent.last_name || ''}
+                            </h3>
+                            <p className="text-slate-400 font-bold tracking-tight text-sm lowercase">{selectedStudent.email}</p>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
+                            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Puntos XP</p>
+                            <p className="text-xl font-black text-white">{selectedStudent.xp || 0}</p>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
+                            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Clases Completas</p>
+                            <p className="text-xl font-black text-white">{studentProgress.length}</p>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
+                            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Rango</p>
+                            <p className="text-xl font-black text-primary">Estudiante</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-10 max-h-[400px] overflow-y-auto custom-scrollbar">
+                    <div className="flex items-center justify-between mb-8">
+                        <h4 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
+                            <BookOpen className="w-4 h-4 text-primary" /> Historial de Progreso
+                        </h4>
+                        <span className="text-[10px] font-black text-slate-500 uppercase bg-white/5 px-3 py-1 rounded-lg">
+                            {studentProgress.length} Lecciones
+                        </span>
+                    </div>
+                    
+                    {loadingProgress ? (
+                        <div className="py-10 flex justify-center">
+                            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    ) : studentProgress.length > 0 ? (
+                        <div className="space-y-3">
+                            {/* Group by course to show enrollment */}
+                            {Array.from(new Set(studentProgress.map(p => p.lessons?.course_id))).map((courseId, cIdx) => (
+                                <div key={cIdx} className="mb-6 last:mb-0">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <div className="h-px flex-1 bg-white/5"></div>
+                                        <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">{courseId}</span>
+                                        <div className="h-px flex-1 bg-white/5"></div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        {studentProgress
+                                            .filter(p => p.lessons?.course_id === courseId)
+                                            .map((p: any, idx) => (
+                                                <div key={idx} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 group hover:border-white/10 transition-all">
+                                                    <div>
+                                                        <p className="text-xs font-black text-white mb-0.5 uppercase tracking-tight">{p.lessons?.title || 'Lección desconocida'}</p>
+                                                        <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{new Date(p.completed_at).toLocaleDateString()}</p>
+                                                    </div>
+                                                    <div className="w-8 h-8 rounded-lg bg-[#10b981]/10 flex items-center justify-center text-[#10b981]">
+                                                        <ShieldCheck className="w-4 h-4" />
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="py-10 text-center text-slate-500 font-black uppercase tracking-widest text-xs border-2 border-dashed border-white/5 rounded-[32px]">
+                            El estudiante aún no ha completado ninguna lección
+                        </div>
+                    )}
+                </div>
+
+                <div className="p-6 bg-white/2 border-t border-white/5 flex gap-4">
+                    <button 
+                        onClick={() => setSelectedStudent(null)}
+                        className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest border border-white/5 transition-all"
+                    >
+                        Cerrar Detalle
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+      )}
     </div>
   );
 }
