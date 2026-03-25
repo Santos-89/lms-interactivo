@@ -20,7 +20,7 @@ export default function NotFound() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 max-w-2xl px-4"
       >
-        <div className="w-24 h-24 bg-white border border-white/20 rounded-[40px] flex items-center justify-center mx-auto mb-10 shadow-2xl relative overflow-hidden p-3 shadow-blue-500/20">
+        <div className="w-24 h-24 bg-white border border-white/20 rounded-2xl flex items-center justify-center mx-auto mb-10 shadow-2xl relative overflow-hidden p-3 shadow-blue-500/20">
           <div className="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full"></div>
           <Image 
             src="/mbi-logo.png" 
