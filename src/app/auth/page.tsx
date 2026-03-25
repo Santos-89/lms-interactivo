@@ -71,20 +71,6 @@ export default function AuthPage() {
       setLoading(false);
     }
   };
-  
-  const handleOAuthLogin = async (provider: 'google' | 'facebook') => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/auth`,
-        },
-      });
-      if (error) throw error;
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
 
   const tAuth = isLogin ? {
     title: 'Nos Alegra',
@@ -259,32 +245,13 @@ export default function AuthPage() {
                 </div>
               </div>
 
-              <div className="pt-8 flex items-center justify-between gap-6">
+              <div className="pt-8 flex flex-col items-center gap-6">
                 <button 
                   disabled={loading}
-                  className="px-10 py-4 bg-primary text-white rounded-xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-primary-hover transition-all shadow-[0_15px_30px_rgba(99,102,241,0.2)] active:scale-[0.98] disabled:opacity-50"
+                  className="w-full py-5 bg-primary text-white rounded-2xl font-black text-[13px] uppercase tracking-[0.2em] hover:bg-primary-hover transition-all shadow-[0_15px_30px_rgba(99,102,241,0.2)] active:scale-[0.98] disabled:opacity-50"
                 >
                   {loading ? 'Procesando...' : tAuth.action}
                 </button>
-                
-                <div className="flex gap-4">
-                  <button 
-                    type="button" 
-                    onClick={() => handleOAuthLogin('google')}
-                    className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm group"
-                    title="Entrar con Google"
-                  >
-                    <Mail className="w-5 h-5 text-[#EA4335] group-hover:scale-110 transition-transform" />
-                  </button>
-                  <button 
-                    type="button" 
-                    onClick={() => handleOAuthLogin('facebook')}
-                    className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm group"
-                    title="Entrar con Facebook"
-                  >
-                    <Facebook className="w-5 h-5 text-[#1877F2] group-hover:scale-110 transition-transform" />
-                  </button>
-                </div>
               </div>
             </form>
           </div>
