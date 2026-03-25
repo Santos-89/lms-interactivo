@@ -1,21 +1,30 @@
 "use client";
-export const dynamic = 'force-dynamic';
-export const runtime = 'edge';
 
+// Hardcoded para Static Export (Cloudflare Free Tier)
+export function generateStaticParams() {
+  return [
+    { courseId: 'liderazgo' },
+    { courseId: 'diaconado' }
+  ];
+}
 
 import React from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
-import { motion } from 'framer-motion';
-import { BookOpen, CheckCircle, Lock, Play, Trophy, Clock, Users, ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { BookOpen, CheckCircle, Lock, Play, Trophy, Clock, Users, ArrowRight, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 import { supabase } from '@/lib/supabase';
+import LessonViewer from '@/components/lesson/LessonViewer';
 
 export default function CoursePage() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const courseId = params.courseId as string;
+  const currentLessonId = searchParams.get('lesson');
   
   const [course, setCourse] = React.useState<any>(null);
   const [lessons, setLessons] = React.useState<any[]>([]);
@@ -93,6 +102,30 @@ export default function CoursePage() {
 
   const completedCount = lessons.filter(l => userProgress.includes(l.id)).length;
   const progressPercentage = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
+
+  // Find current lesson index if we are in lesson mode
+  const currentLessonIndex = currentLessonId ? lessons.findIndex(l => l.id === currentLessonId) : -1;
+
+  if (currentLessonIndex !== -1) {
+    return (
+      <LessonViewer
+        courseId={courseId}
+        courseTitle={course.title}
+        lessons={lessons}
+        initialLessonIndex={currentLessonIndex}
+        initialCompletedLessons={userProgress}
+        onLessonComplete={async (lessonId) => {
+          if (user) {
+            await supabase.from('user_progress').insert({
+              user_id: user.id,
+              lesson_id: lessonId
+            });
+            setUserProgress(prev => [...prev, lessonId]);
+          }
+        }}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FDF8F5] pb-20">
@@ -176,8 +209,8 @@ export default function CoursePage() {
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <Link 
-                      href={`/cursos/${courseId}/lessons/${lesson.id}`}
+                    <button 
+                      onClick={() => router.push(`/cursos/${courseId}?lesson=${lesson.id}`)}
                       className="block bg-white group p-8 rounded-[40px] border border-transparent shadow-sm hover:shadow-2xl hover:shadow-orange-100/30 transition-all duration-500"
                     >
                       <div className="flex items-center gap-8">
@@ -205,7 +238,7 @@ export default function CoursePage() {
                           </div>
                         )}
                       </div>
-                    </Link>
+                    </button>
                   </motion.div>
                 );
               })}
@@ -235,7 +268,7 @@ export default function CoursePage() {
                 href={
                   courseId === 'liderazgo' ? '/cursos/liderazgo/interactivo' :
                   courseId === 'diaconado' ? '/cursos/diaconado/interactivo' :
-                  (lessons.length > 0 ? `/cursos/${courseId}/lessons/${lessons[0].id}` : '#')
+                  (lessons.length > 0 ? `/cursos/${courseId}?lesson=${lessons[0].id}` : '#')
                 }
                 className="w-full py-5 bg-[#FF6633] text-white rounded-[24px] font-black text-base flex items-center justify-center gap-3 shadow-xl shadow-orange-300 hover:bg-[#E85A1D] transition-all active:scale-95 group/btn"
               >
