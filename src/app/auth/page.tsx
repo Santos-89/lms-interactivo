@@ -110,8 +110,8 @@ export default function AuthPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-5xl bg-white/5 backdrop-blur-[80px] rounded-[40px] border border-white/30 shadow-[0_40px_100px_rgba(0,0,0,0.3)] flex flex-col md:flex-row overflow-hidden relative z-10"
       >
-        {/* Left Section: Welcome Info */}
-        <div className="w-full md:w-5/12 p-10 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10">
+        {/* Left Section: Welcome Info - Slightly darker for better contrast */}
+        <div className="w-full md:w-5/12 p-10 md:p-16 flex flex-col justify-center border-b md:border-b-0 md:border-r border-white/10 bg-black/5">
           <Link href="/" className="mb-12 flex items-center gap-3 group">
             <div className="relative w-10 h-10">
               <Image 
@@ -133,11 +133,11 @@ export default function AuthPage() {
               exit={{ opacity: 0, x: 20 }}
               className="flex-1 flex flex-col justify-center"
             >
-              <h1 className="text-4xl md:text-5xl font-black font-outfit text-white leading-[1.1] mb-4">
+              <h1 className="text-4xl md:text-5xl font-black font-outfit text-white leading-[1.1] mb-4 drop-shadow-md">
                 {tAuth.title}<br />
                 <span className="text-gradient pr-2">{tAuth.subtitle}</span>
               </h1>
-              <p className="text-white/70 text-sm font-medium tracking-wide mb-12">
+              <p className="text-white/80 text-sm font-medium tracking-wide mb-12 drop-shadow-sm">
                 {tAuth.tagline}
               </p>
 
