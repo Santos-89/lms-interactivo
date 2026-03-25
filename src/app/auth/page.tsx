@@ -142,10 +142,20 @@ export default function AuthPage() {
               </p>
 
               <div className="flex gap-6 mt-auto pt-8">
-                {[Instagram, Facebook, Youtube].map((Icon, idx) => (
-                  <button key={idx} className="text-white/40 hover:text-white transition-colors hover:scale-110">
+                {[
+                  { Icon: Instagram, url: 'https://instagram.com/ministeriobethel' },
+                  { Icon: Facebook, url: 'https://facebook.com/ministeriobethel' },
+                  { Icon: Youtube, url: 'https://youtube.com/@ministeriobethel' }
+                ].map(({ Icon, url }, idx) => (
+                  <a 
+                    key={idx} 
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white/40 hover:text-white transition-colors hover:scale-110"
+                  >
                     <Icon className="w-6 h-6" />
-                  </button>
+                  </a>
                 ))}
               </div>
             </motion.div>
