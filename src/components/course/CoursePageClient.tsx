@@ -167,7 +167,7 @@ export default function CoursePageClient({ courseId }: { courseId: string }) {
             className="w-full lg:w-[450px] aspect-[4/3] bg-[#F9DCC4] rounded-[48px] overflow-hidden relative shadow-2xl group"
           >
             <Image 
-              src={`/illustrations/${course.id === 'liderazgo' ? 'liderazgo' : course.id === 'diaconado' ? 'diaconado' : 'maestros'}.png`}
+              src={`/illustrations/${course.id === 'liderazgo' ? 'liderazgo' : course.id === 'diaconado' ? 'Diaconos' : 'maestros'}.png`}
               alt={course.title}
               fill
               className="object-contain p-8 group-hover:scale-105 transition-transform duration-700"
