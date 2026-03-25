@@ -143,9 +143,9 @@ export default function AuthPage() {
 
               <div className="flex gap-6 mt-auto pt-8">
                 {[
-                  { Icon: Instagram, url: 'https://instagram.com/ministeriobethel' },
-                  { Icon: Facebook, url: 'https://facebook.com/ministeriobethel' },
-                  { Icon: Youtube, url: 'https://youtube.com/@ministeriobethel' }
+                  { Icon: Instagram, url: 'https://www.instagram.com/ministeriobethel.ec' },
+                  { Icon: Facebook, url: 'https://www.facebook.com/ministeriobethelec' },
+                  { Icon: Youtube, url: 'https://www.youtube.com/@pastor.josuemejia' }
                 ].map(({ Icon, url }, idx) => (
                   <a 
                     key={idx} 
