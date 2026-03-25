@@ -108,18 +108,28 @@ export default function Home() {
   React.useEffect(() => {
     async function fetchCourses() {
       console.log('Fetching courses from Supabase...');
-      const { data, error } = await supabase
-        .from('courses')
-        .select('*')
-        .order('created_at', { ascending: true });
+      try {
+        const { data, error } = await supabase
+          .from('courses')
+          .select('*')
+          .order('created_at', { ascending: true });
 
-      if (error) {
-        console.error('Error fetching courses:', error);
-      } else {
-        console.log('Courses fetched successfully:', data);
-        setCourses(data || []);
+        if (error) {
+          console.error('Error fetching courses:', error);
+          setCourses(COURSES); // Fallback on error
+        } else if (!data || data.length === 0) {
+          console.log('No courses found in database, using fallback.');
+          setCourses(COURSES); // Fallback on empty
+        } else {
+          console.log('Courses fetched successfully:', data);
+          setCourses(data);
+        }
+      } catch (err) {
+        console.error('Unexpected error fetching courses:', err);
+        setCourses(COURSES);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     fetchCourses();
   }, []);
