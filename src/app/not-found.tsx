@@ -1,18 +1,50 @@
+"use client";
 
+import { Sparkles, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-950 text-white p-4">
-      <h1 className="text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-600 mb-4 ls-tight">
-        404
-      </h1>
-      <p className="text-xl text-slate-400 mb-8">Página no encontrada</p>
-      <a 
-        href="/"
-        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-xl transition-all font-medium"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#0A0F1E] text-white p-6 text-center relative overflow-hidden font-sans">
+      {/* Background Decor - Visual Excellence */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full animate-pulse"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full animate-pulse delay-700"></div>
+      </div>
+
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 max-w-2xl px-4"
       >
-        Volver al inicio
-      </a>
+        <div className="w-24 h-24 bg-white/5 border border-white/10 rounded-[32px] flex items-center justify-center mx-auto mb-10 shadow-2xl backdrop-blur-3xl relative">
+          <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full"></div>
+          <Sparkles className="w-12 h-12 text-blue-400 relative z-10 animate-pulse" />
+        </div>
+        
+        <h1 className="text-5xl md:text-8xl font-black mb-8 tracking-tighter uppercase font-outfit bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40 leading-[1.1]">
+          Próximamente
+        </h1>
+        
+        <p className="text-slate-400 text-lg md:text-2xl font-medium mb-16 max-w-lg mx-auto leading-relaxed italic">
+          Estamos preparando algo especial para ti. Esta sección estará lista muy pronto para acompañarte en tu formación.
+        </p>
+
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+            <Link 
+                href="/"
+                className="inline-flex items-center gap-4 px-12 py-6 bg-blue-600 text-white rounded-[28px] font-black text-sm uppercase tracking-widest hover:bg-blue-500 hover:translate-y-[-4px] transition-all shadow-2xl shadow-blue-900/40 active:translate-y-0 group"
+            >
+                <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" />
+                Volver al Inicio
+            </Link>
+        </div>
+      </motion.div>
+
+      {/* Subtle Grid Pattern Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
     </div>
   );
 }
