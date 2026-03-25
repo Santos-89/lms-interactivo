@@ -23,9 +23,18 @@ import { useRouter } from 'next/navigation';
 export default function AdminDashboard() {
   const router = useRouter();
   const [isAdmin, setIsAdmin] = React.useState<boolean | null>(null);
+  const [profiles, setProfiles] = React.useState<any[]>([]);
+  const [courses, setCourses] = React.useState<any[]>([]);
   const [lessons, setLessons] = React.useState<any[]>([]);
   const [selectedCourse, setSelectedCourse] = React.useState<string>('liderazgo');
   const [newLessonTitle, setNewLessonTitle] = React.useState('');
+  const [stats, setStats] = React.useState({
+    students: 0,
+    courses: 0,
+    totalXp: 0,
+    certificates: 0
+  });
+  const [loading, setLoading] = React.useState(true);
 
   const loadLessons = React.useCallback(async (courseId: string) => {
     const { data } = await supabase
