@@ -71,6 +71,20 @@ export default function AuthPage() {
       setLoading(false);
     }
   };
+  
+  const handleOAuthLogin = async (provider: 'google' | 'facebook') => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth`,
+        },
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
 
   const tAuth = isLogin ? {
     title: 'Nos Alegra',
@@ -254,11 +268,21 @@ export default function AuthPage() {
                 </button>
                 
                 <div className="flex gap-4">
-                  <button type="button" className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm group">
-                    <Chrome className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
+                  <button 
+                    type="button" 
+                    onClick={() => handleOAuthLogin('google')}
+                    className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm group"
+                    title="Entrar con Google"
+                  >
+                    <Mail className="w-5 h-5 text-[#EA4335] group-hover:scale-110 transition-transform" />
                   </button>
-                  <button type="button" className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm group">
-                    <Github className="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors" />
+                  <button 
+                    type="button" 
+                    onClick={() => handleOAuthLogin('facebook')}
+                    className="w-12 h-12 rounded-xl bg-white border border-slate-100 flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm group"
+                    title="Entrar con Facebook"
+                  >
+                    <Facebook className="w-5 h-5 text-[#1877F2] group-hover:scale-110 transition-transform" />
                   </button>
                 </div>
               </div>
