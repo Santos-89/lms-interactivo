@@ -1,8 +1,9 @@
 "use client";
 
-import { Sparkles, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function NotFound() {
   return (
@@ -19,12 +20,19 @@ export default function NotFound() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="relative z-10 max-w-2xl px-4"
       >
-        <div className="w-24 h-24 bg-white/5 border border-white/10 rounded-[32px] flex items-center justify-center mx-auto mb-10 shadow-2xl backdrop-blur-3xl relative">
-          <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full"></div>
-          <Sparkles className="w-12 h-12 text-blue-400 relative z-10 animate-pulse" />
+        <div className="w-24 h-24 bg-white/5 border border-white/10 rounded-[32px] flex items-center justify-center mx-auto mb-10 shadow-2xl backdrop-blur-3xl relative overflow-hidden p-4">
+          <div className="absolute inset-0 bg-blue-500/10 blur-2xl rounded-full"></div>
+          <Image 
+            src="/mbi-logo.png" 
+            alt="MBI Logo" 
+            width={60} 
+            height={60} 
+            className="relative z-10 drop-shadow-lg"
+            unoptimized
+          />
         </div>
         
-        <h1 className="text-5xl md:text-8xl font-black mb-8 tracking-tighter uppercase font-outfit bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40 leading-[1.1]">
+        <h1 className="text-4xl md:text-7xl font-black mb-8 tracking-tight uppercase font-outfit bg-clip-text text-transparent bg-gradient-to-b from-white to-white/40 leading-[1.1]">
           Próximamente
         </h1>
         
