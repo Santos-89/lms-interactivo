@@ -43,7 +43,7 @@ export default function NotFound() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <Link 
                 href="/"
-                className="inline-flex items-center gap-4 px-12 py-6 bg-blue-600 text-white rounded-[28px] font-black text-sm uppercase tracking-widest hover:bg-blue-500 hover:translate-y-[-4px] transition-all shadow-2xl shadow-blue-900/40 active:translate-y-0 group"
+                className="inline-flex items-center gap-4 px-12 py-5 bg-primary text-white rounded-2xl font-black text-[13px] uppercase tracking-[0.2em] hover:bg-primary-hover hover:translate-y-[-4px] transition-all shadow-[0_15px_30px_rgba(99,102,241,0.2)] active:translate-y-0 group"
             >
                 <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform" />
                 Volver al Inicio
