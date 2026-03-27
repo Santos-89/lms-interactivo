@@ -6,10 +6,12 @@ import {
   ArrowRight, BookMarked, MessageCircle, Sparkles, 
   Loader2, Lock, ChevronLeft, Layout, Check, Quote,
   Trophy, Target, Zap, AlertCircle, RefreshCw, Wand2, BrainCircuit, 
-  Info, Users, Flame, ScrollText
+  Info, Users, Flame, ScrollText, GraduationCap, Medal
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import CourseCertificate from './CourseCertificate';
 
 
 // --- CONFIGURACIÓN DE LA API DE GEMINI ---
@@ -155,7 +157,9 @@ export default function LiderazgoInteractive() {
   const [completedLessons, setCompletedLessons] = useState<number[]>([]);
   const [points, setPoints] = useState(0);
   const [user, setUser] = useState<any>(null);
+  const [profileData, setProfileData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showCertificate, setShowCertificate] = useState(false);
 
   // Estados de Lección
   const [currentStep, setCurrentStep] = useState(0); 
@@ -224,12 +228,13 @@ export default function LiderazgoInteractive() {
       // 3. Obtener XP del perfil
       const { data: profile } = await supabase
         .from('profiles')
-        .select('xp')
+        .select('xp, full_name')
         .eq('id', session.user.id)
         .single();
       
       if (profile) {
         setPoints(profile.xp || 0);
+        setProfileData(profile);
       }
 
       setLoading(false);
@@ -431,6 +436,16 @@ export default function LiderazgoInteractive() {
     );
   }
 
+  if (showCertificate) {
+    return (
+      <CourseCertificate 
+        courseTitle="Programa de Liderazgo" 
+        studentName={profileData?.full_name || user?.email || "Líder Cristiano"} 
+        onClose={() => setShowCertificate(false)} 
+      />
+    );
+  }
+
   if (view === 'dashboard') {
     return (
       <div className="min-h-screen bg-slate-50 p-6 md:p-12">
@@ -455,9 +470,40 @@ export default function LiderazgoInteractive() {
                   <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Experiencia Total</span>
                   <span className="text-indigo-600 font-black">{points} XP</span>
                 </div>
-                <ProgressBar current={points % 1000} total={1000} color="bg-gradient-to-r from-indigo-500 to-purple-600" />
+                <ProgressBar current={points % 1000} total={1000} color="bg-gradient-to-r from-indigo-500 to-amber-500" />
               </div>
             </div>
+
+            {/* Banner de Graduación / Certificado */}
+            {completedLessons.length === LESSONS_DATA.length && (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-12 bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-[3rem] p-8 md:p-12 text-white shadow-2xl relative overflow-hidden group"
+              >
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="flex items-center gap-6">
+                    <div className="w-20 h-20 bg-white/20 rounded-[2rem] flex items-center justify-center backdrop-blur-md shadow-inner">
+                      <Medal className="w-10 h-10 text-white" />
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-black mb-2">¡Misión Cumplida, Líder!</h2>
+                      <p className="text-indigo-100 font-medium opacity-90">Has completado satisfactoriamente el Programa de Liderazgo.</p>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => setShowCertificate(true)}
+                    className="w-full md:w-auto px-10 py-5 bg-white text-indigo-800 font-black rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3"
+                  >
+                    <GraduationCap className="w-6 h-6" />
+                    GENERAR MI CERTIFICADO
+                  </button>
+                </div>
+                {/* Decoración Fondo */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[100px] rounded-full translate-x-32 -translate-y-32"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-400/20 blur-[80px] rounded-full -translate-x-32 translate-y-32"></div>
+              </motion.div>
+            )}
           </header>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -742,6 +788,14 @@ export default function LiderazgoInteractive() {
         </div>
 
       </main>
+
+      {showCertificate && (
+        <CourseCertificate 
+          studentName={profileData?.full_name || user?.email || 'Estudiante'}
+          courseTitle="Programa de Liderazgo"
+          onClose={() => setShowCertificate(false)}
+        />
+      )}
     </div>
   );
 }
