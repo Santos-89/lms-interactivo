@@ -28,19 +28,35 @@ const TRANSLATIONS: any = {
 const Header = ({ language = 'es' }: { language?: string }) => {
   const supabase = createClient();
   const [user, setUser] = React.useState<any>(null);
+  const [profile, setProfile] = React.useState<any>(null);
   const router = useRouter();
   const t = TRANSLATIONS[language];
-
+  
   React.useEffect(() => {
-    // Get initial session
+    // 1. Obtener sesión inicial
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user || null);
+      const currentUser = session?.user || null;
+      setUser(currentUser);
+      if (currentUser) fetchProfile(currentUser.id);
     });
 
-    // Listen for auth changes
+    // 2. Escuchar cambios de autenticación
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
+      const currentUser = session?.user || null;
+      setUser(currentUser);
+      if (currentUser) fetchProfile(currentUser.id);
+      else setProfile(null);
     });
+
+    async function fetchProfile(userId: string) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('first_name, last_name, full_name')
+        .eq('id', userId)
+        .single();
+      
+      if (data) setProfile(data);
+    }
 
     return () => subscription.unsubscribe();
   }, []);
@@ -79,12 +95,34 @@ const Header = ({ language = 'es' }: { language?: string }) => {
         <div className="flex items-center gap-4">
           {user ? (
             <div className="flex items-center gap-4 bg-white/40 p-1.5 pr-4 rounded-full border border-white/60 backdrop-blur-md shadow-sm">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xs shadow-md">
-                {user.email?.substring(0, 2).toUpperCase()}
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-black text-[10px] shadow-lg shadow-primary/20">
+                {profile ? (
+                  (() => {
+                    const first = profile.first_name?.[0] || profile.full_name?.[0] || 'U';
+                    const last = profile.last_name?.[0] || (profile.full_name?.includes(' ') ? profile.full_name.split(' ').filter(Boolean).slice(-1)[0][0] : '');
+                    return (first + last).toUpperCase();
+                  })()
+                ) : (
+                  user.email?.substring(0, 2).toUpperCase()
+                )}
+              </div>
+              <div className="hidden lg:flex flex-col">
+                <span className="text-[10px] font-black text-[#1E293B] leading-none uppercase truncate max-w-[100px]">
+                  {profile ? (
+                    (() => {
+                      const nameParts = profile.full_name?.split(' ').filter(Boolean) || [profile.first_name];
+                      if (nameParts.length > 1) {
+                        return `${nameParts[0]} ${nameParts[1][0]}.`;
+                      }
+                      return nameParts[0] || 'Alumno';
+                    })()
+                  ) : 'Alumno'}
+                </span>
+                <span className="text-[8px] font-bold text-primary tracking-widest leading-none uppercase">Estudiante</span>
               </div>
               <button 
                 onClick={handleLogout}
-                className="px-4 py-1.5 bg-white/60 border border-white text-primary rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm"
+                className="px-4 py-1.5 bg-white/60 border border-white text-primary rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm ml-2"
               >
                 {t.exit}
               </button>

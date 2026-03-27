@@ -270,7 +270,11 @@ export default function AdminDashboard() {
                       <td className="px-10 py-8">
                         <div className="flex items-center gap-5">
                           <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-[#818cf8] flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20`}>
-                            {(profile.first_name || profile.full_name || 'U').charAt(0)}
+                            {(() => {
+                              const first = profile.first_name?.[0] || profile.full_name?.[0] || 'U';
+                              const last = profile.last_name?.[0] || (profile.full_name?.includes(' ') ? profile.full_name.split(' ').filter(Boolean).slice(-1)[0][0] : '');
+                              return (first + last).toUpperCase();
+                            })()}
                           </div>
                           <div>
                             <p className="text-white font-black text-base mb-1">

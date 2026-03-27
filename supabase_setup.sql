@@ -9,12 +9,14 @@
 -- 5. Pega este código y dale al botón verde "Run".
 -- ==============================================================================
 
--- 1. Crear tabla de PERFILES (Gamificación XP)
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   first_name TEXT,
   last_name TEXT,
+  full_name TEXT,
+  email TEXT,
   xp INTEGER DEFAULT 0 NOT NULL,
+  is_admin BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -55,7 +57,13 @@ ALTER TABLE public.user_progress ENABLE ROW LEVEL SECURITY;
 -- 6. Crear Políticas de Seguridad (Quién puede ver/editar qué)
 -- Profiles
 CREATE POLICY "Usuarios pueden ver su propio perfil" ON public.profiles FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Admins pueden ver todos los perfiles" ON public.profiles FOR SELECT USING (
+  (SELECT is_admin FROM public.profiles WHERE id = auth.uid()) = TRUE OR auth.uid() = id
+);
 CREATE POLICY "Usuarios pueden actualizar su XP" ON public.profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Admins pueden borrar perfiles" ON public.profiles FOR DELETE USING (
+  (SELECT is_admin FROM public.profiles WHERE id = auth.uid()) = TRUE
+);
 
 -- Courses y Lessons (Todos los usuarios logueados pueden ver el catálogo)
 CREATE POLICY "Todos pueden ver los cursos" ON public.courses FOR SELECT USING (true);
@@ -70,8 +78,16 @@ CREATE POLICY "Usuarios actualizan su progreso" ON public.user_progress FOR UPDA
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, first_name, last_name, xp)
-  VALUES (new.id, new.raw_user_meta_data->>'first_name', new.raw_user_meta_data->>'last_name', 0);
+  INSERT INTO public.profiles (id, first_name, last_name, full_name, email, xp, is_admin)
+  VALUES (
+    new.id, 
+    new.raw_user_meta_data->>'first_name', 
+    new.raw_user_meta_data->>'last_name', 
+    new.raw_user_meta_data->>'full_name', 
+    new.email, 
+    0,
+    FALSE
+  );
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

@@ -58,6 +58,8 @@ export default function AuthPage() {
           options: {
             data: {
               full_name: fullName,
+              first_name: fullName.split(' ')[0],
+              last_name: fullName.split(' ').slice(1).join(' '),
             },
           },
         });
