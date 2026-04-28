@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Award, Download, Printer, X, ShieldCheck, Star, Camera, Loader2 } from 'lucide-react';
+import { Award, Printer, X, ShieldCheck, Star } from 'lucide-react';
 import Image from 'next/image';
-import html2canvas from 'html2canvas';
 
 interface CertificateProps {
   studentName: string;
@@ -20,7 +19,6 @@ const CourseCertificate: React.FC<CertificateProps> = ({
 }) => {
   
   const [scale, setScale] = useState(1);
-  const [isDownloading, setIsDownloading] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,44 +39,9 @@ const CourseCertificate: React.FC<CertificateProps> = ({
   }, []);
 
   const handlePrint = () => {
-    // NUEVA LÓGICA: Abrir página de impresión dedicada para evitar el fondo del admin
+    // Abrir página de impresión dedicada
     const printUrl = `/print-certificate?name=${encodeURIComponent(studentName)}&course=${encodeURIComponent(courseTitle)}`;
     window.open(printUrl, '_blank');
-  };
-
-  const handleDownloadImage = async () => {
-    if (!certificateRef.current) return;
-    
-    setIsDownloading(true);
-    try {
-      const element = certificateRef.current;
-      const canvas = await html2canvas(element, {
-        scale: 2, 
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff',
-        width: 1050,
-        height: 740,
-        onclone: (clonedDoc) => {
-          const clonedElement = clonedDoc.querySelector('.certificate-body') as HTMLElement;
-          if (clonedElement) {
-            clonedElement.style.transform = 'none';
-            clonedElement.style.position = 'relative';
-          }
-        }
-      });
-      
-      const image = canvas.toDataURL("image/png", 1.0);
-      const link = document.createElement('a');
-      link.download = `Certificado-${studentName.replace(/\s+/g, '-')}.png`;
-      link.href = image;
-      link.click();
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error al generar imagen. Prueba con el botón 'IMPRIMIR PDF'.");
-    } finally {
-      setIsDownloading(false);
-    }
   };
 
   const getNameFontSize = (name: string) => {
@@ -93,27 +56,18 @@ const CourseCertificate: React.FC<CertificateProps> = ({
       {/* Botones de Acción Superiores */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 flex flex-wrap justify-end gap-2 md:gap-3 no-print z-[210]">
         <button 
-          onClick={handleDownloadImage}
-          disabled={isDownloading}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl font-black shadow-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50 text-xs md:text-sm"
-        >
-          {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-          {isDownloading ? 'PROCESANDO...' : 'DESCARGAR FOTO'}
-        </button>
-        
-        <button 
           onClick={handlePrint}
-          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl font-black shadow-xl transition-all hover:scale-105 active:scale-95 text-xs md:text-sm"
+          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-5 md:px-8 py-2 md:py-4 rounded-xl md:rounded-2xl font-black shadow-xl transition-all hover:scale-105 active:scale-95 text-xs md:text-sm"
         >
-          <Printer className="w-4 h-4" />
-          IMPRIMIR PDF
+          <Printer className="w-5 h-5" />
+          IMPRIMIR CERTIFICADO (PDF)
         </button>
         
         <button 
           onClick={onClose}
-          className="p-2 md:p-3 bg-white/10 hover:bg-white/20 text-white rounded-xl md:rounded-2xl transition-all"
+          className="p-2 md:p-4 bg-white/10 hover:bg-white/20 text-white rounded-xl md:rounded-2xl transition-all"
         >
-          <X className="w-5 h-5 md:w-6 md:h-6" />
+          <X className="w-6 h-6" />
         </button>
       </div>
 
