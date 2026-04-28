@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Award, Download, Printer, X, ShieldCheck, Star, Camera } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Award, Download, Printer, X, ShieldCheck, Star, Camera, Loader2 } from 'lucide-react';
 import Image from 'next/image';
+import html2canvas from 'html2canvas';
 
 interface CertificateProps {
   studentName: string;
@@ -19,20 +20,18 @@ const CourseCertificate: React.FC<CertificateProps> = ({
 }) => {
   
   const [scale, setScale] = useState(1);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
-      // Forzar dimensiones de certificado profesional (Relación A4 Landscape)
       const certWidth = 1050;
       const certHeight = 740;
-      
       const padding = 40;
       const availableWidth = window.innerWidth - padding;
       const availableHeight = window.innerHeight - padding;
-      
       const scaleW = availableWidth / certWidth;
       const scaleH = availableHeight / certHeight;
-      
       setScale(Math.min(1, scaleW, scaleH));
     };
 
@@ -47,7 +46,34 @@ const CourseCertificate: React.FC<CertificateProps> = ({
     }
   };
 
-  // Función para determinar el tamaño del nombre según su longitud
+  const handleDownloadImage = async () => {
+    if (!certificateRef.current) return;
+    
+    setIsDownloading(true);
+    try {
+      // Pequeña pausa para asegurar que las fuentes y estilos estén listos
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const canvas = await html2canvas(certificateRef.current, {
+        scale: 2, // Doble resolución para que se vea nítido
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false
+      });
+      
+      const image = canvas.toDataURL("image/png", 1.0);
+      const link = document.createElement('a');
+      link.download = `Certificado-${studentName.replace(/\s+/g, '-')}.png`;
+      link.href = image;
+      link.click();
+    } catch (error) {
+      console.error("Error al descargar el certificado:", error);
+      alert("Hubo un problema al generar la imagen. Por favor, intenta usar el botón de imprimir.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const getNameFontSize = (name: string) => {
     if (name.length > 30) return 'text-3xl';
     if (name.length > 20) return 'text-4xl';
@@ -55,17 +81,27 @@ const CourseCertificate: React.FC<CertificateProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/95 backdrop-blur-md p-4 animate-in fade-in duration-500 overflow-hidden print:static print:bg-white print:p-0">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/95 backdrop-blur-md p-4 animate-in fade-in duration-500 overflow-hidden print:static print:bg-white print:p-0">
       
       {/* Botones de Acción Superiores */}
-      <div className="absolute top-6 right-6 flex gap-3 no-print z-50">
+      <div className="absolute top-6 right-6 flex flex-wrap justify-end gap-3 no-print z-50">
+        <button 
+          onClick={handleDownloadImage}
+          disabled={isDownloading}
+          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-2xl font-black shadow-xl transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+        >
+          {isDownloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
+          {isDownloading ? 'GENERANDO...' : 'DESCARGAR IMAGEN'}
+        </button>
+        
         <button 
           onClick={handlePrint}
-          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-2xl font-black shadow-xl transition-all hover:scale-105 active:scale-95"
+          className="flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-2xl font-black shadow-xl transition-all hover:scale-105 active:scale-95"
         >
           <Printer className="w-5 h-5" />
           IMPRIMIR / PDF
         </button>
+        
         <button 
           onClick={onClose}
           className="p-3 bg-white/10 hover:bg-white/20 text-white rounded-2xl transition-all"
@@ -76,6 +112,7 @@ const CourseCertificate: React.FC<CertificateProps> = ({
 
       {/* Contenedor del Certificado */}
       <div 
+        ref={certificateRef}
         className="bg-white relative shadow-[0_50px_100px_rgba(0,0,0,0.6)] overflow-hidden origin-center print:shadow-none print:m-0 print:!transform-none"
         style={{ 
           width: '1050px', 
