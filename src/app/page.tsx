@@ -65,6 +65,20 @@ const TRANSLATIONS: any = {
       resources: "Recursos",
       enter: "Entrar",
       exit: "Salir"
+    },
+    courses: {
+      diaconado: {
+        title: "Diaconado",
+        description: "Aprende sobre el ministerio del diaconado, sus responsabilidades y cómo servir con excelencia."
+      },
+      liderazgo: {
+        title: "Liderazgo",
+        description: "Desarrolla habilidades de liderazgo cristiano y aprende a guiar a otros con sabiduría y amor."
+      },
+      maestros: {
+        title: "Maestros",
+        description: "Capacítate para enseñar la Palabra de Dios de manera efectiva y transformadora."
+      }
     }
   },
   en: {
@@ -94,6 +108,20 @@ const TRANSLATIONS: any = {
       resources: "Resources",
       enter: "Log in",
       exit: "Log out"
+    },
+    courses: {
+      diaconado: {
+        title: "Diaconate",
+        description: "Learn about the ministry of the diaconate, its responsibilities, and how to serve with excellence."
+      },
+      liderazgo: {
+        title: "Leadership",
+        description: "Develop Christian leadership skills and learn to guide others with wisdom and love."
+      },
+      maestros: {
+        title: "Teachers",
+        description: "Train to teach the Word of God effectively and transformatively."
+      }
     }
   }
 };
@@ -288,10 +316,28 @@ export default function Home() {
                       {/* Content Area */}
                       <div className="relative z-20">
                         <h3 className="text-3xl font-black font-outfit text-[#1E293B] mb-6 leading-none tracking-tighter uppercase whitespace-pre-line">
-                          {course.title}
+                          {(() => {
+                            const id = course.id?.toLowerCase() || '';
+                            const title = course.title?.toLowerCase() || '';
+                            const translation = 
+                              t.courses[id] || 
+                              (title.includes('diaconado') ? t.courses.diaconado : null) ||
+                              (title.includes('liderazgo') ? t.courses.liderazgo : null) ||
+                              (title.includes('maestros') ? t.courses.maestros : null);
+                            return translation ? translation.title : course.title;
+                          })()}
                         </h3>
                         <p className="text-[#64748B] font-medium text-lg leading-relaxed mb-12 line-clamp-3">
-                          {course.description}
+                          {(() => {
+                            const id = course.id?.toLowerCase() || '';
+                            const title = course.title?.toLowerCase() || '';
+                            const translation = 
+                              t.courses[id] || 
+                              (title.includes('diaconado') ? t.courses.diaconado : null) ||
+                              (title.includes('liderazgo') ? t.courses.liderazgo : null) ||
+                              (title.includes('maestros') ? t.courses.maestros : null);
+                            return translation ? translation.description : course.description;
+                          })()}
                         </p>
 
                         {/* Botón de Acción Único */}
