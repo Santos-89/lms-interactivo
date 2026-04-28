@@ -1,106 +1,92 @@
 "use client";
 
-import React from 'react';
-import Header from '@/components/layout/Header';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 import { 
-  Users, 
-  BookOpen, 
-  Plus, 
-  Search, 
-  MoreVertical,
-  TrendingUp,
-  Award,
-  Settings,
-  ShieldCheck,
-  LogOut,
-  ArrowRight,
-  Trash2
-} from 'lucide-react';
-import { supabase } from '@/lib/supabase';
-import { useRouter } from 'next/navigation';
+  Users, BookOpen, GraduationCap, TrendingUp, Search, 
+  ChevronRight, Calendar, Mail, Shield, Award, 
+  Clock, Plus, Trash2, Edit2, ShieldCheck, X, 
+  Settings, Database, CheckCircle, AlertCircle, Printer
+} from "lucide-react";
+import Link from "next/link";
+import CourseCertificate from "@/components/course/CourseCertificate";
+
+interface Profile {
+  id: string;
+  full_name: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  xp: number;
+  is_admin: boolean;
+  created_at: string;
+}
+
+interface Lesson {
+  id: string;
+  title: string;
+  course_id: string;
+  order_index: number;
+}
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const [isAdmin, setIsAdmin] = React.useState<boolean | null>(null);
-  const [profiles, setProfiles] = React.useState<any[]>([]);
-  const [courses, setCourses] = React.useState<any[]>([]);
-  const [lessons, setLessons] = React.useState<any[]>([]);
-  const [selectedCourse, setSelectedCourse] = React.useState<string>('liderazgo');
-  const [newLessonTitle, setNewLessonTitle] = React.useState('');
-  const [stats, setStats] = React.useState({
-    students: 0,
-    courses: 0,
-    totalXp: 0,
-    certificates: 0
-  });
-  const [loading, setLoading] = React.useState(true);
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [selectedStudent, setSelectedStudent] = React.useState<any | null>(null);
-  const [studentProgress, setStudentProgress] = React.useState<any[]>([]);
-  const [loadingProgress, setLoadingProgress] = React.useState(false);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState<Profile | null>(null);
+  const [studentProgress, setStudentProgress] = useState<any[]>([]);
+  const [loadingProgress, setLoadingProgress] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Gestión de Lecciones
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [newLesson, setNewLesson] = useState({ title: "", course_id: "liderazgo", order_index: 0 });
+  const [isAddingLesson, setIsAddingLesson] = useState(false);
 
-  const filteredProfiles = React.useMemo(() => {
-    return profiles.filter(p => {
-      const searchStr = `${p.first_name} ${p.last_name} ${p.full_name} ${p.email}`.toLowerCase();
-      return searchStr.includes(searchQuery.toLowerCase());
-    });
-  }, [profiles, searchQuery]);
+  // Certificado
+  const [showCertificate, setShowCertificate] = useState(false);
+  const [certCourse, setCertCourse] = useState("Programa de Diaconado");
 
-  const loadLessons = React.useCallback(async (courseId: string) => {
-    const { data } = await supabase
-      .from('lessons')
-      .select('*')
-      .eq('course_id', courseId)
-      .order('order_index', { ascending: true });
-    setLessons(data || []);
+  useEffect(() => {
+    checkAdmin();
+    fetchData();
   }, []);
 
-  const handleAddLesson = async () => {
-    if (!newLessonTitle) return;
-    const nextOrder = lessons.length > 0 ? Math.max(...lessons.map(l => l.order_index || 0)) + 1 : 1;
+  const checkAdmin = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', user.id)
+      .single();
     
-    const { error } = await supabase
-      .from('lessons')
-      .insert([{
-        id: newLessonTitle.toLowerCase().replace(/\s+/g, '-'),
-        course_id: selectedCourse,
-        title: newLessonTitle,
-        xp_value: 100,
-        order_index: nextOrder
-      }]);
-
-    if (!error) {
-      setNewLessonTitle('');
-      loadLessons(selectedCourse);
-    }
+    setIsAdmin(!!profile?.is_admin);
   };
 
-  const handleDeleteLesson = async (id: string) => {
-    const { error } = await supabase
-      .from('lessons')
-      .delete()
-      .eq('id', id);
-
-    if (!error) {
-      loadLessons(selectedCourse);
-    }
-  };
-
-  const handleDeleteProfile = async (id: string, name: string) => {
-    if (!window.confirm(`¿Estás seguro de que deseas eliminar al estudiante "${name}"? Esta acción no se puede deshacer.`)) return;
+  const fetchData = async () => {
+    setLoading(true);
     
-    const { error } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', id);
+    const { data: profilesData } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('xp', { ascending: false });
+    
+    if (profilesData) setProfiles(profilesData);
 
-    if (!error) {
-        setProfiles(prev => prev.filter(p => p.id !== id));
-    }
+    const { data: lessonsData } = await supabase
+      .from('lessons')
+      .select('*')
+      .order('course_id', { ascending: true })
+      .order('order_index', { ascending: true });
+    
+    if (lessonsData) setLessons(lessonsData);
+    
+    setLoading(false);
   };
 
-  const loadStudentProgress = async (student: any) => {
+  const loadStudentProgress = async (student: Profile) => {
     setSelectedStudent(student);
     setLoadingProgress(true);
     
@@ -109,343 +95,268 @@ export default function AdminDashboard() {
       .select('*, lessons(title, course_id)')
       .eq('user_id', student.id);
     
-    setStudentProgress(progress || []);
+    if (progress) setStudentProgress(progress);
     setLoadingProgress(false);
   };
 
-  React.useEffect(() => {
-    async function checkAdminAndLoad() {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        router.push('/auth');
-        return;
-      }
+  const promoteToAdmin = async (id: string, currentStatus: boolean) => {
+    if (!confirm(`¿Estás seguro de que quieres ${currentStatus ? 'quitar' : 'dar'} permisos de administrador?`)) return;
+    
+    const { error } = await supabase
+      .from('profiles')
+      .update({ is_admin: !currentStatus })
+      .eq('id', id);
+    
+    if (!error) fetchData();
+  };
 
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('is_admin')
-        .eq('id', session.user.id)
-        .single();
-
-      if (profileError || !profile?.is_admin) {
-        console.error('Acceso denegado: No eres administrador');
-        setIsAdmin(false);
-        router.push('/');
-        return;
-      }
-
-      setIsAdmin(true);
-      await loadData();
-      await loadLessons('liderazgo');
+  const handleAddLesson = async () => {
+    const { error } = await supabase
+      .from('lessons')
+      .insert([newLesson]);
+    
+    if (!error) {
+      setNewLesson({ title: "", course_id: "liderazgo", order_index: 0 });
+      setIsAddingLesson(false);
+      fetchData();
     }
+  };
 
-    async function loadData() {
-      // Fetch all profiles
-      const { data: allProfiles } = await supabase
-        .from('profiles')
-        .select('*')
-        .order('xp', { ascending: false });
-      
-      setProfiles(allProfiles || []);
+  const deleteLesson = async (id: string) => {
+    if (!confirm("¿Eliminar esta lección?")) return;
+    const { error } = await supabase.from('lessons').delete().eq('id', id);
+    if (!error) fetchData();
+  };
 
-      // Fetch all courses
-      const { data: allCourses } = await supabase
-        .from('courses')
-        .select('*');
-      
-      setCourses(allCourses || []);
+  const filteredProfiles = profiles.filter(p => {
+    const searchStr = `${p.first_name} ${p.last_name} ${p.full_name} ${p.email || ''}`.toLowerCase();
+    return searchStr.includes(searchTerm.toLowerCase());
+  });
 
-      // Calculate stats
-      const totalXp = allProfiles?.reduce((acc, p) => acc + (p.xp || 0), 0) || 0;
-      
-      setStats({
-        students: allProfiles?.length || 0,
-        courses: allCourses?.length || 0,
-        totalXp: totalXp,
-        certificates: Math.floor(totalXp / 1000)
-      });
-
-      setLoading(false);
-    }
-
-    checkAdminAndLoad();
-  }, [router, loadLessons]);
-
-  if (isAdmin === null || loading) {
+  if (!isAdmin && !loading) {
     return (
-      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
+        <Shield className="w-16 h-16 text-slate-800 mb-6" />
+        <h1 className="text-2xl font-black text-white mb-2">Acceso Restringido</h1>
+        <p className="text-slate-500 mb-8">Esta área es solo para personal autorizado del ministerio.</p>
+        <Link href="/" className="bg-primary text-white font-black px-8 py-3 rounded-xl">Volver al Inicio</Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-20 bg-[#0f172a]">
-      <Header />
-      
-      <main className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 pt-8">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <ShieldCheck className="w-5 h-5 text-primary" />
-              <span className="text-primary font-black text-[10px] uppercase tracking-widest">Admin Mode</span>
-            </div>
-            <h1 className="text-4xl font-black font-outfit text-white mb-2 uppercase tracking-tight">Panel de <span className="text-primary">Control</span></h1>
-            <p className="text-gray-500 font-medium">Gestiona tu academia y monitorea el crecimiento espiritual de tus estudiantes.</p>
+    <div className="min-h-screen bg-[#020617] text-slate-200">
+      {/* Sidebar / Header */}
+      <div className="fixed top-0 left-0 right-0 h-20 bg-slate-900/50 backdrop-blur-xl border-b border-white/5 z-40 px-8 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+            <ShieldCheck className="text-white w-6 h-6" />
           </div>
-          <div className="flex gap-4">
-            <button className="flex items-center justify-center gap-2 px-6 py-4 bg-white/5 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-white/10 transition-all border border-white/10">
-              <Settings className="w-5 h-5" /> Configuración
-            </button>
-            <button className="flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] transition-all">
-              <Plus className="w-5 h-5" /> Nuevo Curso
-            </button>
+          <div>
+            <h1 className="text-lg font-black text-white tracking-tight uppercase">Panel Administrativo</h1>
+            <p className="text-[10px] text-slate-500 font-bold tracking-[0.2em] uppercase">Gestión Ministerial v2.0</p>
           </div>
         </div>
 
+        <div className="flex items-center gap-6">
+          <div className="hidden md:flex flex-col items-end">
+            <span className="text-xs font-black text-white uppercase">MBI Internacional</span>
+            <span className="text-[10px] text-primary font-bold uppercase">Sincronizado</span>
+          </div>
+          <div className="w-px h-8 bg-white/5"></div>
+          <Link href="/" className="p-3 hover:bg-white/5 rounded-xl transition-all">
+            <X className="w-5 h-5 text-slate-500" />
+          </Link>
+        </div>
+      </div>
+
+      <main className="pt-32 pb-20 px-6 md:px-12 max-w-7xl mx-auto">
+        
         {/* Stats Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
           {[
-            { label: 'Estudiantes Totales', value: stats.students.toLocaleString(), icon: <Users /> },
-            { label: 'Cursos Activos', value: stats.courses.toString(), icon: <BookOpen /> },
-            { label: 'XP Acumulado', value: stats.totalXp.toLocaleString(), icon: <Award /> },
-            { label: 'Crecimiento Hoy', value: '+12%', icon: <TrendingUp />, isTrend: true }
-          ].map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-[#1e293b]/40 backdrop-blur-3xl p-8 rounded-[36px] border border-white/10 hover:border-primary/30 transition-all shadow-2xl"
-            >
-              <div className="flex items-center justify-between mb-6">
-                <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-                  {React.cloneElement(stat.icon as React.ReactElement<any>, { className: "w-7 h-7" })}
+            { label: "Estudiantes", val: profiles.length, icon: Users, color: "bg-blue-500" },
+            { label: "XP Generado", val: profiles.reduce((a, b) => a + (b.xp || 0), 0).toLocaleString(), icon: TrendingUp, color: "bg-amber-500" },
+            { label: "Lecciones", val: lessons.length, icon: BookOpen, color: "bg-emerald-500" },
+            { label: "Admins", val: profiles.filter(p => p.is_admin).length, icon: Shield, color: "bg-primary" },
+          ].map((s, i) => (
+            <div key={i} className="bg-slate-900/40 p-6 rounded-[2rem] border border-white/5 relative overflow-hidden group">
+              <div className="flex items-center gap-4 relative z-10">
+                <div className={`${s.color} p-3 rounded-2xl shadow-lg`}>
+                  <s.icon className="w-5 h-5 text-white" />
                 </div>
-                {stat.isTrend && (
-                   <span className="text-xs font-black text-[#10b981] bg-[#10b981]/10 px-3 py-1.5 rounded-xl border border-[#10b981]/20">
-                    {stat.value}
-                  </span>
-                )}
+                <div>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{s.label}</p>
+                  <p className="text-2xl font-black text-white">{s.val}</p>
+                </div>
               </div>
-              <p className="text-[11px] text-slate-400 font-black uppercase tracking-[0.1em] mb-2">{stat.label}</p>
-              <h3 className="text-4xl font-black text-white font-outfit tracking-tighter">
-                {!stat.isTrend ? stat.value : 'Puntuación'}
-              </h3>
-            </motion.div>
+              <div className={`absolute -right-4 -bottom-4 w-24 h-24 ${s.color} opacity-[0.03] rounded-full blur-2xl group-hover:scale-150 transition-transform`}></div>
+            </div>
           ))}
         </div>
 
-        <div className="space-y-16">
-          {/* Students Table - Full Width */}
-          <div className="space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Alumnos List */}
+          <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-black font-outfit text-white uppercase tracking-tight">Estudiantes Registrados</h2>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+              <h3 className="text-xl font-black text-white flex items-center gap-3">
+                <Users className="text-primary w-6 h-6" /> Directorio de Estudiantes
+              </h3>
+              <div className="relative group">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-primary transition-colors" />
                 <input 
                   type="text" 
-                  placeholder="Buscar por nombre o email..." 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-primary transition-all w-64"
+                  placeholder="Buscar alumno..." 
+                  className="bg-slate-900/50 border border-white/5 rounded-2xl py-3 pl-12 pr-6 text-sm outline-none focus:border-primary/50 w-[240px] transition-all"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="bg-[#1e293b]/40 backdrop-blur-3xl rounded-[40px] overflow-hidden border border-white/10 shadow-2xl">
-              <table className="w-full text-left">
+            <div className="bg-slate-900/40 rounded-[2.5rem] border border-white/5 overflow-hidden">
+              <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-white/5 text-slate-400 text-[11px] font-black uppercase tracking-[0.2em]">
-                    <th className="px-10 py-6">Usuario</th>
-                    <th className="px-10 py-6">Progreso</th>
-                    <th className="px-10 py-6">Estado</th>
-                    <th className="px-10 py-6 text-right">Acciones</th>
+                  <tr className="border-b border-white/5 bg-white/[0.02]">
+                    <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Estudiante</th>
+                    <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Puntos XP</th>
+                    <th className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {filteredProfiles.length > 0 ? filteredProfiles.map((profile, i) => (
-                    <tr key={profile.id} className="group hover:bg-white/[0.03] transition-colors">
-                      <td className="px-10 py-8">
-                        <div className="flex items-center gap-5">
-                          <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-[#818cf8] flex items-center justify-center text-white font-black text-xl shadow-lg shadow-primary/20`}>
-                            {(() => {
-                              const first = profile.first_name?.[0] || profile.full_name?.[0] || 'U';
-                              const last = profile.last_name?.[0] || (profile.full_name?.includes(' ') ? profile.full_name.split(' ').filter(Boolean).slice(-1)[0][0] : '');
-                              return (first + last).toUpperCase();
-                            })()}
+                  {filteredProfiles.map((profile) => (
+                    <tr key={profile.id} className="group hover:bg-white/[0.02] transition-all">
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center font-black text-slate-400 group-hover:text-primary transition-colors shadow-inner border border-white/5">
+                            {profile.full_name?.charAt(0) || profile.email?.charAt(0) || '?'}
                           </div>
-                          <div>
-                            <p className="text-white font-black text-base mb-1">
-                              {profile.first_name || profile.full_name || 'Nuevo Usuario'} {profile.last_name || ''}
-                            </p>
-                            <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest flex items-center gap-2">
-                                {profile.is_admin ? (
-                                    <span className="text-primary flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> ADMINISTRADOR</span>
-                                ) : 'ESTUDIANTE ACTIVO'}
-                                <span className="opacity-40">•</span>
-                                <span className="lowercase">{profile.email || 'sin email'}</span>
-                            </p>
+                          <div className="flex flex-col">
+                            <div className="flex items-center gap-2">
+                                <span className="font-black text-white group-hover:text-primary transition-colors">{profile.full_name || profile.first_name || 'Sin nombre'}</span>
+                                {profile.is_admin && (
+                                    <span className="text-primary flex items-center gap-1.5 font-black uppercase tracking-widest text-[8px] bg-primary/10 px-2 py-0.5 rounded-md"><ShieldCheck className="w-3 h-3" /> ADMIN</span>
+                                )}
+                            </div>
+                            <span className="opacity-20">•</span>
+                            <span className={profile.email ? "lowercase text-slate-400 text-[10px]" : "text-amber-500/80 italic text-[9px]"}>{profile.email || '⚠️ correo no sincronizado'}</span>
                           </div>
                         </div>
                       </td>
-                      <td className="px-10 py-8">
-                        <div className="flex flex-col gap-2">
-                           <span className="text-white font-black text-sm">{profile.xp || 0} XP</span>
-                           <div className="w-32 h-1.5 bg-white/5 rounded-full overflow-hidden">
-                              <div 
-                                className="h-full bg-primary" 
-                                style={{ width: `${Math.min((profile.xp || 0) / 10, 100)}%` }}
-                              ></div>
-                           </div>
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
+                          <span className="font-black text-amber-500">{profile.xp || 0} XP</span>
                         </div>
                       </td>
-                      <td className="px-10 py-8">
-                        <span className={`text-[10px] font-black px-4 py-2 rounded-xl uppercase tracking-widest bg-[#10b981]/10 text-[#10b981] border border-[#10b981]/20`}>
-                          ONLINE
-                        </span>
-                      </td>
-                      <td className="px-10 py-8 text-right">
-                        <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
-                            <button 
-                                onClick={() => loadStudentProgress(profile)}
-                                className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-slate-300 hover:text-white transition-all border border-white/5 hover:border-white/10 shadow-sm flex items-center gap-2"
-                            >
-                                <span className="text-[10px] font-black uppercase tracking-widest px-2">Ver Progreso</span>
-                                <ArrowRight className="w-5 h-5" />
-                            </button>
-                            <button 
-                                onClick={() => handleDeleteProfile(profile.id, profile.first_name || profile.full_name || 'estudiante')}
-                                className="p-3 bg-red-500/5 hover:bg-red-500/10 rounded-2xl text-red-400 hover:text-red-500 transition-all border border-red-500/10 shadow-sm"
-                            >
-                                <Trash2 className="w-5 h-5" />
-                            </button>
+                      <td className="px-8 py-5">
+                        <div className="flex items-center gap-2">
+                          <button 
+                            onClick={() => loadStudentProgress(profile)}
+                            className="p-2.5 bg-white/5 hover:bg-primary hover:text-white rounded-xl transition-all shadow-sm"
+                            title="Ver Progreso"
+                          >
+                            <TrendingUp className="w-4 h-4" />
+                          </button>
+                          <button 
+                            onClick={() => promoteToAdmin(profile.id, profile.is_admin)}
+                            className={`p-2.5 rounded-xl transition-all shadow-sm ${profile.is_admin ? 'bg-primary/20 text-primary' : 'bg-white/5 hover:bg-white/10 text-slate-500'}`}
+                            title={profile.is_admin ? "Quitar Admin" : "Hacer Admin"}
+                          >
+                            <Shield className="w-4 h-4" />
+                          </button>
                         </div>
                       </td>
                     </tr>
-                  )) : (
-                    <tr>
-                      <td colSpan={4} className="px-10 py-24 text-center text-slate-500 font-black uppercase text-xs tracking-[0.3em]">
-                        {searchQuery ? `No hay resultados para "${searchQuery}"` : "No hay estudiantes registrados"}
-                      </td>
-                    </tr>
-                  )}
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* Bottom Grid: Management + Security */}
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Content Management */}
-            <div className="bg-[#1e293b]/60 backdrop-blur-3xl p-10 rounded-[40px] border border-primary/20 shadow-2xl">
-              <h3 className="text-2xl font-black font-outfit text-white mb-2 uppercase tracking-tighter">Gestión de Contenido</h3>
-              <p className="text-[11px] text-slate-400 font-black uppercase tracking-widest mb-10">Añade o quita clases de los programas</p>
-              
-              <div className="flex gap-2.5 mb-10 overflow-x-auto pb-2 scrollbar-hide">
-                {['liderazgo', 'diaconado', 'maestros'].map((id) => (
-                  <button
-                    key={id}
-                    onClick={() => {
-                        setSelectedCourse(id);
-                        loadLessons(id);
-                    }}
-                    className={`flex-1 min-w-[90px] py-4 rounded-2xl text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-300 shadow-md ${
-                      selectedCourse === id ? 'bg-primary text-white shadow-primary/20 scale-[1.02]' : 'bg-white/5 text-slate-400 hover:bg-white/10 border border-white/5'
-                    }`}
+          {/* Sidebar: Gestión de Lecciones */}
+          <div className="space-y-8">
+            <div className="bg-slate-900/40 rounded-[2.5rem] border border-white/5 p-8 relative overflow-hidden">
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-lg font-black text-white flex items-center gap-3">
+                    <Database className="text-primary w-5 h-5" /> Contenido
+                  </h3>
+                  <button 
+                    onClick={() => setIsAddingLesson(true)}
+                    className="p-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl transition-all"
                   >
-                    {id}
+                    <Plus className="w-5 h-5" />
                   </button>
-                ))}
-              </div>
-
-              <div className="space-y-4 mb-10 max-h-[400px] overflow-y-auto pr-3 custom-scrollbar">
-                {lessons.map((lesson) => (
-                  <motion.div 
-                    layout
-                    key={lesson.id} 
-                    className="flex items-center justify-between p-5 bg-[#0f172a]/50 rounded-2xl border border-white/5 hover:border-primary/20 transition-all group shadow-sm"
-                  >
-                    <div>
-                      <p className="text-sm font-black text-white leading-[1.3] mb-1">{lesson.title}</p>
-                      <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">ID: {lesson.id}</p>
-                    </div>
-                    <button 
-                      onClick={() => handleDeleteLesson(lesson.id)}
-                      className="p-3 bg-red-500/0 hover:bg-red-500/10 text-slate-500 hover:text-red-500 rounded-xl transition-all"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="space-y-4 bg-white/5 p-6 rounded-[28px] border border-white/5">
-                <input 
-                  type="text" 
-                  value={newLessonTitle}
-                  onChange={(e) => setNewLessonTitle(e.target.value)}
-                  placeholder="Título de la nueva lección..."
-                  className="w-full bg-[#0f172a]/80 border border-white/10 rounded-2xl py-5 px-8 text-sm text-white focus:outline-none focus:border-primary transition-all font-bold placeholder:text-slate-600"
-                />
-                <button 
-                  onClick={handleAddLesson}
-                  className="w-full py-5 bg-primary text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] hover:bg-primary-hover hover:shadow-[0_15px_40px_rgba(99,102,241,0.3)] transition-all flex items-center justify-center gap-3 active:scale-[0.98]"
-                >
-                  <Plus className="w-5 h-5" /> Añadir Lección
-                </button>
-              </div>
-            </div>
-
-            {/* Security Block (Moved here inside grid) */}
-            <div className="glass p-10 rounded-[40px] border-white/5 flex flex-col justify-center">
-                <h3 className="text-2xl font-black font-outfit text-white mb-6 uppercase tracking-tighter flex items-center gap-3">
-                    <ShieldCheck className="w-6 h-6 text-orange-500" /> Seguridad
-                </h3>
-                <div className="p-8 bg-orange-500/10 border border-orange-500/20 rounded-[32px] mb-8">
-                    <p className="text-xs font-black text-orange-500 uppercase tracking-widest mb-2">Acceso Administrativo</p>
-                    <p className="text-sm text-slate-400 leading-relaxed font-bold">Estás en el panel de control maestro. Asegúrate de cerrar sesión al terminar para proteger los datos de la academia.</p>
                 </div>
-                <button 
-                    onClick={async () => {
-                        await supabase.auth.signOut();
-                        router.push('/auth');
-                    }}
-                    className="w-full flex items-center justify-center gap-4 py-6 bg-red-500/10 text-red-500 rounded-[28px] font-black text-sm uppercase tracking-widest hover:bg-red-500/20 hover:scale-[1.02] transition-all border border-red-500/20 active:scale-[0.98]"
-                >
-                    <LogOut className="w-5 h-5" /> Cerrar Sesión Segura
-                </button>
+
+                {isAddingLesson && (
+                  <div className="mb-8 p-6 bg-white/[0.02] rounded-3xl border border-white/5 space-y-4 animate-in zoom-in-95 duration-300">
+                    <input 
+                      type="text" placeholder="Título de lección"
+                      className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm"
+                      value={newLesson.title}
+                      onChange={(e) => setNewLesson({...newLesson, title: e.target.value})}
+                    />
+                    <select 
+                      className="w-full bg-slate-950 border border-white/10 rounded-xl p-3 text-sm"
+                      value={newLesson.course_id}
+                      onChange={(e) => setNewLesson({...newLesson, course_id: e.target.value})}
+                    >
+                      <option value="liderazgo">Liderazgo</option>
+                      <option value="diaconado">Diaconado</option>
+                    </select>
+                    <div className="flex gap-2">
+                      <button onClick={handleAddLesson} className="flex-1 bg-primary text-white font-black py-2 rounded-xl text-sm">Guardar</button>
+                      <button onClick={() => setIsAddingLesson(false)} className="flex-1 bg-white/5 text-slate-500 font-black py-2 rounded-xl text-sm">Cerrar</button>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-3">
+                  {lessons.map((lesson) => (
+                    <div key={lesson.id} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 group hover:border-white/10 transition-all">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${lesson.course_id === 'liderazgo' ? 'bg-primary' : 'bg-amber-500'}`}></div>
+                        <div>
+                          <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{lesson.course_id}</p>
+                          <p className="text-xs font-bold text-white group-hover:text-primary transition-colors">{lesson.title}</p>
+                        </div>
+                      </div>
+                      <button onClick={() => deleteLesson(lesson.id)} className="p-2 text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary opacity-[0.02] rounded-full blur-3xl"></div>
             </div>
           </div>
+
         </div>
       </main>
 
-      {/* Student Detail Modal */}
+      {/* Modal Detalles Alumno */}
       {selectedStudent && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                onClick={() => setSelectedStudent(null)}
-                className="absolute inset-0 bg-black/80 backdrop-blur-md"
-            ></motion.div>
-            
-            <motion.div 
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                className="bg-[#1e293b] w-full max-w-2xl rounded-[40px] border border-white/10 overflow-hidden relative z-10 shadow-2xl"
-            >
-                <div className="p-10 border-b border-white/5 bg-white/2">
-                    <div className="flex items-center gap-6 mb-8">
-                        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-[#818cf8] flex items-center justify-center text-white font-black text-3xl shadow-xl shadow-primary/30">
-                            {(selectedStudent.first_name || selectedStudent.full_name || 'U').charAt(0)}
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-slate-950/90 backdrop-blur-md animate-in fade-in duration-300">
+            <div className="bg-slate-900 w-full max-w-2xl rounded-[3rem] border border-white/5 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
+                <div className="p-10 bg-gradient-to-br from-slate-800 to-slate-900 border-b border-white/5 relative">
+                    <button 
+                        onClick={() => setSelectedStudent(null)}
+                        className="absolute top-8 right-8 p-2 bg-white/5 hover:bg-white/10 rounded-xl transition-all"
+                    >
+                        <X className="w-6 h-6 text-slate-500" />
+                    </button>
+                    
+                    <div className="flex items-center gap-8 mb-10">
+                        <div className="w-24 h-24 rounded-[2rem] bg-primary/20 flex items-center justify-center text-4xl font-black text-primary shadow-2xl shadow-primary/20 border-4 border-primary/20">
+                            {selectedStudent.full_name?.charAt(0) || selectedStudent.email?.charAt(0)}
                         </div>
                         <div>
-                            <h3 className="text-3xl font-black text-white font-outfit uppercase tracking-tighter">
-                                {selectedStudent.first_name || selectedStudent.full_name || 'Nuevo Usuario'} {selectedStudent.last_name || ''}
-                            </h3>
-                            <p className="text-slate-400 font-bold tracking-tight text-sm lowercase">{selectedStudent.email}</p>
+                            <h2 className="text-4xl font-black text-white tracking-tight leading-none mb-2">{selectedStudent.full_name || selectedStudent.first_name}</h2>
+                            <p className="text-slate-500 font-medium">{selectedStudent.email}</p>
                         </div>
                     </div>
                     
@@ -456,7 +367,7 @@ export default function AdminDashboard() {
                         </div>
                         <div className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
                             <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Clases Completas</p>
-                            <p className="text-xl font-black text-white">{studentProgress.length}</p>
+                            <p className="text-xl font-black text-white">{studentProgress.filter(p => p.status === 'completed').length}</p>
                         </div>
                         <div className="bg-white/5 p-4 rounded-2xl border border-white/5 text-center">
                             <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Rango</p>
@@ -470,9 +381,23 @@ export default function AdminDashboard() {
                         <h4 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
                             <BookOpen className="w-4 h-4 text-primary" /> Historial de Progreso
                         </h4>
-                        <span className="text-[10px] font-black text-slate-500 uppercase bg-white/5 px-3 py-1 rounded-lg">
-                            {studentProgress.length} Lecciones
-                        </span>
+                        <div className="flex items-center gap-3">
+                            {/* BOTÓN DE CERTIFICADO DINÁMICO */}
+                            {studentProgress.filter(p => p.status === 'completed').length >= 3 && (
+                                <button 
+                                    onClick={() => {
+                                        setCertCourse(studentProgress[0]?.lessons?.course_id === 'liderazgo' ? "Programa de Liderazgo" : "Programa de Diaconado");
+                                        setShowCertificate(true);
+                                    }}
+                                    className="bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-black px-4 py-2 rounded-xl flex items-center gap-2 transition-all shadow-lg shadow-amber-900/20"
+                                >
+                                    <Printer className="w-4 h-4" /> IMPRIMIR CERTIFICADO
+                                </button>
+                            )}
+                            <span className="text-[10px] font-black text-slate-500 uppercase bg-white/5 px-3 py-1 rounded-lg">
+                                {studentProgress.length} Lecciones
+                            </span>
+                        </div>
                     </div>
                     
                     {loadingProgress ? (
@@ -481,25 +406,31 @@ export default function AdminDashboard() {
                         </div>
                     ) : studentProgress.length > 0 ? (
                         <div className="space-y-3">
-                            {/* Group by course to show enrollment */}
-                            {Array.from(new Set(studentProgress.map(p => p.lessons?.course_id))).map((courseId, cIdx) => (
+                            {Array.from(new Set(studentProgress.map(p => p.lessons?.course_id || 'Curso Desconocido'))).map((courseId, cIdx) => (
                                 <div key={cIdx} className="mb-6 last:mb-0">
                                     <div className="flex items-center gap-3 mb-3">
                                         <div className="h-px flex-1 bg-white/5"></div>
-                                        <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">{courseId}</span>
+                                        <span className="text-[9px] font-black text-primary uppercase tracking-[0.2em]">{courseId === 'liderazgo' ? 'Programa de Liderazgo' : courseId === 'diaconado' ? 'Programa de Diaconado' : courseId}</span>
                                         <div className="h-px flex-1 bg-white/5"></div>
                                     </div>
                                     <div className="space-y-2">
                                         {studentProgress
-                                            .filter(p => p.lessons?.course_id === courseId)
+                                            .filter(p => (p.lessons?.course_id || 'Curso Desconocido') === courseId)
                                             .map((p: any, idx) => (
                                                 <div key={idx} className="flex items-center justify-between p-4 bg-white/[0.03] rounded-2xl border border-white/5 group hover:border-white/10 transition-all">
                                                     <div>
-                                                        <p className="text-xs font-black text-white mb-0.5 uppercase tracking-tight">{p.lessons?.title || 'Lección desconocida'}</p>
-                                                        <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{new Date(p.completed_at).toLocaleDateString()}</p>
+                                                        <p className="text-xs font-black text-white mb-0.5 uppercase tracking-tight">{p.lessons?.title || 'Lección antigua o no sincronizada'}</p>
+                                                        <div className="flex items-center gap-2">
+                                                            <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{new Date(p.completed_at).toLocaleDateString()}</p>
+                                                            <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-md uppercase tracking-tighter ${
+                                                                p.status === 'completed' ? 'bg-green-500/10 text-green-500' : 'bg-amber-500/10 text-amber-500 animate-pulse'
+                                                            }`}>
+                                                                {p.status === 'completed' ? 'COMPLETADA' : 'EN CURSO'}
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="w-8 h-8 rounded-lg bg-[#10b981]/10 flex items-center justify-center text-[#10b981]">
-                                                        <ShieldCheck className="w-4 h-4" />
+                                                    <div className="w-8 h-8 bg-white/5 rounded-lg flex items-center justify-center">
+                                                        <CheckCircle className={`w-4 h-4 ${p.status === 'completed' ? 'text-green-500' : 'text-slate-700'}`} />
                                                     </div>
                                                 </div>
                                             ))}
@@ -508,22 +439,32 @@ export default function AdminDashboard() {
                             ))}
                         </div>
                     ) : (
-                        <div className="py-10 text-center text-slate-500 font-black uppercase tracking-widest text-xs border-2 border-dashed border-white/5 rounded-[32px]">
-                            El estudiante aún no ha completado ninguna lección
+                        <div className="py-20 flex flex-col items-center justify-center text-center">
+                            <AlertCircle className="w-12 h-12 text-slate-800 mb-4" />
+                            <p className="text-slate-500 font-medium">El estudiante aún no ha completado ninguna lección.</p>
                         </div>
                     )}
                 </div>
 
-                <div className="p-6 bg-white/2 border-t border-white/5 flex gap-4">
+                <div className="p-10 bg-white/[0.02] border-t border-white/5">
                     <button 
                         onClick={() => setSelectedStudent(null)}
-                        className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black text-[11px] uppercase tracking-widest border border-white/5 transition-all"
+                        className="w-full py-4 bg-slate-800 hover:bg-slate-700 text-white font-black rounded-2xl transition-all uppercase tracking-widest text-xs"
                     >
                         Cerrar Detalle
                     </button>
                 </div>
-            </motion.div>
+            </div>
         </div>
+      )}
+
+      {/* Modal de Certificado */}
+      {showCertificate && selectedStudent && (
+          <CourseCertificate 
+            studentName={selectedStudent.full_name || selectedStudent.first_name || 'Estudiante'}
+            courseTitle={certCourse}
+            onClose={() => setShowCertificate(false)}
+          />
       )}
     </div>
   );
