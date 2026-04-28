@@ -88,7 +88,7 @@ const CourseCertificate: React.FC<CertificateProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 animate-in fade-in duration-500 overflow-hidden print:hidden">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 animate-in fade-in duration-500 overflow-hidden">
       
       {/* Botones de Acción Superiores */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 flex flex-wrap justify-end gap-2 md:gap-3 no-print z-[210]">

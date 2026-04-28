@@ -10,15 +10,15 @@ function PrintContent() {
   const course = searchParams.get('course') || 'Programa de Formación';
 
   useEffect(() => {
-    // Esperar a que todo cargue y disparar impresión
+    // Pequeña espera para que las fuentes y el logo carguen bien
     const timer = setTimeout(() => {
       window.print();
-    }, 1000);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="print-page min-h-screen bg-white">
       <CourseCertificate 
         studentName={name}
         courseTitle={course}
@@ -27,7 +27,18 @@ function PrintContent() {
       
       <style jsx global>{`
         @media print {
-          .no-print { display: none !important; }
+          @page {
+            size: A4 landscape;
+            margin: 0;
+          }
+          .no-print {
+            display: none !important;
+          }
+          body {
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+          }
         }
       `}</style>
     </div>
@@ -36,7 +47,7 @@ function PrintContent() {
 
 export default function PrintCertificatePage() {
   return (
-    <Suspense fallback={<div className="p-10 text-center font-black">Cargando certificado para impresión...</div>}>
+    <Suspense fallback={<div className="p-10 text-center font-black">Preparando certificado...</div>}>
       <PrintContent />
     </Suspense>
   );
