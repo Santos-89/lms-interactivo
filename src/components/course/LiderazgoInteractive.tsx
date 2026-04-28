@@ -359,7 +359,8 @@ export default function LiderazgoInteractive() {
           .from('user_progress')
           .upsert({ 
             user_id: user.id, 
-            lesson_id: dbId
+            lesson_id: dbId,
+            status: 'completed'
           });
       }
     }

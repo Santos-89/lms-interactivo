@@ -308,7 +308,8 @@ export default function DiaconadoInteractive() {
           .from('user_progress')
           .upsert({ 
             user_id: user.id, 
-            lesson_id: dbId
+            lesson_id: dbId,
+            status: 'completed'
           });
       }
     }
