@@ -41,9 +41,9 @@ const CourseCertificate: React.FC<CertificateProps> = ({
   }, []);
 
   const handlePrint = () => {
-    if (typeof window !== 'undefined') {
-      window.print();
-    }
+    // NUEVA LÓGICA: Abrir página de impresión dedicada para evitar el fondo del admin
+    const printUrl = `/print-certificate?name=${encodeURIComponent(studentName)}&course=${encodeURIComponent(courseTitle)}`;
+    window.open(printUrl, '_blank');
   };
 
   const handleDownloadImage = async () => {
@@ -51,11 +51,7 @@ const CourseCertificate: React.FC<CertificateProps> = ({
     
     setIsDownloading(true);
     try {
-      // Forzar renderizado limpio para captura
       const element = certificateRef.current;
-      
-      // html2canvas tiene problemas con transform: scale
-      // Vamos a capturarlo asegurando que los estilos sean los base
       const canvas = await html2canvas(element, {
         scale: 2, 
         useCORS: true,
@@ -64,7 +60,6 @@ const CourseCertificate: React.FC<CertificateProps> = ({
         width: 1050,
         height: 740,
         onclone: (clonedDoc) => {
-          // Aseguramos que en el clon el elemento NO tenga transformaciones que lo achiquen
           const clonedElement = clonedDoc.querySelector('.certificate-body') as HTMLElement;
           if (clonedElement) {
             clonedElement.style.transform = 'none';
@@ -79,8 +74,8 @@ const CourseCertificate: React.FC<CertificateProps> = ({
       link.href = image;
       link.click();
     } catch (error) {
-      console.error("Error detallado:", error);
-      alert("Error al generar imagen. Por favor usa 'IMPRIMIR' y selecciona 'Guardar como PDF'.");
+      console.error("Error:", error);
+      alert("Error al generar imagen. Prueba con el botón 'IMPRIMIR PDF'.");
     } finally {
       setIsDownloading(false);
     }
@@ -93,7 +88,7 @@ const CourseCertificate: React.FC<CertificateProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 animate-in fade-in duration-500 overflow-hidden print:static print:bg-white print:p-0 print:block">
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-slate-950/95 backdrop-blur-xl p-4 animate-in fade-in duration-500 overflow-hidden print:hidden">
       
       {/* Botones de Acción Superiores */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 flex flex-wrap justify-end gap-2 md:gap-3 no-print z-[210]">
@@ -124,8 +119,7 @@ const CourseCertificate: React.FC<CertificateProps> = ({
 
       {/* Contenedor del Certificado */}
       <div 
-        id="certificate-to-print"
-        className="certificate-container relative print:m-0 print:p-0 print:shadow-none"
+        className="certificate-container relative"
         style={{ 
           width: '1050px', 
           height: '740px', 
@@ -135,19 +129,16 @@ const CourseCertificate: React.FC<CertificateProps> = ({
       >
         <div 
           ref={certificateRef}
-          className="certificate-body bg-white relative w-[1050px] h-[740px] overflow-hidden shadow-2xl print:shadow-none"
+          className="certificate-body bg-white relative w-[1050px] h-[740px] overflow-hidden shadow-2xl"
         >
-          {/* Marco Decorativo */}
           <div className="absolute inset-0 border-[35px] border-[#0F172A] z-0"></div>
           <div className="absolute inset-5 border-[2px] border-amber-400/40 z-0"></div>
-          
           <div className="absolute top-0 left-0 w-40 h-40 border-t-[20px] border-l-[20px] border-amber-500 z-10"></div>
           <div className="absolute top-0 right-0 w-40 h-40 border-t-[20px] border-r-[20px] border-amber-500 z-10"></div>
           <div className="absolute bottom-0 left-0 w-40 h-40 border-b-[20px] border-l-[20px] border-amber-500 z-10"></div>
           <div className="absolute bottom-0 right-0 w-40 h-40 border-b-[20px] border-r-[20px] border-amber-500 z-10"></div>
 
           <div className="relative z-20 h-full flex flex-col items-center justify-between px-24 py-16 text-center">
-            
             <div className="flex flex-col items-center">
               <div className="relative w-20 h-20 mb-3">
                 <Image src="/mbi-logo.png" alt="Logo MBI" fill className="object-contain" unoptimized />
@@ -208,37 +199,6 @@ const CourseCertificate: React.FC<CertificateProps> = ({
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @media print {
-          @page {
-            size: A4 landscape;
-            margin: 0;
-          }
-          /* Ocultar ABSOLUTAMENTE TODO excepto el certificado */
-          body * {
-            visibility: hidden !important;
-          }
-          #certificate-to-print, #certificate-to-print * {
-            visibility: visible !important;
-          }
-          #certificate-to-print {
-            position: fixed !important;
-            left: 0 !important;
-            top: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
-            transform: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            z-index: 9999 !important;
-          }
-          .no-print {
-            display: none !important;
-            visibility: hidden !important;
-          }
-        }
-      `}</style>
     </div>
   );
 };
