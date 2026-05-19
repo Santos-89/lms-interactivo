@@ -46,6 +46,7 @@ export default function AdminDashboard() {
   const [showCertificate, setShowCertificate] = useState(false);
   const [certCourse, setCertCourse] = useState("Programa de Diaconado");
   const [authorizedCourses, setAuthorizedCourses] = useState<string[]>([]);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'warning' } | null>(null);
 
   useEffect(() => {
     checkAdmin();
@@ -103,6 +104,14 @@ export default function AdminDashboard() {
     if (!selectedStudent) return;
     const isGranted = authorizedCourses.includes(courseId);
     
+    const courseNames: Record<string, string> = {
+      discipulado: 'Discipulado 🌱',
+      diaconado: 'Diaconado 🤝',
+      liderazgo: 'Liderazgo 👑',
+      maestros: 'Maestros 📖'
+    };
+    const courseName = courseNames[courseId] || courseId;
+
     if (isGranted) {
       // Revocar acceso
       const { error } = await supabase
@@ -114,6 +123,10 @@ export default function AdminDashboard() {
       if (!error) {
         setAuthorizedCourses(prev => prev.filter(id => id !== courseId));
         setAllAccess(prev => prev.filter(a => !(a.user_id === selectedStudent.id && a.course_id === courseId)));
+        
+        // Mostrar toast
+        setToast({ message: `¡Acceso restringido para ${courseName}!`, type: 'warning' });
+        setTimeout(() => setToast(null), 3000);
       } else {
         console.error('Error al revocar acceso al curso:', error);
         alert(`No se pudo revocar el acceso: ${error.message}`);
@@ -130,6 +143,10 @@ export default function AdminDashboard() {
       if (!error) {
         setAuthorizedCourses(prev => [...prev, courseId]);
         setAllAccess(prev => [...prev, { user_id: selectedStudent.id, course_id: courseId }]);
+        
+        // Mostrar toast
+        setToast({ message: `¡Acceso autorizado para ${courseName}!`, type: 'success' });
+        setTimeout(() => setToast(null), 3000);
       } else {
         console.error('Error al conceder acceso al curso:', error);
         alert(`No se pudo conceder el acceso: ${error.message}`);
@@ -440,7 +457,24 @@ export default function AdminDashboard() {
       {/* STUDENT DETAIL MODAL DRAWER */}
       {selectedStudent && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
-          <div className="bg-slate-900 w-full max-w-2xl rounded-[3rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300">
+          
+          {/* FLOATING TOAST NOTIFICATION */}
+          {toast && (
+            <div className={`fixed top-10 left-1/2 -translate-x-1/2 z-[300] px-6 py-4 rounded-[1.5rem] shadow-2xl border flex items-center gap-3 backdrop-blur-xl animate-in slide-in-from-top-10 fade-in duration-300 ${
+              toast.type === 'success' 
+                ? 'bg-emerald-950/90 border-emerald-500/30 text-emerald-400 shadow-emerald-500/10' 
+                : 'bg-red-950/90 border-red-500/30 text-red-400 shadow-red-500/10'
+            }`}>
+              {toast.type === 'success' ? (
+                <CheckCircle className="w-5 h-5 text-emerald-400" />
+              ) : (
+                <AlertCircle className="w-5 h-5 text-red-400" />
+              )}
+              <span className="text-xs font-black uppercase tracking-wider">{toast.message}</span>
+            </div>
+          )}
+
+          <div className="bg-slate-900 w-full max-w-2xl rounded-[3rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in-95 duration-300 relative">
             {/* Header Modal */}
             <div className="p-8 bg-gradient-to-br from-slate-800 to-slate-900 relative border-b border-white/5">
               <button 
@@ -508,28 +542,44 @@ export default function AdminDashboard() {
                   ].map((course) => {
                     const hasAccess = authorizedCourses.includes(course.id);
                     return (
-                      <button
+                      <div
                         key={course.id}
-                        type="button"
-                        onClick={() => toggleCourseAccess(course.id)}
-                        className={`flex items-center justify-between p-4 rounded-2xl border text-left transition-all ${
+                        className={`flex items-center justify-between p-4 rounded-2xl border text-left transition-all duration-300 ${
                           hasAccess 
-                            ? 'bg-primary/10 border-primary shadow-[0_4px_25px_rgba(99,102,241,0.15)] scale-[1.02]' 
-                            : 'bg-slate-900/60 border-white/5 hover:translate-y-[-1px]'
-                        } ${course.color}`}
+                            ? 'bg-emerald-500/5 border-emerald-500/20 shadow-[0_4px_25px_rgba(16,185,129,0.05)] scale-[1.02]' 
+                            : 'bg-slate-900/60 border-white/5'
+                        }`}
                       >
                         <div>
                           <p className="text-xs font-black text-white">{course.name}</p>
                           <p className="text-[9px] text-slate-500 font-bold uppercase tracking-wider">{course.desc}</p>
                         </div>
-                        <div className={`w-6 h-6 rounded-lg flex items-center justify-center border transition-all ${
-                          hasAccess 
-                            ? 'bg-primary border-primary text-white shadow-md' 
-                            : 'border-white/20 text-transparent'
-                        }`}>
-                          <CheckCircle className="w-4 h-4" />
-                        </div>
-                      </button>
+                        
+                        <button
+                          type="button"
+                          onClick={() => toggleCourseAccess(course.id)}
+                          className="flex items-center gap-2 cursor-pointer focus:outline-none"
+                        >
+                          <span className={`text-[8px] font-black uppercase tracking-widest transition-colors duration-300 ${
+                            hasAccess ? 'text-emerald-400' : 'text-slate-500'
+                          }`}>
+                            {hasAccess ? 'Acceso' : 'Restringido'}
+                          </span>
+                          <div className={`w-11 h-6 rounded-full p-0.5 transition-all duration-300 flex items-center ${
+                            hasAccess 
+                              ? 'bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.3)]' 
+                              : 'bg-slate-950 border border-white/10'
+                          }`}>
+                            <div className={`w-5 h-5 rounded-full bg-white shadow-md transition-all duration-300 flex items-center justify-center ${
+                              hasAccess ? 'translate-x-5' : 'translate-x-0'
+                            }`}>
+                              <div className={`w-1.5 h-1.5 rounded-full transition-all ${
+                                hasAccess ? 'bg-emerald-500' : 'bg-slate-600'
+                              }`}></div>
+                            </div>
+                          </div>
+                        </button>
+                      </div>
                     );
                   })}
                 </div>
