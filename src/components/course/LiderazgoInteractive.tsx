@@ -160,6 +160,7 @@ export default function LiderazgoInteractive() {
   const [profileData, setProfileData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showCertificate, setShowCertificate] = useState(false);
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
 
   // Estados de Lección
   const [currentStep, setCurrentStep] = useState(0); 
@@ -184,6 +185,7 @@ export default function LiderazgoInteractive() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         setLoading(false);
+        setHasAccess(false);
         return;
       }
       setUser(session.user);
@@ -225,16 +227,32 @@ export default function LiderazgoInteractive() {
         setUnlockedLessons([...new Set(unlockedIndices)]);
       }
 
-      // 3. Obtener XP del perfil
+      // 3. Obtener XP del perfil e is_admin
       const { data: profile } = await supabase
         .from('profiles')
-        .select('xp, full_name')
+        .select('xp, full_name, is_admin')
         .eq('id', session.user.id)
         .single();
       
       if (profile) {
         setPoints(profile.xp || 0);
         setProfileData(profile);
+
+        if (profile.is_admin) {
+          setHasAccess(true);
+        } else {
+          // Check explicit user course access
+          const { data: access } = await supabase
+            .from('user_course_access')
+            .select('id')
+            .eq('user_id', session.user.id)
+            .eq('course_id', courseId)
+            .maybeSingle();
+
+          setHasAccess(!!access);
+        }
+      } else {
+        setHasAccess(false);
       }
 
       setLoading(false);
@@ -413,11 +431,41 @@ export default function LiderazgoInteractive() {
     </div>
   );
 
-  if (loading) {
+  if (loading || hasAccess === null) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
         <Loader2 className="w-12 h-12 text-indigo-600 animate-spin mb-4" />
         <p className="text-slate-600 font-bold animate-pulse">Cargando tu progreso espiritual...</p>
+      </div>
+    );
+  }
+
+  if (hasAccess === false) {
+    return (
+      <div className="min-h-screen bg-[#020617] text-slate-200 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.08),transparent_50%)]"></div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="relative z-10 max-w-md w-full bg-slate-900/60 p-12 rounded-[3.5rem] border border-white/5 shadow-2xl backdrop-blur-xl flex flex-col items-center"
+        >
+          <div className="w-20 h-20 bg-amber-500/10 border-2 border-amber-500/20 text-amber-500 rounded-3xl flex items-center justify-center mb-8 shadow-[0_8px_30px_rgba(245,158,11,0.15)] animate-pulse">
+            <Lock className="w-10 h-10" />
+          </div>
+          <h2 className="text-3xl font-black text-white font-outfit uppercase tracking-tighter mb-4">
+            Acceso Restringido
+          </h2>
+          <p className="text-slate-400 font-medium text-sm leading-relaxed mb-10">
+            Este programa de formación está restringido. Por favor, solicita el acceso a un mentor o administrador de la iglesia para que sea activado en tu plan de crecimiento personal.
+          </p>
+          <Link 
+            href="/" 
+            className="w-full py-4.5 bg-primary text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all text-center"
+          >
+            Volver al Inicio
+          </Link>
+        </motion.div>
       </div>
     );
   }

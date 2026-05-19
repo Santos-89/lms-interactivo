@@ -44,6 +44,7 @@ export default function AdminDashboard() {
 
   const [showCertificate, setShowCertificate] = useState(false);
   const [certCourse, setCertCourse] = useState("Programa de Diaconado");
+  const [authorizedCourses, setAuthorizedCourses] = useState<string[]>([]);
 
   useEffect(() => {
     checkAdmin();
@@ -69,9 +70,50 @@ export default function AdminDashboard() {
   const loadStudentProgress = async (student: Profile) => {
     setSelectedStudent(student);
     setLoadingProgress(true);
+    
+    // Cargar progreso
     const { data: progress } = await supabase.from('user_progress').select('*, lessons(title, course_id)').eq('user_id', student.id);
     if (progress) setStudentProgress(progress);
+    
+    // Cargar cursos autorizados
+    const { data: access } = await supabase.from('user_course_access').select('course_id').eq('user_id', student.id);
+    if (access) {
+      setAuthorizedCourses(access.map((a: any) => a.course_id));
+    } else {
+      setAuthorizedCourses([]);
+    }
+    
     setLoadingProgress(false);
+  };
+
+  const toggleCourseAccess = async (courseId: string) => {
+    if (!selectedStudent) return;
+    const isGranted = authorizedCourses.includes(courseId);
+    
+    if (isGranted) {
+      // Revocar acceso
+      const { error } = await supabase
+        .from('user_course_access')
+        .delete()
+        .eq('user_id', selectedStudent.id)
+        .eq('course_id', courseId);
+      
+      if (!error) {
+        setAuthorizedCourses(prev => prev.filter(id => id !== courseId));
+      }
+    } else {
+      // Conceder acceso
+      const { error } = await supabase
+        .from('user_course_access')
+        .insert({
+          user_id: selectedStudent.id,
+          course_id: courseId
+        });
+      
+      if (!error) {
+        setAuthorizedCourses(prev => [...prev, courseId]);
+      }
+    }
   };
 
   const promoteToAdmin = async (id: string, currentStatus: boolean) => {
@@ -210,6 +252,47 @@ export default function AdminDashboard() {
                                 <p className="text-[7px] font-black text-white uppercase">Certificado</p>
                             </button>
                         )}
+                    </div>
+
+                    {/* Control de Accesos / Autorizaciones */}
+                    <div className="mt-6 bg-white/5 p-5 rounded-2xl border border-white/5">
+                      <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <ShieldCheck className="w-3.5 h-3.5 text-primary" /> Permisos de Acceso a Cursos
+                      </h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        {[
+                          { id: 'discipulado', name: 'Discipulado', desc: 'Camino de Fe', color: 'border-emerald-500/20 hover:border-emerald-500/40' },
+                          { id: 'diaconado', name: 'Diaconado', desc: 'Servicio y Ayuda', color: 'border-orange-500/20 hover:border-orange-500/40' },
+                          { id: 'liderazgo', name: 'Liderazgo', desc: 'Habilidades Directivas', color: 'border-blue-500/20 hover:border-blue-500/40' },
+                          { id: 'maestros', name: 'Maestros', desc: 'Enseñanza Bíblica', color: 'border-green-500/20 hover:border-green-500/40' }
+                        ].map((course) => {
+                          const hasAccess = authorizedCourses.includes(course.id);
+                          return (
+                            <button
+                              key={course.id}
+                              type="button"
+                              onClick={() => toggleCourseAccess(course.id)}
+                              className={`flex items-center justify-between p-3.5 rounded-xl border text-left transition-all ${
+                                hasAccess 
+                                  ? 'bg-primary/10 border-primary shadow-[0_4px_20px_rgba(99,102,241,0.1)]' 
+                                  : 'bg-slate-950/40 border-white/5'
+                              } ${course.color}`}
+                            >
+                              <div>
+                                <p className="text-xs font-black text-white">{course.name}</p>
+                                <p className="text-[8px] text-slate-500 font-bold uppercase">{course.desc}</p>
+                              </div>
+                              <div className={`w-5 h-5 rounded-md flex items-center justify-center border transition-all ${
+                                hasAccess 
+                                  ? 'bg-primary border-primary text-white' 
+                                  : 'border-white/20 text-transparent'
+                              }`}>
+                                <CheckCircle className="w-3.5 h-3.5" />
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                 </div>
 

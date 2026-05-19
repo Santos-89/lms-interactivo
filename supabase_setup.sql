@@ -122,5 +122,30 @@ INSERT INTO public.lessons (id, course_id, title, order_index, xp_value) VALUES
 ('discipulado-leccion-10', 'discipulado', 'Compartiendo tu Nueva Fe', 10, 100)
 ON CONFLICT (id) DO NOTHING;
 
+-- ==============================================================================
+-- 🔒 SISTEMA DE CONTROL DE ACCESO A CURSOS
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.user_course_access (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+  course_id TEXT REFERENCES public.courses(id) ON DELETE CASCADE NOT NULL,
+  granted_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  UNIQUE(user_id, course_id)
+);
+
+-- Habilitar RLS en la tabla
+ALTER TABLE public.user_course_access ENABLE ROW LEVEL SECURITY;
+
+-- Políticas de RLS
+CREATE POLICY "Usuarios pueden ver su propio acceso" 
+  ON public.user_course_access FOR SELECT 
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Admins tienen acceso total a autorizaciones" 
+  ON public.user_course_access FOR ALL 
+  USING (
+    (SELECT is_admin FROM public.profiles WHERE id = auth.uid()) = TRUE
+  );
+
 -- ¡FIN DEL SCRIPT! 🚀
 
