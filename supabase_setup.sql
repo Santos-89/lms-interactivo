@@ -54,15 +54,26 @@ ALTER TABLE public.courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_progress ENABLE ROW LEVEL SECURITY;
 
--- 6. Crear Políticas de Seguridad (Quién puede ver/editar qué)
+-- 6. Crear Función Security Definer para evitar recursión RLS infinita en Supabase
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles 
+    WHERE id = auth.uid() AND is_admin = TRUE
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 7. Crear Políticas de Seguridad (Quién puede ver/editar qué)
 -- Profiles
 CREATE POLICY "Usuarios pueden ver su propio perfil" ON public.profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Admins pueden ver todos los perfiles" ON public.profiles FOR SELECT USING (
-  (SELECT is_admin FROM public.profiles WHERE id = auth.uid()) = TRUE OR auth.uid() = id
+  public.is_admin() = TRUE OR auth.uid() = id
 );
 CREATE POLICY "Usuarios pueden actualizar su XP" ON public.profiles FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Admins pueden borrar perfiles" ON public.profiles FOR DELETE USING (
-  (SELECT is_admin FROM public.profiles WHERE id = auth.uid()) = TRUE
+  public.is_admin() = TRUE
 );
 
 -- Courses y Lessons (Todos los usuarios logueados pueden ver el catálogo)
@@ -74,7 +85,7 @@ CREATE POLICY "Usuarios ven su propio progreso" ON public.user_progress FOR SELE
 CREATE POLICY "Usuarios insertan su progreso" ON public.user_progress FOR INSERT WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "Usuarios actualizan su progreso" ON public.user_progress FOR UPDATE USING (auth.uid() = user_id);
 
--- 7. Trigger Automático: Crear Perfil y 0 XP al Registrarse (Sign Up)
+-- 8. Trigger Automático: Crear Perfil y 0 XP al Registrarse (Sign Up)
 CREATE OR REPLACE FUNCTION public.handle_new_user() 
 RETURNS TRIGGER AS $$
 BEGIN
@@ -100,7 +111,7 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
 
--- 8. Autocompletar los Cursos Base
+-- 9. Autocompletar los Cursos Base
 INSERT INTO public.courses (id, title, description) VALUES
 ('liderazgo', 'Programa de Liderazgo', 'Desarrolla habilidades directivas basadas en la palabra.'),
 ('diaconado', 'Programa de Diaconado', 'Aprende los fundamentos del ministerio de ayuda y servicio.'),
@@ -144,7 +155,7 @@ CREATE POLICY "Usuarios pueden ver su propio acceso"
 CREATE POLICY "Admins tienen acceso total a autorizaciones" 
   ON public.user_course_access FOR ALL 
   USING (
-    (SELECT is_admin FROM public.profiles WHERE id = auth.uid()) = TRUE
+    public.is_admin() = TRUE
   );
 
 -- ¡FIN DEL SCRIPT! 🚀

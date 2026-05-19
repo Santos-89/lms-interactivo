@@ -114,6 +114,9 @@ export default function AdminDashboard() {
       if (!error) {
         setAuthorizedCourses(prev => prev.filter(id => id !== courseId));
         setAllAccess(prev => prev.filter(a => !(a.user_id === selectedStudent.id && a.course_id === courseId)));
+      } else {
+        console.error('Error al revocar acceso al curso:', error);
+        alert(`No se pudo revocar el acceso: ${error.message}`);
       }
     } else {
       // Conceder acceso
@@ -127,6 +130,9 @@ export default function AdminDashboard() {
       if (!error) {
         setAuthorizedCourses(prev => [...prev, courseId]);
         setAllAccess(prev => [...prev, { user_id: selectedStudent.id, course_id: courseId }]);
+      } else {
+        console.error('Error al conceder acceso al curso:', error);
+        alert(`No se pudo conceder el acceso: ${error.message}`);
       }
     }
   };
@@ -139,6 +145,9 @@ export default function AdminDashboard() {
       if (selectedStudent?.id === id) {
         setSelectedStudent(prev => prev ? { ...prev, is_admin: !currentStatus } : null);
       }
+    } else {
+      console.error('Error al cambiar rol administrativo:', error);
+      alert(`No se pudo cambiar el rol administrativo: ${error.message}`);
     }
   };
 
