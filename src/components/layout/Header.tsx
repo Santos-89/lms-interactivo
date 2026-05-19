@@ -90,6 +90,14 @@ const Header = ({ language = 'es' }: { language?: string }) => {
           <Link href="/" className="text-sm font-bold text-[#64748B] hover:text-primary transition-colors font-outfit uppercase tracking-wider">{t.home}</Link>
           <Link href="/#programas" className="text-sm font-bold text-[#64748B] hover:text-primary transition-colors font-outfit uppercase tracking-wider">{t.courses}</Link>
           <Link href="/recursos" className="text-sm font-bold text-[#64748B] hover:text-primary transition-colors font-outfit uppercase tracking-wider">{t.resources}</Link>
+          
+          <Link 
+            href="/cursos/discipulado/interactivo" 
+            className="text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 bg-gradient-to-r from-emerald-600 to-amber-500 text-white rounded-xl transition-all hover:scale-105 active:scale-95 shadow-sm shadow-emerald-200/50 flex items-center gap-1.5"
+          >
+            <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
+            {language === 'es' ? 'Empezar Discipulado' : 'Start Discipleship'}
+          </Link>
         </nav>
 
         <div className="flex items-center gap-4">

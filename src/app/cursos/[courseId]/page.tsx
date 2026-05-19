@@ -5,7 +5,9 @@ import { Suspense } from 'react';
 export function generateStaticParams() {
   return [
     { courseId: 'liderazgo' },
-    { courseId: 'diaconado' }
+    { courseId: 'diaconado' },
+    { courseId: 'maestros' },
+    { courseId: 'discipulado' }
   ];
 }
 

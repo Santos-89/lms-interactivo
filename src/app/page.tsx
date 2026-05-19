@@ -4,11 +4,20 @@
 import React from 'react';
 import Header from '@/components/layout/Header';
 import { motion } from 'framer-motion';
-import { Compass, BookOpen, Users, Pencil, ArrowRight, Sparkles, Facebook, Instagram, Youtube, Globe } from 'lucide-react';
+import { Compass, BookOpen, Users, Pencil, ArrowRight, Sparkles, Facebook, Instagram, Youtube, Globe, Heart } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import PlantGrowth from '@/components/course/PlantGrowth';
 
 const COURSES = [
+  {
+    id: 'discipulado',
+    title: 'Discipulado',
+    description: 'Inicia tu caminar de fe, descubre el amor incondicional de Dios y conéctate con una comunidad de crecimiento.',
+    icon: <Heart className="w-8 h-8" />,
+    color: 'bg-emerald-600',
+    href: '/cursos/discipulado'
+  },
   {
     id: 'diaconado',
     title: 'Diaconado',
@@ -67,6 +76,10 @@ const TRANSLATIONS: any = {
       exit: "Salir"
     },
     courses: {
+      discipulado: {
+        title: "Discipulado",
+        description: "Inicia tu caminar de fe, descubre el amor incondicional de Dios y conéctate con una comunidad de crecimiento."
+      },
       diaconado: {
         title: "Diaconado",
         description: "Aprende sobre el ministerio del diaconado, sus responsabilidades y cómo servir con excelencia."
@@ -110,6 +123,10 @@ const TRANSLATIONS: any = {
       exit: "Log out"
     },
     courses: {
+      discipulado: {
+        title: "Discipleship",
+        description: "Start your journey of faith, discover God's unconditional love, and connect with a growing community."
+      },
       diaconado: {
         title: "Diaconate",
         description: "Learn about the ministry of the diaconate, its responsibilities, and how to serve with excellence."
@@ -262,6 +279,51 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Banner de Discipulado de Alto Impacto */}
+        <section className="mb-24">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="bg-gradient-to-tr from-emerald-800 to-emerald-950 rounded-[48px] p-8 md:p-16 text-white shadow-2xl relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12"
+          >
+            {/* Esferas decorativas de luz */}
+            <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-emerald-600/30 blur-[100px] rounded-full"></div>
+            <div className="absolute -top-20 -left-20 w-80 h-80 bg-amber-500/10 blur-[100px] rounded-full"></div>
+            
+            <div className="relative z-10 max-w-xl space-y-6">
+              <div className="inline-flex items-center gap-3 bg-white/10 px-5 py-2 rounded-full border border-white/10 backdrop-blur-sm">
+                <Sparkles className="w-4 h-4 text-amber-300 fill-amber-300 animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-200">¡NUEVO APARTADO INTERACTIVO!</span>
+              </div>
+              
+              <h2 className="text-4xl md:text-5xl font-black font-outfit leading-tight uppercase tracking-tighter">
+                Empezar Discipulado
+              </h2>
+              <p className="text-emerald-100/90 font-medium text-lg leading-relaxed">
+                Inicia tu caminar de fe de una forma completamente interactiva. Registra tus reflexiones en tu propio diario digital, recibe la guía personalizada de nuestro <strong className="text-amber-300 font-extrabold">Mentor Espiritual IA</strong> y conéctate con mentores presenciales de nuestra iglesia.
+              </p>
+              
+              <div className="pt-4">
+                <Link 
+                  href="/cursos/discipulado/interactivo" 
+                  className="inline-flex items-center gap-3 px-10 py-5 bg-amber-500 text-white rounded-3xl font-black text-xs uppercase tracking-widest shadow-[0_15px_30px_rgba(245,158,11,0.3)] hover:bg-amber-600 transition-all hover:scale-105 active:scale-95"
+                >
+                  <span>Iniciar Mi Camino de Fe</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </div>
+            
+            {/* Visualización de la planta al final de su crecimiento */}
+            <div className="relative z-10 shrink-0 w-80 h-80 bg-white/5 rounded-[40px] border border-white/10 backdrop-blur-md shadow-inner flex items-center justify-center">
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/10 to-amber-500/10 opacity-30 rounded-[40px]"></div>
+              <PlantGrowth completedCount={10} size={260} />
+            </div>
+          </motion.div>
+        </section>
+
         {/* Courses Section */}
         <section id="programas">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
@@ -283,9 +345,9 @@ export default function Home() {
                 const config = {
                   diaconado: { bg: 'bg-[#F9DCC4]', circle: 'bg-[#F08E52]/20', img: '/illustrations/Diaconos.png' },
                   liderazgo: { bg: 'bg-[#BDE0FE]', circle: 'bg-[#4895EF]/20', img: '/illustrations/liderazgo.png' },
-                  maestros: { bg: 'bg-[#D0F4DE]', circle: 'bg-[#40916C]/20', img: '/illustrations/maestros.png' }
+                  maestros: { bg: 'bg-[#D0F4DE]', circle: 'bg-[#40916C]/20', img: '/illustrations/maestros.png' },
+                  discipulado: { bg: 'bg-[#D1FAE5]', circle: 'bg-[#10B981]/20', img: '/illustrations/discipulado.png' }
                 } as any;
-
                 
                 const courseConfig = config[course.id] || config.diaconado;
 
@@ -323,7 +385,8 @@ export default function Home() {
                               t.courses[id] || 
                               (title.includes('diaconado') ? t.courses.diaconado : null) ||
                               (title.includes('liderazgo') ? t.courses.liderazgo : null) ||
-                              (title.includes('maestros') ? t.courses.maestros : null);
+                              (title.includes('maestros') ? t.courses.maestros : null) ||
+                              (title.includes('discipulado') ? t.courses.discipulado : null);
                             return translation ? translation.title : course.title;
                           })()}
                         </h3>
@@ -335,7 +398,8 @@ export default function Home() {
                               t.courses[id] || 
                               (title.includes('diaconado') ? t.courses.diaconado : null) ||
                               (title.includes('liderazgo') ? t.courses.liderazgo : null) ||
-                              (title.includes('maestros') ? t.courses.maestros : null);
+                              (title.includes('maestros') ? t.courses.maestros : null) ||
+                              (title.includes('discipulado') ? t.courses.discipulado : null);
                             return translation ? translation.description : course.description;
                           })()}
                         </p>
@@ -346,6 +410,7 @@ export default function Home() {
                             href={
                               course.id === 'liderazgo' ? '/cursos/liderazgo/interactivo' :
                               course.id === 'diaconado' ? '/cursos/diaconado/interactivo' :
+                              course.id === 'discipulado' ? '/cursos/discipulado/interactivo' :
                               `/cursos/${course.id}`
                             }
                             className="w-full px-8 py-5 bg-primary rounded-[28px] text-xs font-black text-white uppercase tracking-[0.3em] shadow-[0_15px_35px_rgba(99,102,241,0.2)] hover:bg-[#4F46E5] transition-all active:scale-95 flex items-center justify-center gap-3 transition-all duration-300 group/btn"

@@ -104,7 +104,23 @@ CREATE TRIGGER on_auth_user_created
 INSERT INTO public.courses (id, title, description) VALUES
 ('liderazgo', 'Programa de Liderazgo', 'Desarrolla habilidades directivas basadas en la palabra.'),
 ('diaconado', 'Programa de Diaconado', 'Aprende los fundamentos del ministerio de ayuda y servicio.'),
-('maestros', 'Programa de Maestros', 'Enseña la palabra de forma efectiva.')
+('maestros', 'Programa de Maestros', 'Enseña la palabra de forma efectiva.'),
+('discipulado', 'Programa de Discipulado', 'Inicia tu caminar de fe, descubre el amor incondicional de Dios y conéctate con una comunidad de crecimiento.')
+ON CONFLICT (id) DO NOTHING;
+
+-- Insertar las 10 lecciones del Curso de Discipulado
+INSERT INTO public.lessons (id, course_id, title, order_index, xp_value) VALUES
+('discipulado-leccion-1', 'discipulado', 'El Amor de Dios y la Gracia', 1, 100),
+('discipulado-leccion-2', 'discipulado', 'Salvación por Fe', 2, 100),
+('discipulado-leccion-3', 'discipulado', 'Una Nueva Criatura en Cristo', 3, 100),
+('discipulado-leccion-4', 'discipulado', 'La Oración: Conversar con el Padre', 4, 100),
+('discipulado-leccion-5', 'discipulado', 'La Biblia: Nuestra Guía', 5, 100),
+('discipulado-leccion-6', 'discipulado', 'El Espíritu Santo: Guía y Consolador', 6, 100),
+('discipulado-leccion-7', 'discipulado', 'La Vida en Comunidad y la Iglesia', 7, 100),
+('discipulado-leccion-8', 'discipulado', 'Obediencia y Fidelidad', 8, 100),
+('discipulado-leccion-9', 'discipulado', 'Superando Pruebas y Tentaciones', 9, 100),
+('discipulado-leccion-10', 'discipulado', 'Compartiendo tu Nueva Fe', 10, 100)
 ON CONFLICT (id) DO NOTHING;
 
 -- ¡FIN DEL SCRIPT! 🚀
+
