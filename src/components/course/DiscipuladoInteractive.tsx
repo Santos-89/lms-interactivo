@@ -41,204 +41,284 @@ const PrayerIcon = ({ className }: { className?: string }) => (
 // --- CURRICULUM DE DISCIPULADO DE 10 LECCIONES ---
 const LESSONS_DATA = [
   {
-    id: 0,
-    title: "El Amor de Dios y la Gracia",
-    badge: "Lección 1",
-    description: "El regalo incondicional de la salvación.",
-    content: "El punto de partida del caminar cristiano es comprender que Dios te ama incondicionalmente. No necesitas ganar su amor a través de buenas obras ni rituales; es un regalo gratuito conocido como Gracia. La gracia significa recibir el favor inmerecido de Dios. A través de Jesús, somos adoptados como hijos e hijas amados, perdonados de todo nuestro pasado y cimentados sobre una base de amor eterno y paz espiritual.",
-    verses: [
-      { ref: "Juan 3:16", text: "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree, no se pierda, mas tenga vida eterna." },
-      { ref: "Efesios 2:8–9", text: "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios; no por obras, para que nadie se gloríe." }
+    "id": 0,
+    "title": "Discípulo",
+    "badge": "Lección 1",
+    "description": "Aprende el significado de ser un aprendiz y seguidor verdadero de Cristo.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo; enseñándoles que guarden todas las cosas que os he mandado; y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo. Amén.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— Mateo 28:19-20 (RVR1960)</span>\n                        </div>\n                        <p>Esta fue la gran encomienda que Dios, en la persona de Jesús, nos dejó antes de ascender al cielo. Es lamentable decir que hoy en día, en la iglesia, te puedes encontrar con diferentes tipos de personas y los discípulos reales son escasos.</p>\n                        <div class=\"grid grid-cols-1 md:grid-cols-2 gap-4 my-6\">\n                            <div class=\"bg-blue-50 border border-blue-100 p-5 rounded-xl\">\n                                <h4 class=\"font-bold text-blue-900 text-sm uppercase tracking-wide mb-2\"><i class=\"fa-solid fa-users text-blue-600 mr-2\"></i>La Multitud de Admiradores</h4>\n                                <p class=\"text-sm text-slate-600\">La Biblia habla de una gran multitud siguiendo a Jesús. Había personas que le admiraban y le seguían a dondequiera que fuera por sus milagros o por curiosidad. Hoy en día abundan los admiradores, pero Jesús no pidió admiradores.</p>\n                            </div>\n                            <div class=\"bg-amber-50 border border-amber-100 p-5 rounded-xl\">\n                                <h4 class=\"font-bold text-amber-900 text-sm uppercase tracking-wide mb-2\"><i class=\"fa-solid fa-user-graduate text-amber-600 mr-2\"></i>El Discípulo Verdadero</h4>\n                                <p class=\"text-sm text-slate-600\">Un discípulo es un <strong>aprendiz</strong>: es aquella persona que voluntariamente decide seguir, vivir y defender activamente la doctrina y los métodos de su Maestro. Decidimos aprender diariamente de Él.</p>\n                            </div>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">¿Cómo funciona el discipulado en Cristo?</h3>\n                        <p>Debes comprender que <strong>tú no eres discipulado solo en esta aula de clases</strong>. Desde el momento que dispusiste tu corazón, Dios comenzó una obra transformadora en ti. Estas lecciones son solo la preparación inicial para enfrentar la gran aventura que emprendiste el día que Cristo se apareció en tu vida.</p>\n                        <div class=\"bg-indigo-50 border border-indigo-100 p-5 rounded-xl flex items-start gap-3 my-6\">\n                            <div class=\"text-indigo-600 text-xl\"><i class=\"fa-solid fa-lightbulb\"></i></div>\n                            <div>\n                                <h4 class=\"font-bold text-indigo-950 text-sm\">¡Todo discípulo llega a ser líder!</h4>\n                                <p class=\"text-xs sm:text-sm text-slate-600 mt-1\">Mira el ejemplo en <strong>Josué 1:1-9</strong>. Moisés fue el líder de Josué, pero llegado el momento, Josué tuvo el privilegio y la responsabilidad de liderar a Israel. Al vivir el Reino de Dios, toda persona se convierte de una u otra forma en un ejemplo, en un modelo a seguir.</p>\n                            </div>\n                        </div>\n                        <div class=\"bg-slate-50 p-4 rounded-xl border border-slate-200\">\n                            <p class=\"text-xs sm:text-sm italic text-slate-600\">\"Porque no nos ha dado Dios espíritu de cobardía, sino de poder, de amor y de dominio propio.\" — 2 Timoteo 1:7</p>\n                        </div>\n                        <p class=\"text-center font-bold text-blue-900 font-serif italic text-base my-4\">\"En la mayoría de los casos, Dios no llama a preparados, Dios prepara a sus llamados.\"</p>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">La diferencia clave: Creyente vs. Discípulo</h3>\n                        <p>La diferencia principal entre un simple creyente y un discípulo radica en la palabra <strong>\"TODO\"</strong> que encontramos en la gran comisión:</p>\n                        <ul class=\"space-y-2 pl-4\">\n                            <li class=\"flex items-start gap-2.5 text-sm\"><i class=\"fa-solid fa-circle-check text-emerald-600 mt-1\"></i> <span><strong>Todas las naciones:</strong> Ir a cualquier lugar sin excusas.</span></li>\n                            <li class=\"flex items-start gap-2.5 text-sm\"><i class=\"fa-solid fa-circle-check text-emerald-600 mt-1\"></i> <span><strong>Todas las cosas:</strong> Obedecer y enseñar todas las órdenes sin acomodarlas a nuestra manera.</span></li>\n                            <li class=\"flex items-start gap-2.5 text-sm\"><i class=\"fa-solid fa-circle-check text-emerald-600 mt-1\"></i> <span><strong>Todos los días:</strong> Vivir el evangelio diariamente, no solo los domingos.</span></li>\n                        </ul>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Señor, yo te doy gracias por lo que hasta este momento has hecho en mi vida, ayúdame a entender tus planes en mí. Dame la fortaleza necesaria para llegar hasta el final. En el nombre de Jesús tu hijo amado oramos, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "Mateo 28:19-20",
+        "text": "Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo; enseñándoles que guarden todas las cosas que os he mandado; y he aquí yo estoy con vosotros todos los días, hasta el fin del mundo. Amén."
+      }
     ],
-    reflectionQuestions: ["¿Cómo cambia mi vida saber que el amor de Dios no depende de mis esfuerzos, sino de su gracia infinita?"],
-    quiz: [
-      { q: "¿Cómo se define la 'Gracia' de Dios?", options: ["Un premio por ser perfectos", "Un favor inmerecido y gratuito", "Una ley estricta", "Un título académico"], correct: 1 },
-      { q: "Según Juan 3:16, ¿cuál fue la mayor muestra de amor de Dios?", options: ["Crear los planetas", "Enviar a su Hijo único", "Dar riquezas", "Predicar en el desierto"], correct: 1 },
-      { q: "Según Efesios 2:8-9, la salvación es...", options: ["Por buenas obras", "Por medio de la fe, como un don de Dios", "Por antigüedad", "Por conocimientos teológicos"], correct: 1 },
-      { q: "¿Por qué la salvación no es por obras?", options: ["Para que nadie se gloríe o presuma", "Porque es muy difícil hacer buenas obras", "Porque Dios no quiere que hagamos nada", "Porque las obras no agradan a Dios"], correct: 0 },
-      { q: "¿Cuál es el cimiento de nuestra fe?", options: ["El esfuerzo personal", "El temor a la ley", "El amor incondicional y gracia de Dios", "La opinión de otros"], correct: 2 }
+    "reflectionQuestions": [
+      "¿Qué cambios necesito hacer en mi rutina diaria para comprometerme a ser un discípulo verdadero todos los días y no solo un admirador?"
     ],
-    aiContext: "El amor incondicional, la gracia redentora y dejar atrás la culpa por las fallas del pasado."
+    "quiz": [
+      {
+        "q": "¿Cuál es la diferencia fundamental que define al discípulo frente al simple creyente de acuerdo al texto?",
+        "options": [
+          "El creyente conoce la teología y el discípulo sabe de memoria toda la Biblia.",
+          "El discípulo obedece, enseña y vive 'todas las cosas' ordenadas por Cristo, 'todos los días' y en 'todo lugar'.",
+          "El creyente asiste a los servicios y el discípulo asiste a clases todos los días."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "El significado de ser discípulo verdadero, la multitud vs. el aprendiz de Jesús y la obediencia."
   },
   {
-    id: 1,
-    title: "Salvación por Fe",
-    badge: "Lección 2",
-    description: "Entender la redención por medio de Jesucristo.",
-    content: "La salvación consiste en ser restaurado en nuestra relación con Dios. A través del pecado, la humanidad se distanció de su Creador, pero Jesucristo pagó el precio de ese alejamiento al morir en la cruz. Su sacrificio nos limpia y nos declara justos ante el Padre. Para recibir este perdón, solo necesitamos confesar a Jesús como Señor y creer de corazón que resucitó. La fe es la mano que toma la salvación ofrecida.",
-    verses: [
-      { ref: "Romanos 10:9", text: "Que si confesares con tu boca que Jesús es el Señor, y creyeres en tu corazón que Dios le levantó de los muertos, serás salvo." },
-      { ref: "Romanos 5:1", text: "Justificados, pues, por la fe, tenemos paz para con Dios por medio de nuestro Señor Jesucristo." }
+    "id": 1,
+    "title": "Tiempo de Cambio",
+    "badge": "Lección 2",
+    "description": "Descubre la necesidad del arrepentimiento y de ordenar tu vida espiritual.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"De modo que, si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— 2 Corintios 5:17 (RVR1960)</span>\n                        </div>\n                        <p>Muchos de los sufrimientos, conflictos e insatisfacciones que has enfrentado se deben enteramente a tus decisiones y acciones pasadas. Somos, al final del día, el fruto de nuestras siembras.</p>\n                        <div class=\"bg-red-50 border border-red-100 p-5 rounded-xl my-4\">\n                            <h4 class=\"font-bold text-red-900 text-sm uppercase mb-2\"><i class=\"fa-solid fa-triangle-exclamation mr-2\"></i>La Ley de la Siembra y la Cosecha</h4>\n                            <p class=\"text-sm text-slate-600\"><strong>Gálatas 6:7</strong> nos dice: <em>\"No os engañéis; Dios no puede ser burlado: pues todo lo que el hombre sembrare, eso también segará.\"</em> Si queremos que nuestra vida cambie, debemos cambiar radicalmente nuestra forma de vivir.</p>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">El Ordenar la Casa: La parábola de la Dracma Perdida</h3>\n                        <p>En <strong>Lucas 15:8-9</strong>, vemos la historia de la mujer que pierde una dracma. Ella hace tres cosas fundamentales para recuperarla:</p>\n                        <div class=\"space-y-4 my-4\">\n                            <div class=\"flex gap-3\">\n                                <span class=\"bg-indigo-600 text-white font-bold h-6 w-6 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-1\">1</span>\n                                <div>\n                                    <strong>Enciende la lámpara (Salir de la oscuridad):</strong> La mujer pierde la moneda porque estaba a oscuras. La ausencia de la Palabra en la vida de una persona es total oscuridad. Como dice el <strong>Salmo 119:105</strong>: <em>\"Lámpara es a mis pies tu palabra...\"</em>.\n                                </div>\n                            </div>\n                            <div class=\"flex gap-3\">\n                                <span class=\"bg-indigo-600 text-white font-bold h-6 w-6 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-1\">2</span>\n                                <div>\n                                    <strong>Barre la casa (Limpiar el desorden y suciedad):</strong> El desorden y la suciedad ocultan lo valioso. Hay cosas en tu vida (felicidad, amor, familia, finanzas) que se perdieron en el desorden espiritual de las tinieblas y que solo la luz de la Palabra te permitirá identificar y restaurar.\n                                </div>\n                            </div>\n                            <div class=\"flex gap-3\">\n                                <span class=\"bg-indigo-600 text-white font-bold h-6 w-6 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-1\">3</span>\n                                <div>\n                                    <strong>Busca con diligencia:</strong> Implica cambios definitivos. Lo que el enemigo te robó en tu pasado de desorden, Dios te lo devolverá con creces una vez que ordenes tu vida.\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"bg-slate-900 text-white p-6 rounded-2xl my-6\">\n                            <h4 class=\"font-bold text-amber-400 text-sm uppercase tracking-wider mb-3\"><i class=\"fa-solid fa-list-check mr-2\"></i>Identificando el Desorden de la Carne</h4>\n                            <p class=\"text-sm text-slate-300 mb-4\">El apóstol Pablo nos da una lista clara en <strong>Gálatas 5:19-21</strong> sobre las obras de la carne que contradicen el reino de Dios y deben ser eliminadas:</p>\n                            <div class=\"grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm\">\n                                <div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-xmark text-rose-500\"></i> Unión libre (fornicación)</div>\n                                <div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-xmark text-rose-500\"></i> Relación fuera del matrimonio (adulterio)</div>\n                                <div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-xmark text-rose-500\"></i> Pornografía e inmoralidad</div>\n                                <div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-xmark text-rose-500\"></i> Ocultismo (brujería, hechicería, santería)</div>\n                                <div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-xmark text-rose-500\"></i> Chismes y contiendas</div>\n                                <div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-xmark text-rose-500\"></i> Robo, mentira y borracheras</div>\n                            </div>\n                        </div>\n                        <p>Recuerda el llamado apostólico en <strong>Hechos 3:19</strong>: <em>\"Así que, arrepentíos y convertíos, para que sean borrados vuestros pecados; para que vengan de la presencia del Señor tiempos de refrigerio...\"</em>.</p>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Señor te pido la fuerza y el carácter necesario para hacer cambios en mi vida, toma el control de mis sentimientos y emociones, permite sacar todo aquello irreal en mi vida. No quiero nada en mi vida que no provenga de ti, solo quiero tu voluntad. En el nombre de Jesús, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "2 Corintios 5:17",
+        "text": "De modo que, si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas."
+      }
     ],
-    reflectionQuestions: ["¿Qué significa para mí que Jesús haya cargado con mis errores y me declare justo y en paz con Dios?"],
-    quiz: [
-      { q: "¿Qué significa ser 'Justificados'?", options: ["Buscar excusas para pecar", "Ser declarados inocentes y justos por Dios", "Tener razón en una discusión", "Ganar mucho dinero"], correct: 1 },
-      { q: "Según Romanos 10:9, ¿qué dos cosas se necesitan para ser salvos?", options: ["Confesar con la boca y creer con el corazón", "Tener estudios y saber hebreo", "Pagar ofrendas y servir", "Ir a la iglesia todos los días"], correct: 0 },
-      { q: "¿Por qué Jesús murió en la cruz?", options: ["Para dar un ejemplo moral", "Para pagar por el pecado y darnos paz con el Padre", "Para derrotar a los gobernantes de Roma", "Para fundar una religión"], correct: 1 },
-      { q: "¿Qué obtenemos de la justificación por fe según Romanos 5:1?", options: ["Fama instantánea", "Ausencia completa de problemas", "Paz para con Dios por medio de Jesucristo", "Dones especiales"], correct: 2 },
-      { q: "¿Cómo se describe la fe en este tema?", options: ["Una fuerza mental abstracta", "La confianza de que Dios ya pagó nuestra redención", "Una duda constante", "Una lista de reglas"], correct: 1 }
+    "reflectionQuestions": [
+      "¿Qué áreas o 'obras de la carne' en mi vida necesitan ser limpiadas y ordenadas bajo la luz de la Palabra?"
     ],
-    aiContext: "La salvación gratuita a través de la fe, la expiación de pecados en la cruz y el regalo de la justicia divina."
+    "quiz": [
+      {
+        "q": "¿Cuáles son las dos principales razones analizadas por las que la mujer de Lucas 15 pierde su moneda (dracma)?",
+        "options": [
+          "Porque era distraída y la casa tenía un piso de arena movediza.",
+          "Estaba a oscuras (ausencia de la Palabra) y vivía en suciedad/desorden (obras de la carne).",
+          "Porque las amigas y vecinas le habían robado mientras dormía."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "La siembra y la cosecha, arrepentimiento, limpieza espiritual y la lámpara de la palabra."
   },
   {
-    id: 2,
-    title: "Una Nueva Criatura en Cristo",
-    badge: "Lección 3",
-    description: "Nuestra nueva identidad y dejar atrás el pasado.",
-    content: "Cuando aceptas a Jesús, tu vida experimenta un nuevo nacimiento espiritual. Tu pasado es borrado por completo y Dios te ve como si nunca hubieras pecado. Ahora tienes una nueva identidad: eres coheredero con Cristo y posees el Espíritu de Dios en tu interior. Las conductas viejas, rencores y remordimientos van quedando atrás y el carácter de Jesús empieza a brillar en ti de forma natural.",
-    verses: [
-      { ref: "2 Corintios 5:17", text: "De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas." },
-      { ref: "Gálatas 2:20", text: "Con Cristo estoy juntamente crucificado, y ya no vivo yo, mas vive Cristo en mí." }
+    "id": 2,
+    "title": "Seguridad en Él",
+    "badge": "Lección 3",
+    "description": "Edifica tu vida sobre el fundamento firme de la obediencia a la Roca.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"El temor del hombre pondrá lazo; Mas el que confía en Jehová será exaltado.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— Proverbios 29:25 (RVR1960)</span>\n                        </div>\n                        <p>Todos los seres humanos edificamos constantemente cosas en nuestro diario vivir: relaciones familiares, proyectos, matrimonios y nuestro propio carácter. Jesucristo dividió a los constructores en dos tipos muy específicos:</p>\n                        <div class=\"grid grid-cols-1 md:grid-cols-2 gap-6 my-6\">\n                            <div class=\"border border-indigo-100 bg-indigo-50/50 p-5 rounded-2xl flex flex-col justify-between\">\n                                <div>\n                                    <h4 class=\"font-serif font-bold text-lg text-indigo-950 mb-2\"><i class=\"fa-solid fa-mountain text-indigo-600 mr-2\"></i>Edificar sobre la Roca</h4>\n                                    <p class=\"text-xs sm:text-sm text-slate-600\">Representa a quien oye las palabras de Jesús y las <strong>hace</strong> (obediencia). Cuando descienda la lluvia, vengan ríos y soplen vientos, la casa no caerá porque sus bases son eternas.</p>\n                                </div>\n                            </div>\n                            <div class=\"border border-rose-100 bg-rose-50/50 p-5 rounded-2xl flex flex-col justify-between\">\n                                <div>\n                                    <h4 class=\"font-serif font-bold text-lg text-rose-950 mb-2\"><i class=\"fa-solid fa-water text-rose-600 mr-2\"></i>Edificar sobre la Arena</h4>\n                                    <p class=\"text-xs sm:text-sm text-slate-600\">Representa a quien oye las palabras pero <strong>no las hace</strong>. Ante las mismas tormentas y vientos de la vida, su caída será estrepitosa y grande será su ruina.</p>\n                                </div>\n                            </div>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">Las Tormentas son Inevitables</h3>\n                        <p>Note un detalle crítico en las palabras de Jesús: <strong>ambas casas experimentaron exactamente las mismas tormentas</strong>. Cristo no te promete una vida libre de tormentas o dificultades —vivimos en un mundo complejo— pero te asegura que en Él prevalecerás y nada definitivo te hará daño si edificas sobre Su voluntad.</p>\n                        <div class=\"bg-blue-950 text-white p-6 rounded-2xl\">\n                            <h4 class=\"font-bold text-amber-400 text-sm uppercase tracking-wider mb-2\"><i class=\"fa-solid fa-shield-halved mr-2\"></i>La Promesa Activa</h4>\n                            <p class=\"text-xs sm:text-sm leading-relaxed text-slate-200\">Como le fue dicho a Josué (Josué 1:5): <em>\"Nadie te podrá hacer frente en todos los días de tu vida; como estuve con Moisés, estaré contigo; no te dejaré, ni te desamparará\"</em>. Solamente esfuérzate, sé valiente y medita de día y de noche en el libro de la ley.</p>\n                        </div>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Dios mío y Señor mío, quiero confiar ciegamente en ti, quiero que tú dirijas mi camino. Quiero descansar en tus brazos y saber que todo va a estar bien. Yo rechazo la duda y la inseguridad. Abrazo tus promesas porque sé que tú eres fiel y verdadero. Reafirmo mi compromiso contigo y sé que nada me apartará de tu amor y de tus propósitos, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "Proverbios 29:25",
+        "text": "El temor del hombre pondrá lazo; Mas el que confía en Jehová será exaltado."
+      }
     ],
-    reflectionQuestions: ["¿Qué hábitos o formas de pensar viejas siento que Dios está transformando hoy en mi nueva vida?"],
-    quiz: [
-      { q: "Según 2 Corintios 5:17, cuando estamos en Cristo somos...", options: ["Mejores personas que los demás", "Una nueva criatura", "Perfectos al instante sin fallas", "Personas con dudas constantes"], correct: 1 },
-      { q: "¿Qué sucede con las 'cosas viejas' del pasado?", options: ["Permanecen para siempre acusándonos", "Pasaron, y he aquí todas son hechas nuevas", "Se ignoran a medias", "Hay que pagarlas con penitencia"], correct: 1 },
-      { q: "Según Gálatas 2:20, ¿quién vive ahora en el creyente?", options: ["El pasado", "Cristo por medio de su Espíritu", "Las opiniones de la gente", "La ley antigua"], correct: 1 },
-      { q: "¿Qué define nuestra nueva identidad?", options: ["Nuestros logros humanos", "Ser amados y perdonados en Cristo", "Nuestros bienes materiales", "Nuestra antigua conducta"], correct: 1 },
-      { q: "El cambio de carácter en el nuevo creyente es...", options: ["Un proceso guiado por el Espíritu de Dios", "Una obligación forzada", "Imposible de lograr", "Innecesario"], correct: 0 }
+    "reflectionQuestions": [
+      "¿Cómo puedo fortalecer mi obediencia práctica para asegurar que mi vida esté edificada sobre la Roca ante las tormentas?"
     ],
-    aiContext: "Nuestra nueva identidad, la redención del pasado y el crecimiento en el carácter amoroso de Jesús."
+    "quiz": [
+      {
+        "q": "¿Qué determina la diferencia en el resultado final entre la casa sobre la roca y la casa sobre la arena?",
+        "options": [
+          "La fuerza de la tormenta que golpeó a cada una de manera diferente.",
+          "Los materiales decorativos que usaron en el techo.",
+          "El fundamento: uno oyó y obedeció (roca), el otro oyó pero no actuó (arena)."
+        ],
+        "correct": 2
+      }
+    ],
+    "aiContext": "Edificar sobre la roca (obediencia) vs. sobre la arena (oír sin hacer) y enfrentar tormentas de fe."
   },
   {
-    id: 3,
-    title: "La Oración: Conversar con el Padre",
-    badge: "Lección 4",
-    description: "Cómo desarrollar una relación diaria y sencilla con Dios.",
-    content: "La oración no es un rezo repetitivo ni aburrido; es una conversación íntima, sincera y cercana con tu Padre celestial. A Dios le interesa cada aspecto de tu vida: tus alegrías, dudas, temores y necesidades. No necesitas palabras elocuentes; la sencillez y honestidad de tu corazón es lo que más le agrada. Al orar, no solo pedimos, sino que aprendemos a escuchar la paz y la guía del Señor.",
-    verses: [
-      { ref: "Mateo 6:6", text: "Mas tú, cuando ores, entra en tu aposento, y cerrada la puerta, ora a tu Padre que está en lo secreto; y tu Padre que ve en lo secreto te recompensará en público." },
-      { ref: "Filipenses 4:6", text: "Por nada estéis afanosos, sino sean conocidas vuestras peticiones delante de Dios en toda oración y ruego, con acción de gracias." }
+    "id": 3,
+    "title": "Decisiones",
+    "badge": "Lección 4",
+    "description": "Aprende a tomar decisiones sabias y firmes basadas en las Escrituras.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"A los cielos y a la tierra llamo por testigos hoy contra vosotros, que os he puesto delante la vida y la muerte, la bendición y la maldición; escoge, pues, la vida, para que vivas tú y tu descendencia.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— Deuteronomio 30:19 (RVR1960)</span>\n                        </div>\n                        <p>Nuestra vida actual es la suma de nuestras decisiones pasadas. Si deseamos resultados diferentes y la bendición de Dios, es indispensable que tomemos decisiones basadas en Su Palabra y no en nuestras emociones pasajeras.</p>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">Claves para Decisiones Sabias</h3>\n                        <div class=\"space-y-4\">\n                            <div class=\"bg-slate-50 border-l-4 border-indigo-600 p-4 rounded-r-xl\">\n                                <h4 class=\"font-bold text-slate-900 text-sm\">1. Basadas estrictamente en la Escritura</h4>\n                                <p class=\"text-xs sm:text-sm text-slate-600 mt-1\">La Biblia es un manual útil para enseñar, redargüir, corregir e instruir en justicia (2 Timoteo 3:16). Evita unirte en yugo desigual en tus relaciones (2 Corintios 6:14) y cuida con diligencia tus amistades (1 Corintios 15:33).</p>\n                            </div>\n                            <div class=\"bg-slate-50 border-l-4 border-indigo-600 p-4 rounded-r-xl\">\n                                <h4 class=\"font-bold text-slate-900 text-sm\">2. Nunca basadas en opiniones humanas sin filtro espiritual</h4>\n                                <p class=\"text-xs sm:text-sm text-slate-600 mt-1\"><em>\"Hay camino que al hombre le parece derecho; Pero su fin es camino de muerte\"</em> (Proverbios 14:12). Busca consejo maduro en la iglesia (pastores, líderes celulares, supervisores) sabiendo que a veces te dirán cosas que confrontarán tu ego.</p>\n                            </div>\n                            <div class=\"bg-slate-50 border-l-4 border-indigo-600 p-4 rounded-r-xl\">\n                                <h4 class=\"font-bold text-slate-900 text-sm\">3. Decisiones radicales y firmes</h4>\n                                <p class=\"text-xs sm:text-sm text-slate-600 mt-1\"><em>\"Determinarás asimismo una cosa, y te será firme...\"</em> (Job 22:28). El carácter de un discípulo se demuestra en la firmeza de sus decisiones, erradicando por completo el doble ánimo.</p>\n                            </div>\n                        </div>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Señor Jesús entiendo que la vida se trata de decisiones, ayúdame y dame la sabiduría para no seguir errando en mi camino. Dame la fortaleza para tomar decisiones definitivas en mi vida. En el nombre Jesús, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "Deuteronomio 30:19",
+        "text": "A los cielos y a la tierra llamo por testigos hoy contra vosotros, que os he puesto delante la vida y la muerte, la bendición y la maldición; escoge, pues, la vida, para que vivas tú y tu descendencia."
+      }
     ],
-    reflectionQuestions: ["¿Cómo puedo organizar un momento especial del día para conversar con Dios de forma privada y honesta?"],
-    quiz: [
-      { q: "¿Qué es realmente la oración?", options: ["Una fórmula mágica", "Una conversación cercana con Dios como Padre", "Un monólogo para lucirse", "Un deber solo para líderes"], correct: 1 },
-      { q: "Según Mateo 6:6, ¿dónde nos invita Jesús a orar preferiblemente?", options: ["En las esquinas de las calles", "En nuestro aposento privado (lo secreto)", "En megáfonos", "Solo en templos"], correct: 1 },
-      { q: "¿Cómo debemos presentar nuestras peticiones según Filipenses 4:6?", options: ["Con desesperación y queja", "Con toda oración y ruego, acompañados de acción de gracias", "Solo mentalmente sin hablar", "Por medio de intermediarios"], correct: 1 },
-      { q: "¿Cuál es el antídoto contra el afán y la ansiedad según la Biblia?", options: ["Ignorar las responsabilidades", "La oración constante a Dios", "Comprar cosas", "La autoconfianza"], correct: 1 },
-      { q: "¿Qué le agrada a Dios cuando oramos?", options: ["La sencillez y sinceridad de corazón", "Palabras teológicas complejas", "Orar muchas horas seguidas", "El tono de voz imponente"], correct: 0 }
+    "reflectionQuestions": [
+      "¿Cuál es la decisión más importante que debo tomar esta semana y cómo puedo filtrarla a través de la Palabra y el consejo espiritual?"
     ],
-    aiContext: "Desarrollar una vida de oración sencilla, honesta y sin formalismos, conociendo a Dios como un Padre tierno."
+    "quiz": [
+      {
+        "q": "¿Qué regalo divino nos da la responsabilidad completa sobre nuestro destino espiritual según el texto?",
+        "options": [
+          "El estatus económico y la educación universitaria.",
+          "El libre albedrío, que nos permite escoger la bendición o la maldición.",
+          "La opinión de las personas que nos rodean en la comunidad."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "Tomar decisiones basadas en la Biblia, no dejarse guiar por emociones y buscar consejo sabio."
   },
   {
-    id: 4,
-    title: "La Biblia: Nuestra Guía",
-    badge: "Lección 5",
-    description: "Las Escrituras como lámpara para caminar seguro.",
-    content: "La Biblia es la Palabra inspirada de Dios y el alimento para nuestro espíritu. A través de ella, conocemos el carácter del Señor, sus hermosas promesas y los principios prácticos para tomar buenas decisiones. Al leer la Biblia con regularidad, nuestra mente es renovada, aprendemos a diferenciar lo correcto y experimentamos aliento y fortaleza en momentos difíciles.",
-    verses: [
-      { ref: "Salmo 119:105", text: "Lámpara es a mis pies tu palabra, y lumbrera a mi camino." },
-      { ref: "2 Timoteo 3:16", text: "Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia." }
+    "id": 4,
+    "title": "Relaciones",
+    "badge": "Lección 5",
+    "description": "Comprende cómo relacionarte sanamente y proteger tu crecimiento espiritual.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"Ninguna palabra corrompida salga de vuestra boca, sino la que sea buena para la necesaria edificación... Antes sed benignos unos con otros, misericordiosos, perdonándoos unos a otros, como Dios también os perdonó a vosotros en Cristo.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— Efesios 4:29, 32 (RVR1960)</span>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">La Diversidad Humana</h3>\n                        <p>Dios creó al hombre del polvo y a la mujer a partir del hombre, separando las personalidades para luego unirlas milagrosamente en el matrimonio. Somos diferentes pero dependientes unos de otros. Esta diversidad también se manifiesta en las culturas, géneros, etapas del desarrollo y creencias.</p>\n                        <div class=\"bg-slate-50 p-5 rounded-xl border border-slate-200 text-center font-serif italic text-sm my-4\">\n                            \"Entre los individuos, como entre las naciones, el respeto al derecho ajeno es la paz.\" — Benito Juárez\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">El Ejemplo de Jesús: Zaqueo (Lucas 19:1-9)</h3>\n                        <p>Jesús se relacionó con pecadores sin comprometer Su santidad. Él no nos llamó a escondernos del mundo, sino a ser luz para el mundo. Sin embargo, para relacionarnos adecuadamente, debemos identificar en qué etapa espiritual nos encontramos:</p>\n                        <div class=\"grid grid-cols-1 md:grid-cols-2 gap-4\">\n                            <div class=\"bg-rose-50 border border-rose-100 p-5 rounded-xl\">\n                                <h4 class=\"font-bold text-rose-900 text-sm mb-1\"><i class=\"fa-solid fa-baby mr-2\"></i>Etapa de Recién Convertido</h4>\n                                <p class=\"text-xs sm:text-sm text-slate-600\">Al igual que un bebé, necesitas cuidados especiales. No estás listo para exponerte a ciertas influencias. Tu mejor amigo no puede ser alguien del mundo, debes cuidar quién te aconseja, los lugares que frecuentas y cómo te diviertes para evitar el yugo desigual.</p>\n                            </div>\n                            <div class=\"bg-emerald-50 border border-emerald-100 p-5 rounded-xl\">\n                                <h4 class=\"font-bold text-emerald-900 text-sm mb-1\"><i class=\"fa-solid fa-shield-halved mr-2\"></i>Etapa de Madurez Espiritual</h4>\n                                <p class=\"text-xs sm:text-sm text-slate-600\">Una vez maduro espiritualmente, tienes las convicciones firmes para entrar en cualquier entorno con el fin de rescatar y ganar a otros para el Reino, en lugar de que ellos te ganen a ti, tal como hizo Cristo con Zaqueo.</p>\n                            </div>\n                        </div>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Señor ayúdame en cada etapa de mi vida espiritual y natural. No quiero frustrarme en mi caminar y deseo llegar hasta donde tú digas. Ayúdame a ser mejor cada día en el nombre de Jesús, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "Efesios 4:29, 32",
+        "text": "Ninguna palabra corrompida salga de vuestra boca, sino la que sea buena para la necesaria edificación... Antes sed benignos unos con otros, misericordiosos, perdonándoos unos a otros, como Dios también os perdonó a vosotros en Cristo."
+      }
     ],
-    reflectionQuestions: ["Las Escrituras nos guían y alimentan. ¿Cómo incorporaré la lectura bíblica en mi vida diaria?"],
-    quiz: [
-      { q: "¿Cómo describe el Salmo 119:105 a la Palabra de Dios?", options: ["Un libro histórico complejo", "Lámpara a nuestros pies y lumbrera al camino", "Una recopilación de mitos", "Una ley inalcanzable"], correct: 1 },
-      { q: "Según 2 Timoteo 3:16, toda la Escritura es...", options: ["Inspirada por Dios", "Solo escrita por hombres sin guía", "Útil solo para expertos", "Incomprensible"], correct: 0 },
-      { q: "¿Para qué es útil la Palabra de Dios?", options: ["Para enseñar, corregir e instruir en justicia", "Para debatir y juzgar a los demás", "Para decoración", "Para ahuyentar problemas mágicamente"], correct: 0 },
-      { q: "¿Por qué es importante leer la Biblia habitualmente?", options: ["Para cumplir con un requisito religioso", "Para alimentar el espíritu y guiar nuestras decisiones", "Para sabernos de memoria datos históricos", "Para impresionar a los líderes"], correct: 1 },
-      { q: "¿Cómo se debe recibir la Palabra de Dios?", options: ["Con duda", "Con fe, obediencia y un corazón dispuesto", "Con aburrimiento", "Solo en ocasiones especiales"], correct: 1 }
+    "reflectionQuestions": [
+      "¿En qué etapa de mi vida espiritual me encuentro y cómo puedo proteger mis relaciones mientras crezco en la fe?"
     ],
-    aiContext: "La lectura bíblica constante como guía de vida, las promesas divinas y el fortalecimiento de la fe."
+    "quiz": [
+      {
+        "q": "¿Qué precaución fundamental debe tener un cristiano en la etapa de 'Recién Convertido' al relacionarse con su entorno?",
+        "options": [
+          "Debe aislarse completamente de toda persona y no hablar con nadie.",
+          "Debe cuidar sus amistades, quién le aconseja y los lugares que frecuenta, evitando influencias mundanas mientras madura.",
+          "Debe predicar en lugares peligrosos inmediatamente para probar su fe."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "Relaciones interpersonales, etapas de crecimiento (recién convertido vs. madurez) y evitar el yugo desigual."
   },
   {
-    id: 5,
-    title: "El Espíritu Santo",
-    badge: "Lección 6",
-    description: "Nuestro consolador, maestro y fuente de poder.",
-    content: "Jesús no nos dejó huérfanos. Al ascender al cielo, envió al Espíritu Santo para que viva dentro de nosotros de forma permanente. Él es tu Consolador, Guía y Maestro Personal. Su presencia te ayuda a comprender las Escrituras, te da el poder necesario para superar el pecado, te consuela en el dolor y produce frutos hermosos en tu carácter como el amor, el gozo, la paz y la paciencia.",
-    verses: [
-      { ref: "Juan 14:16–17", text: "Y yo rogaré al Padre, y os dará otro Consolador, para que esté con vosotros para siempre: el Espíritu de verdad." },
-      { ref: "Gálatas 5:22–23", text: "Mas el fruto del Espíritu es amor, gozo, paz, paciencia, benignidad, bondad, fe, mansedumbre, templanza." }
+    "id": 5,
+    "title": "La Palabra de Dios",
+    "badge": "Lección 6",
+    "description": "Conoce la estructura e inspiración de las Sagradas Escrituras.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— 2 Timoteo 3:16 (RVR1960)</span>\n                        </div>\n                        <p>La Biblia es el libro más vendido de la historia, pero también el más atacado. Imperios y gobiernos dictatoriales (como el nazi en 1933) intentaron destruirla quemándola públicamente, pero como dijo Jesús: <em>\"El cielo y la tierra pasarán, pero mis palabras no pasarán\"</em> (Mateo 24:35).</p>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">Mandamiento y Promesa</h3>\n                        <p>Al acercarnos a la Escritura debemos entender que por lo general las promesas bíblicas están indisolublemente ligadas a un mandamiento. En el <strong>Salmo 1</strong> se prometen grandes cosas (ser como árbol plantado junto a corrientes de aguas, prosperar en todo), pero esta bendición llega porque la persona se delita en la ley de Jehová y medita en ella de día y de noche.</p>\n                        <div class=\"bg-indigo-900 text-white p-6 rounded-2xl\">\n                            <h4 class=\"font-bold text-amber-400 text-sm uppercase mb-3\"><i class=\"fa-solid fa-book-open mr-2\"></i>Estructura y Composición de la Biblia</h4>\n                            <p class=\"text-xs text-slate-300 mb-4\">La palabra 'Biblia' proviene del griego <em>biblión</em> (libros). Fue escrita en un período aproximado de 1600 años por múltiples autores guiados por el Espíritu Santo. Contiene <strong>66 libros</strong> en total:</p>\n                            <div class=\"grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm\">\n                                <div>\n                                    <h5 class=\"font-bold text-amber-300 border-b border-indigo-800 pb-1 mb-2\">Antiguo Testamento (39 libros)</h5>\n                                    <ul class=\"space-y-1 text-slate-200\">\n                                        <li>• Pentateuco (5 libros): Génesis a Deuteronomio</li>\n                                        <li>• Históricos (12 libros): Josué a Ester</li>\n                                        <li>• Poéticos (5 libros): Job a Cantares</li>\n                                        <li>• Profetas Mayores (5 libros): Isaías a Daniel</li>\n                                        <li>• Profetas Menores (12): Oseas a Malaquías</li>\n                                    </ul>\n                                </div>\n                                <div>\n                                    <h5 class=\"font-bold text-amber-300 border-b border-indigo-800 pb-1 mb-2\">Nuevo Testamento (27 libros)</h5>\n                                    <ul class=\"space-y-1 text-slate-200\">\n                                        <li>• Evangelios (4 libros): Mateo a Juan</li>\n                                        <li>• Históricos (1 libro): Hechos</li>\n                                        <li>• Epístolas Paulinas (14 libros): Romanos a Hebreos</li>\n                                        <li>• Epístolas Generales (7): Santiago a Judas</li>\n                                        <li>• Profético (1 libro): Apocalipsis</li>\n                                    </ul>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"bg-slate-50 border border-slate-200 p-4 rounded-xl flex items-center gap-3\">\n                            <i class=\"fa-solid fa-circle-info text-blue-600 text-xl\"></i>\n                            <span class=\"text-xs sm:text-sm\"><strong>Dato Clave:</strong> Al apóstol Pablo se le atribuyen 15 libros de la Biblia, siendo el autor con mayor número de escritos individuales en el canon.</span>\n                        </div>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Padre amado, en el nombre de Jesús te pido que me ayudes a amar tu palabra, aprender, retener y vivir conforme a ella. A no cambiarla ni cuestionarla, que siempre sea mi guía y mi consejo en todo tiempo y en todo momento. Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "2 Timoteo 3:16",
+        "text": "Toda la Escritura es inspirada por Dios, y útil para enseñar, para redargüir, para corregir, para instruir en justicia."
+      }
     ],
-    reflectionQuestions: ["¿En qué áreas de mi vida siento que necesito la guía y el consuelo del Espíritu Santo hoy?"],
-    quiz: [
-      { q: "¿Quién es el Espíritu Santo?", options: ["Una energía abstracta impersonal", "Dios mismo habitando en el creyente", "Un ángel del pasado", "Una emoción pasajera"], correct: 1 },
-      { q: "Según Juan 14:16, ¿cuál es una de las funciones del Espíritu Santo?", options: ["Ser nuestro Consolador eterno", "Traer acusaciones", "Solo obrar en líderes", "Hacernos perfectos al instante"], correct: 0 },
-      { q: "¿Cuál es el fruto que el Espíritu produce en nuestro carácter?", options: ["Orgullo y control", "Amor, gozo, paz, paciencia, bondad, fe", "Elocuencia y fama", "Dinero y lujos"], correct: 1 },
-      { q: "¿Cómo nos ayuda el Espíritu Santo en nuestro día a día?", options: ["Nos evita todo problema", "Nos da poder, amor, dominio propio y consuelo", "Hace todo nuestro trabajo", "Nos castiga físicamente"], correct: 1 },
-      { q: "¿Cuándo habita el Espíritu Santo en el creyente?", options: ["Solo al finalizar toda la LMS", "Cuando acepta de corazón a Jesús como Salvador", "Solo cuando ora de forma elocuente", "Rara vez"], correct: 1 }
+    "reflectionQuestions": [
+      "¿Cómo estableceré un plan constante y devocional para leer la Palabra de Dios diariamente?"
     ],
-    aiContext: "El Espíritu Santo como Consolador personal, su fruto en el carácter del creyente y la superación de debilidades."
+    "quiz": [
+      {
+        "q": "¿Cómo se divide estructuralmente la Biblia y cuántos libros tiene en total?",
+        "options": [
+          "Se divide en 3 testamentos y contiene un total de 100 libros históricos.",
+          "Se divide en Antiguo Testamento (39 libros) y Nuevo Testamento (27 libros), sumando un total de 66 libros.",
+          "Se divide en Cartas de Moisés (40 libros) y Evangelios (26 libros), para un total de 66 libros."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "Estructura de la Biblia (66 libros, 39 AT y 27 NT), la Palabra de Dios como manual e inspiración divina."
   },
   {
-    id: 6,
-    title: "La Vida en Comunidad",
-    badge: "Lección 7",
-    description: "La importancia de congregarse y crecer en la Iglesia.",
-    content: "El crecimiento cristiano nunca está diseñado para ser vivido en soledad. Dios nos hizo para vivir en familia. La Iglesia es el cuerpo de Cristo en la tierra, donde compartimos el amor de Dios, nos apoyamos mutuamente en las dificultades, oramos juntos y nos edificamos. Al congregarnos activamente, nos protegemos de los peligros del aislamiento y multiplicamos nuestras alegrías en la fe.",
-    verses: [
-      { ref: "Hebreos 10:24–25", text: "Y considerémonos unos a otros para estimularnos al amor y a las buenas obras; no dejando de congregarnos, como algunos tienen por costumbre." },
-      { ref: "Hechos 2:42", text: "Y perseveraban en la doctrina de los apóstoles, en la comunión unos con otros, en el partimiento del pan y en las oraciones." }
+    "id": 6,
+    "title": "La Oración",
+    "badge": "Lección 7",
+    "description": "Desarrolla una comunicación íntima y constante con tu Padre Celestial.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"Aconteció que estaba Jesús orando en un lugar, y cuando terminó, uno de sus discípulos le dijo: Señor, enséñanos a orar, como también Juan enseñó a sus discípulos.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— Lucas 11:1 (RVR1960)</span>\n                        </div>\n                        <p>Jesús, siendo el Hijo de Dios, basaba Su vida ministerial diaria en la oración. Esto impactó tanto a Sus discípulos que le pidieron que les enseñara a hacerlo. Como discípulos, hoy también clamamos: <em>¡Señor, enséñanos a orar!</em></p>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">Las Cuatro Dimensiones de la Oración</h3>\n                        <div class=\"grid grid-cols-1 sm:grid-cols-2 gap-4\">\n                            <div class=\"bg-slate-50 border border-slate-200 p-4 rounded-xl\">\n                                <h4 class=\"font-bold text-indigo-950 text-sm mb-1\"><i class=\"fa-solid fa-heart text-indigo-600 mr-2\"></i>1. Adoración</h4>\n                                <p class=\"text-xs text-slate-600\">Tiempo de agradecimiento, exaltación, comunión pura y cánticos espontáneos que expresan amor y reconocimiento de la soberanía de Dios sobre nuestras vidas.</p>\n                            </div>\n                            <div class=\"bg-slate-50 border border-slate-200 p-4 rounded-xl\">\n                                <h4 class=\"font-bold text-indigo-950 text-sm mb-1\"><i class=\"fa-solid fa-comment-slash text-indigo-600 mr-2\"></i>2. Meditar</h4>\n                                <p class=\"text-xs text-slate-600\">Hacer silencio activo para escuchar la voz de Dios en nuestro interior. En toda verdadera comunicación interactúan ambas partes.</p>\n                            </div>\n                            <div class=\"bg-slate-50 border border-slate-200 p-4 rounded-xl\">\n                                <h4 class=\"font-bold text-indigo-950 text-sm mb-1\"><i class=\"fa-solid fa-hands-holding-child text-indigo-600 mr-2\"></i>3. Intercesión</h4>\n                                <p class=\"text-xs text-slate-600\">Levantar ruegos y súplicas constantes a favor de otros, de nuestra familia o pidiendo la misericordia de Dios sobre circunstancias de necesidad.</p>\n                            </div>\n                            <div class=\"bg-slate-50 border border-slate-200 p-4 rounded-xl\">\n                                <h4 class=\"font-bold text-indigo-950 text-sm mb-1\"><i class=\"fa-solid fa-shield text-indigo-600 mr-2\"></i>4. Guerra Espiritual</h4>\n                                <p class=\"text-xs text-slate-600\">Tomar la autoridad delegada por Jesucristo para reprender las tinieblas, derribar temores y resistir los ataques del diablo vistiendo la armadura de Dios (Efesios 6).</p>\n                            </div>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">Oración Congregacional e Individual</h3>\n                        <p><strong>Oración Congregacional (Mateo 18:19):</strong> El poder del acuerdo mutuo. Cuando dos o más nos unimos en la Tierra por una causa común en la iglesia, la promesa de respaldo es inmensa.</p>\n                        <p><strong>Oración Individual (Mateo 6:6):</strong> Tu tiempo íntimo con Dios. Es el equivalente de la alcoba de un matrimonio: un lugar secreto, a puerta cerrada, donde abres tu corazón en total vulnerabilidad y el Padre te recompensa en público.</p>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Amado Jesús, tú eres nuestro Señor y nuestro Salvador, queremos hoy acercarnos a ti a través de esta oración y a la vez pedirte que produzcas en nosotros la necesidad de ti a diario. Conocemos la importancia de la oración enséñanos a amarla y practicarla. Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "Lucas 11:1",
+        "text": "Aconteció que estaba Jesús orando en un lugar, y cuando terminó, uno de sus discípulos le dijo: Señor, enséñanos a orar, como también Juan enseñó a sus discípulos."
+      }
     ],
-    reflectionQuestions: ["¿Por qué es importante compartir mi fe e integrarme en la comunidad física de la iglesia local?"],
-    quiz: [
-      { q: "¿Por qué el cristiano no debe aislarse?", options: ["Porque es peligroso y debilita la fe", "Porque es aburrido estar solo", "Porque está prohibido por ley", "Porque el líder se enoja"], correct: 0 },
-      { q: "Según Hebreos 10:24, ¿para qué nos reunimos?", options: ["Para comparar quién es mejor", "Para estimularnos al amor y a las buenas obras", "Para pasar el tiempo", "Para juzgar a los ausentes"], correct: 1 },
-      { q: "¿Qué hacían los primeros cristianos en Hechos 2:42?", options: ["Competían en conocimientos", "Perseveraban en la doctrina, comunión, partimiento del pan y oraciones", "Se reunían solo una vez al año", "Discutían por teología"], correct: 1 },
-      { q: "¿Cuál es el rol de la iglesia local?", options: ["Un club social común", "Una familia espiritual donde crecer y servir unidos", "Un requisito opcional", "Un lugar solo de sermones estáticos"], correct: 1 },
-      { q: "¿Cómo podemos apoyarnos en comunidad?", options: ["Aislándonos", "Orando unos por otros, sirviendo y compartiendo con amor", "Ignorando las necesidades del prójimo", "Criticando los errores ajenos"], correct: 1 }
+    "reflectionQuestions": [
+      "¿Cómo puedo profundizar mi tiempo de oración individual en lo secreto con el Padre?"
     ],
-    aiContext: "La importancia de la iglesia local, la comunión espiritual fraternal, vencer la timidez e integrarse físicamente."
+    "quiz": [
+      {
+        "q": "¿Qué representa la Oración Individual en el 'aposento secreto' (Mateo 6:6)?",
+        "options": [
+          "Un castigo por desobedecer al líder de la iglesia.",
+          "El tiempo de intimidad espiritual profunda con Dios a solas, comparable a la habitación íntima de un matrimonio.",
+          "La oración pública que se hace para que todos admiren nuestra elocuencia."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "Las dimensiones de la oración (adoración, meditación, intercesión, guerra espiritual) y la intimidad con Dios."
   },
   {
-    id: 7,
-    title: "Obediencia y Fidelidad",
-    badge: "Lección 8",
-    description: "Los frutos de una fe viva en nuestra conducta.",
-    content: "La verdadera fe produce un cambio visible en nuestro comportamiento. Jesús enseñó que demostrar amor hacia Él consiste en obedecer sus sabios mandamientos. La obediencia no nace del temor, sino de un corazón agradecido por la salvación. Ser fieles a Dios en lo cotidiano —en nuestro trabajo, finanzas, familia y palabras— es la forma más poderosa de adorarle y honrarle.",
-    verses: [
-      { ref: "Juan 14:15", text: "Si me amáis, guardad mis mandamientos." },
-      { ref: "Santiago 1:22", text: "Pero sed hacedores de la palabra, y no tan solamente oidores, engañándoos a vosotros mismos." }
+    "id": 7,
+    "title": "El Mundo Espiritual",
+    "badge": "Lección 8",
+    "description": "Comprende la naturaleza tripartita del hombre y el conflicto espiritual.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"Por la fe entendemos haber sido constituido el universo por la palabra de Dios, de modo que lo que se ve fue hecho de lo que no se veía.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">—  Hebreos 11:3 (RVR1960)</span>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">Naturaleza Tripartita del Ser Humano</h3>\n                        <p>Dios nos creó como seres espirituales y nos diseñó en tres áreas interconectadas (1 Tesalonicenses 5:23):</p>\n                        <div class=\"space-y-3 pl-4\">\n                            <p>🧬 <strong>Cuerpo (Carne):</strong> El área física por la cual expresamos en el mundo natural todo lo que tenemos internamente.</p>\n                            <p>🧠 <strong>Alma:</strong> El asiento de nuestra personalidad, emociones, intelecto, voluntad y sentimientos.</p>\n                            <p>🕊️ <strong>Espíritu:</strong> La dimensión profunda soplada por Dios que nos permite tener comunión directa con nuestro Creador.</p>\n                        </div>\n                        <div class=\"bg-slate-100 p-5 rounded-xl border border-slate-200\">\n                            <h4 class=\"font-bold text-slate-900 text-sm mb-2\"><i class=\"fa-solid fa-scale-unbalanced mr-2\"></i>La Ley de la Inclinación</h4>\n                            <p class=\"text-xs sm:text-sm text-slate-600\">Tu alma siempre se inclinará hacia la parte que tengas más alimentada y fortalecida. Si alimentas tu espíritu con oración, ayuno y Palabra de Dios, tu alma se deleitará en el Señor. Si fortaleces tu carne, tu alma se someterá a los apetitos destructivos.</p>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">El Conflicto Espiritual Activo</h3>\n                        <p>En el mundo espiritual operan dos reinos antagónicos: el <strong>Reino de la Luz (Dios)</strong> y el <strong>reino de las tinieblas (satanás y sus demonios)</strong>. Como hijos de Dios, enfrentamos maquinaciones sutiles (ataques de duda, desánimo, culpa o tentaciones a través del internet, la música moderna y las redes sociales).</p>\n                        <p>No luches con tus propias fuerzas físicas: <em>\"Las armas de nuestra milicia no son carnales, sino poderosas en Dios para la destrucción de fortalezas\"</em> (2 Corintios 10:4).</p>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Señor Jesús hoy confirmo mi pertenencia a tu reino y desecho toda tiniebla de mí, yo reprendo toda obra de satanás y sus demonios y me cubro con la sangre de Cristo, poniendo un vallado alrededor mío y de mi familia en el nombre de Jesús, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "Hebreos 11:3",
+        "text": "Por la fe entendemos haber sido constituido el universo por la palabra de Dios, de modo que lo que se ve fue hecho de lo que no se veía."
+      }
     ],
-    reflectionQuestions: ["¿Qué área práctica de mi conducta me está pidiendo Dios alinear a su Palabra hoy?"],
-    quiz: [
-      { q: "¿Cuál es el verdadero motor de la obediencia?", options: ["El miedo al castigo", "El agradecimiento y amor a Dios", "La búsqueda de aprobación ajena", "La obligación moral estricta"], correct: 1 },
-      { q: "Según Juan 14:15, ¿cómo demostramos nuestro amor a Jesús?", options: ["Cantando muy fuerte", "Guardando sus mandamientos", "Sabiendo mucha teología", "Diciéndolo solo en palabras"], correct: 1 },
-      { q: "Santiago 1:22 nos advierte sobre ser...", options: ["Solo oidores y no hacedores", "Muy estrictos", "Ignorantes", "Líderes de inmediato"], correct: 0 },
-      { q: "¿Qué significa ser 'hacedor' de la Palabra?", options: ["Llevar la Biblia siempre", "Poner en práctica las enseñanzas de Jesús en el día a día", "Escribir libros", "Hablar de la Biblia constantemente"], correct: 1 },
-      { q: "La fidelidad en las pequeñas decisiones cotidianas...", options: ["No tiene importancia", "Muestra la madurez y realidad de nuestra fe", "Es imposible de mantener", "Solo importa para pastores"], correct: 1 }
+    "reflectionQuestions": [
+      "¿Qué hábitos espirituales o alimentaciones de la carne debo cambiar para inclinar mi alma hacia el Espíritu?"
     ],
-    aiContext: "Obediencia por amor y gratitud, fidelidad financiera, ética laboral y ser luz a través del ejemplo práctico."
+    "quiz": [
+      {
+        "q": "¿Hacia qué área de nuestro ser tripartito se inclina nuestra Alma?",
+        "options": [
+          "Siempre se inclina automáticamente al mal sin que podamos hacer nada.",
+          "Hacia la parte de nuestro ser que tengamos más alimentada y fortalecida (el espíritu o la carne).",
+          "Únicamente se inclina a las opiniones que escuchamos en internet."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "Naturaleza tripartita (cuerpo, alma, espíritu), alimentar el espíritu y la lucha en el mundo espiritual."
   },
   {
-    id: 8,
-    title: "Superando Pruebas",
-    badge: "Lección 9",
-    description: "Cómo resistir las tentaciones y madurar en la fe.",
-    content: "Tener fe en Jesús no significa que no tendremos problemas o tentaciones. Sin embargo, Dios promete que nunca nos enfrentaremos a una tentación más grande de la que podamos soportar, y siempre nos dará la salida. Las dificultades de la vida no vienen para destruirnos, sino para forjar nuestra paciencia, fortalecer nuestras convicciones y moldear un carácter firme.",
-    verses: [
-      { ref: "1 Corintios 10:13", text: "No os ha sobrevenido ninguna tentación que no sea humana; pero fiel es Dios, que no os dejará ser tentados más de lo que podéis resistir..." },
-      { ref: "Santiago 1:12", text: "Bienaventurado el varón que soporta la tentación; porque cuando haya resistido la prueba, recibirá la corona de vida." }
+    "id": 8,
+    "title": "Alabanza y Adoración",
+    "badge": "Lección 9",
+    "description": "Descubre el poder de la adoración sincera y la alabanza en la batalla.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"Todo lo que respira alabe a Jehová. Aleluya.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— Salmos 150:6 (RVR1960)</span>\n                        </div>\n                        <div class=\"bg-indigo-50 border border-indigo-100 p-5 rounded-xl text-center font-serif italic my-4 text-indigo-950\">\n                            \"Un adorador no siempre es músico, y un músico no siempre es adorador.\"\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">El Poder Espiritual de la Alabanza</h3>\n                        <p>La alabanza es un arma de guerra ofensiva de gran poder. En las escrituras vemos que cuando el pueblo de Israel salía a batallar físicamente, la alabanza iba siempre delante del ejército armada de instrumentos de júbilo y Dios les entregaba la victoria sin necesidad de pelear (2 Crónicas 20:21-22).</p>\n                        <div class=\"bg-slate-50 border border-slate-200 p-5 rounded-xl my-4 flex items-start gap-3\">\n                            <div class=\"text-indigo-600 text-2xl\"><i class=\"fa-solid fa-lock-open\"></i></div>\n                            <div>\n                                <h4 class=\"font-bold text-slate-900 text-sm\">El Terremoto de Pablo y Silas</h4>\n                                <p class=\"text-xs sm:text-sm text-slate-600 mt-1\">En <strong>Hechos 16:25-26</strong> vemos que a medianoche, azotados y encarcelados, Pablo y Silas oraban y cantaban himnos a Dios. De repente, un terremoto sacudió los cimientos de la cárcel, abriendo las puertas y rompiendo todas las cadenas.</p>\n                            </div>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">La Ofrenda de nuestro Corazón</h3>\n                        <p>Dios nos ha dado todo lo que poseemos (vida, familia, recursos), pero hay algo que Él no nos dará a la fuerza y que debe brotar voluntariamente de lo profundo de nosotros: <strong>nuestra adoración</strong>.</p>\n                        <p>La adoración verdadera es una expresión sincera de amor, honra y gratitud a Dios, convirtiendo todo lo que hacemos y hablamos en un aroma agradable delante de Él, alejados de la superficialidad artística o el espectáculo.</p>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Padre amado en esta hora me acerco confiadamente al trono de la gracia para adorar y bendecir tu nombre, por tu gran amor para conmigo, agradecido por tu misericordia que es grande para con tus hijos, te alabo por todo lo que has hecho en mi vida hasta este día y lo que aun seguirás haciendo. Te amo, te honro y rindo a ti mi corazón, mi alma te bendice y da la gloria a ti Dios Padre, Hijo y Espíritu Santo, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "Salmos 150:6",
+        "text": "Todo lo que respira alabe a Jehová. Aleluya."
+      }
     ],
-    reflectionQuestions: ["¿Qué promesa de Dios puedo recordar en momentos de prueba para no perder la paz?"],
-    quiz: [
-      { q: "¿Promete Dios una vida libre de dificultades?", options: ["Sí, completamente", "No, pero promete estar con nosotros y darnos la victoria", "Solo a los líderes", "Solo si pagamos"], correct: 1 },
-      { q: "Según 1 Corintios 10:13, ¿qué promete Dios en la tentación?", options: ["Que nos quitará de la tierra", "Que es fiel y nos dará junto con la tentación la salida", "Que nos castigará de inmediato", "Nada"], correct: 1 },
-      { q: "¿Qué beneficio tiene soportar las pruebas según Santiago 1:12?", options: ["Hacernos famosos", "Recibir la corona de vida y fortalecer la fe", "Evitar el trabajo en la iglesia", "Ninguno"], correct: 1 },
-      { q: "¿Cuál debe ser nuestra actitud ante la tentación?", options: ["Resistir en nuestras propias fuerzas humanas", "Confiar en la fidelidad de Dios y usar su Palabra", "Ceder y luego culpar a otros", "Ignorarla a medias"], correct: 1 },
-      { q: "Las dificultades en la vida de un creyente sirven para...", options: ["Destruir su fe por completo", "Forjar el carácter, paciencia y convicción en Dios", "Pasar el rato", "Demostrar que Dios está lejos"], correct: 1 }
+    "reflectionQuestions": [
+      "¿Cómo puedo usar la alabanza y la adoración como un arma espiritual en momentos de dificultad o desánimo?"
     ],
-    aiContext: "Vencer el pecado cotidiano, resistir la presión social y madurar emocionalmente a través de las tormentas de la vida."
+    "quiz": [
+      {
+        "q": "¿Qué impacto tuvo la alabanza y la adoración de Pablo y Silas en la prisión a medianoche?",
+        "options": [
+          "Hizo que los guardias se durmieran para que ellos pudieran escapar en silencio.",
+          "Desató un gran terremoto espiritual y físico que sacudió los cimientos, abrió las puertas y soltó las cadenas de todos.",
+          "Provocó que el rey los liberara por temor a sus voces afinadas."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "La alabanza y adoración como armas de guerra espiritual, romper prisiones y adorar de corazón."
   },
   {
-    id: 9,
-    title: "Compartiendo tu Nueva Fe",
-    badge: "Lección 10",
-    description: "La gran comisión y tu testimonio personal.",
-    content: "El regalo más hermoso que has recibido —la salvación, la paz y el amor de Dios— no es para guardárselo solo para ti. Jesús nos encomendó compartir esta maravillosa noticia con todas las personas. Tu testimonio (la historia sencilla de cómo era tu vida antes y cómo te transformó Jesús) es una herramienta poderosa para iluminar a tu familia, amigos y compañeros de estudio o trabajo. ¡Eres un embajador de esperanza!",
-    verses: [
-      { ref: "Mateo 28:19", text: "Por tanto, id, y haced discípulos a todas las naciones, bautizándolos en el nombre del Padre, y del Hijo, y del Espíritu Santo." },
-      { ref: "1 Pedro 3:15", text: "Y estad siempre preparados para presentar defensa con mansedumbre y reverencia ante todo el que os demande razón de la esperanza que hay en vosotros." }
+    "id": 9,
+    "title": "La Identidad en Cristo",
+    "badge": "Lección 10",
+    "description": "Afirma tu identidad como hijo de Dios y asume tu posición en el Reino.",
+    "content": "<div class=\"space-y-6\">\n                        <div class=\"bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-inner border-l-4 border-amber-500 font-serif italic text-sm sm:text-base\">\n                            <p class=\"mb-3\">\"De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas.\"</p>\n                            <span class=\"block text-right text-xs text-amber-400 font-semibold\">— 2 Corintios 5:17 (RVR1960)</span>\n                        </div>\n                        <p>Vivimos en una gran crisis de identidad mundial: la gente busca imitar a otros modelos destructivos o cae en confusión ideológica. Quien no tiene clara su identidad pierde su esencia y entra en conflictos interminables de aceptación.</p>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">El Ataque a la Identidad</h3>\n                        <p>La primera tentación que satanás lanzó hacia Jesús en el desierto (Mateo 4:3) comenzó confrontando directamente quién era Él: <em>\"Si eres Hijo de Dios...\"</em>. El diablo buscaba verificar si Jesús dudaba de Su esencia. La lección del Maestro es clave: quien tiene clara su identidad no tiene que probar nada a nadie, simplemente la vive.</p>\n                        <div class=\"bg-emerald-950 text-white p-6 rounded-2xl my-6\">\n                            <h4 class=\"font-bold text-amber-400 text-sm uppercase tracking-wider mb-3\"><i class=\"fa-solid fa-crown mr-2\"></i>¿Quién eres tú en realidad?</h4>\n                            <p class=\"text-xs sm:text-sm text-slate-300 mb-4\">Tú no eres lo que tu estatus económico define, ni lo que los demás murmuran o piensen de ti. Tú eres estrictamente lo que Dios dice que eres en Su Palabra:</p>\n                            <div class=\"grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm\">\n                                <div class=\"bg-slate-900/40 p-3 rounded-lg border border-emerald-800 flex items-center gap-2\"><i class=\"fa-solid fa-check text-amber-400\"></i> Eres apto (Colosenses 1:12-13)</div>\n                                <div class=\"bg-slate-900/40 p-3 rounded-lg border border-emerald-800 flex items-center gap-2\"><i class=\"fa-solid fa-check text-amber-400\"></i> Eres Hijo de Dios (Juan 1:12)</div>\n                                <div class=\"bg-slate-900/40 p-3 rounded-lg border border-emerald-800 flex items-center gap-2\"><i class=\"fa-solid fa-check text-amber-400\"></i> Eres heredero (Romanos 8:17)</div>\n                                <div class=\"bg-slate-900/40 p-3 rounded-lg border border-emerald-800 flex items-center gap-2\"><i class=\"fa-solid fa-check text-amber-400\"></i> Más que vencedor (Romanos 8:37)</div>\n                            </div>\n                        </div>\n                        <h3 class=\"font-serif font-bold text-xl text-slate-900 border-b pb-2\">Asume tu Posición en Cristo</h3>\n                        <p>Al entender tu nueva identidad y posición en el Reino de Dios, debes comenzar a comportarte de forma coherente. Cambia tu vocabulario, tus lecturas, tus prioridades y tu vestir. Aunque el mundo de tinieblas intente presionarte para que vuelvas a ser lo de antes, recuerda firmemente: <strong>¡Tú ya no eres el mismo!</strong> Dios ha cambiado tu historia para siempre.</p>\n                        <div class=\"bg-amber-50/50 border border-amber-200 p-5 rounded-2xl mt-8\">\n                            <h4 class=\"font-bold text-amber-900 text-sm flex items-center gap-2 mb-2\"><i class=\"fa-solid fa-hands-praying\"></i> Oración de la Lección</h4>\n                            <p class=\"text-slate-700 italic font-serif text-sm\">\"Padre amado, mi corazón y todo mi ser está agradecido por lo que tú has hecho en mí. Por el cambio que has traído a mi vida y con ellos todas las bendiciones que me han alcanzado. Hoy tomo mi posición y decido vivir conforme a los designios de tu voluntad y así alcanzar mi propósito de vida. Ayúdame a no desmayar te lo pido en el nombre de tu Hijo Jesucristo, Amén.\"</p>\n                        </div>\n                    </div>",
+    "verses": [
+      {
+        "ref": "2 Corintios 5:17",
+        "text": "De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí todas son hechas nuevas."
+      }
     ],
-    reflectionQuestions: ["¿Quién en mi entorno cercano necesita escuchar sobre el amor de Dios y cómo planeo compartir mi testimonio?"],
-    quiz: [
-      { q: "¿Qué es la 'Gran Comisión'?", options: ["Una recaudación de fondos", "La orden de Jesús de hacer discípulos compartiendo su amor", "Un comité de la iglesia", "Una penitencia estricta"], correct: 1 },
-      { q: "Según 1 Pedro 3:15, ¿cómo debemos compartir nuestra fe?", options: ["Con debates acalorados", "Con mansedumbre, reverencia y amor", "Con imposición y enojo", "Solo si nos obligan"], correct: 1 },
-      { q: "¿Qué es nuestro testimonio?", options: ["Un tratado teológico complejo", "La historia de cómo Jesús transformó nuestra vida", "Una lista de los pecados ajenos", "Un requisito administrativo"], correct: 1 },
-      { q: "¿A quiénes debemos compartir del amor de Dios?", options: ["Solo a desconocidos", "A nuestra familia, amigos y a todo aquel que lo necesite", "Solo a personas perfectas", "A nadie"], correct: 1 },
-      { q: "¿Cómo nos describe la Biblia al compartir la fe?", options: ["Como embajadores de reconciliación y esperanza", "Como jueces del mundo", "Como sabios absolutos", "Como personas aburridas"], correct: 0 }
+    "reflectionQuestions": [
+      "¿Qué significa para mí que mi identidad esté definida por lo que Dios dice de mí en Su Palabra y no por el mundo?"
     ],
-    aiContext: "El poder del testimonio personal, compartir a Jesús sin juzgar y conectarse con mentores presenciales de la iglesia local."
+    "quiz": [
+      {
+        "q": "¿Qué lección fundamental nos enseña la respuesta de Jesús al ataque de satanás sobre Su identidad en el desierto?",
+        "options": [
+          "Que debemos hacer milagros públicos inmediatos para silenciar a los que dudan.",
+          "Que quien tiene clara su identidad en Dios no siente la necesidad de probarle nada al enemigo ni al mundo.",
+          "Que es correcto usar nuestro poder divino para alimentarnos cuando hay necesidad física."
+        ],
+        "correct": 1
+      }
+    ],
+    "aiContext": "La verdadera identidad en Cristo, resistir los ataques del diablo y vivir como hijos y herederos de Dios."
   }
 ];
 
@@ -776,7 +856,7 @@ export default function DiscipuladoInteractive() {
               <h1 className="text-4xl md:text-5xl font-black text-slate-900 leading-[1.1] font-outfit uppercase tracking-tighter">{activeLesson.title}</h1>
               <div className="h-2.5 w-20 bg-gradient-to-r from-emerald-500 to-amber-500 rounded-full"></div>
             </div>
-            <p className="text-lg md:text-xl text-[#334155] leading-relaxed font-medium">{activeLesson.content}</p>
+            <div className="text-lg md:text-xl text-[#334155] leading-relaxed font-medium space-y-4" dangerouslySetInnerHTML={{ __html: activeLesson.content }} />
 
             <div className="pt-6">
               {!aiExplanation ? (

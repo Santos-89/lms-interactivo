@@ -121,16 +121,16 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Insertar las 10 lecciones del Curso de Discipulado
 INSERT INTO public.lessons (id, course_id, title, order_index, xp_value) VALUES
-('discipulado-leccion-1', 'discipulado', 'El Amor de Dios y la Gracia', 1, 100),
-('discipulado-leccion-2', 'discipulado', 'Salvación por Fe', 2, 100),
-('discipulado-leccion-3', 'discipulado', 'Una Nueva Criatura en Cristo', 3, 100),
-('discipulado-leccion-4', 'discipulado', 'La Oración: Conversar con el Padre', 4, 100),
-('discipulado-leccion-5', 'discipulado', 'La Biblia: Nuestra Guía', 5, 100),
-('discipulado-leccion-6', 'discipulado', 'El Espíritu Santo: Guía y Consolador', 6, 100),
-('discipulado-leccion-7', 'discipulado', 'La Vida en Comunidad y la Iglesia', 7, 100),
-('discipulado-leccion-8', 'discipulado', 'Obediencia y Fidelidad', 8, 100),
-('discipulado-leccion-9', 'discipulado', 'Superando Pruebas y Tentaciones', 9, 100),
-('discipulado-leccion-10', 'discipulado', 'Compartiendo tu Nueva Fe', 10, 100)
+('discipulado-leccion-1', 'discipulado', 'Discípulo', 1, 100),
+('discipulado-leccion-2', 'discipulado', 'Tiempo de Cambio', 2, 100),
+('discipulado-leccion-3', 'discipulado', 'Seguridad en Él', 3, 100),
+('discipulado-leccion-4', 'discipulado', 'Decisiones', 4, 100),
+('discipulado-leccion-5', 'discipulado', 'Relaciones', 5, 100),
+('discipulado-leccion-6', 'discipulado', 'La Palabra de Dios', 6, 100),
+('discipulado-leccion-7', 'discipulado', 'La Oración', 7, 100),
+('discipulado-leccion-8', 'discipulado', 'El Mundo Espiritual', 8, 100),
+('discipulado-leccion-9', 'discipulado', 'Alabanza y Adoración', 9, 100),
+('discipulado-leccion-10', 'discipulado', 'La Identidad en Cristo', 10, 100)
 ON CONFLICT (id) DO NOTHING;
 
 -- ==============================================================================
